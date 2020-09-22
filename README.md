@@ -1,1 +1,1 @@
-# Amalgorithms
+# AmAlgorithms
