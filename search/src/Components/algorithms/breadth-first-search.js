@@ -9,7 +9,7 @@ async function bfs(g, getPauseStatus, getStopStatus) {
   while (queue.length > 0) {
     let s = queue[0];
     queue.shift();
-    console.log(s);
+    console.log(s,' ');
     let el = document.getElementById(s);
     await new Promise((r) => setTimeout(r, 1000));
     while (getPauseStatus() === true) {
