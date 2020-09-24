@@ -53,19 +53,19 @@ class TreeTraversals extends Component {
 
   getPauseStatus = () => this.state.pause;
   getStopStatus = () => this.state.stop;
-  
+
   buildNodePath = (node) => {
     this.setState({ nodePath: (oldA) => [...oldA, node] });
     createListItem(node);
   };
+
   reset = () => {
     Object.keys(this.adjList).forEach((e) => {
-      let nodeEl = document.getElementById(e);
-      nodeEl.classList.remove('visited-node-bfs');
-      nodeEl.classList.remove('visited-node-dfs');
-      let linkEl = document.getElementById(e + 'link');
-      if (linkEl) {
-        linkEl.classList.remove('link-traversed');
+      let nodeElement = document.getElementById(e);
+      nodeElement.classList.remove('visited-node-bfs', 'visited-node-dfs');
+      let linkElement = document.getElementById(e + 'link');
+      if (linkElement) {
+        linkElement.classList.remove('link-traversed');
       }
     });
     this.outputEl.removeChild(document.getElementById('nodeHistory'));
