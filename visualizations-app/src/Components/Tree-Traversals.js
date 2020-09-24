@@ -1,124 +1,130 @@
-import React, { useState } from 'react';
+import React, { Component } from 'react';
 import bfs from '../algorithms/breadth-first-search';
 import dfs from '../algorithms/depth-first-search';
 import CreateTree from './graph-builder/tree-builder';
 
-let pause = false;
-let stop = false;
+class TreeTraversals extends Component {
+  outputEl;
+  adjList;
 
-const TreeTraversals = () => {
-  const [pauseMessage, setpauseMessage] = useState('Pause');
-  const [nodePath, setnodePath] = useState([]);
-
-  let outputEl = document.getElementById('output');
-  if (!outputEl.hasChildNodes()) {
-    let heading = document.createTextNode('Traversal Ordering');
-    outputEl.appendChild(heading);
-    resetOrderList(outputEl);
+  constructor(props) {
+    super(props);
+    this.state = {
+      pause: false,
+      stop: false,
+      nodePath: [],
+    };
+    this.adjList = {
+      a: ['b', 'c', 'd'],
+      b: ['e', 'h', 'i'],
+      c: ['j', 'r'],
+      d: ['s', 't', 'u', 'v'],
+      e: ['f', 'g'],
+      f: [],
+      g: ['o'],
+      h: [],
+      i: [],
+      j: ['k'],
+      k: ['l', 'q'],
+      l: ['m', 'n', 'p'],
+      m: [],
+      n: [],
+      o: [],
+      p: [],
+      q: [],
+      r: [],
+      s: [],
+      t: [],
+      u: [],
+      v: ['w'],
+      w: ['x'],
+      x: ['y', 'z'],
+      y: [],
+      z: [],
+    };
   }
 
-  let adjList = {
-    a: ['b', 'c', 'd'],
-    b: ['e', 'h', 'i'],
-    c: ['j', 'r'],
-    d: ['s', 't', 'u', 'v'],
-    e: ['f', 'g'],
-    f: [],
-    g: ['o'],
-    h: [],
-    i: [],
-    j: ['k'],
-    k: ['l', 'q'],
-    l: ['m', 'n', 'p'],
-    m: [],
-    n: [],
-    o: [],
-    p: [],
-    q: [],
-    r: [],
-    s: [],
-    t: [],
-    u: [],
-    v: ['w'],
-    w: ['x'],
-    x: ['y', 'z'],
-    y: [],
-    z: [],
-  };
+  componentDidMount() {
+    this.outputEl = document.getElementById('output');
+    let heading = document.createTextNode('Traversal Ordering');
+    this.outputEl.appendChild(heading);
+    resetTraversalList(this.outputEl);
+  }
 
-  const getPauseStatus = () => pause;
-  const getStopStatus = () => stop;
-  const buildNodePath = (node) => {
-    setnodePath((oldA) => [...oldA, node]);
-    let li = document.createElement('LI');
-    li.style.textAlign = 'center';
-    li.appendChild(document.createTextNode(node));
-    document.getElementById('nodeHistory').appendChild(li);
+  getPauseStatus = () => this.state.pause;
+  getStopStatus = () => this.state.stop;
+  
+  buildNodePath = (node) => {
+    this.setState({ nodePath: (oldA) => [...oldA, node] });
+    createListItem(node);
   };
-
-  const reset = () => {
-    Object.keys(adjList).forEach((e) => {
-      let el = document.getElementById(e);
-      el.classList.remove('visited-node-bfs');
-      el.classList.remove('visited-node-dfs');
+  reset = () => {
+    Object.keys(this.adjList).forEach((e) => {
+      let nodeEl = document.getElementById(e);
+      nodeEl.classList.remove('visited-node-bfs');
+      nodeEl.classList.remove('visited-node-dfs');
+      let linkEl = document.getElementById(e + 'link');
+      if (linkEl) {
+        linkEl.classList.remove('link-traversed');
+      }
     });
-    let outputEl = document.getElementById('output');
-    outputEl.removeChild(document.getElementById('nodeHistory'));
-    resetOrderList(outputEl);
+    this.outputEl.removeChild(document.getElementById('nodeHistory'));
+    resetTraversalList(this.outputEl);
   };
 
-  return (
-    <div>
+  render() {
+    return (
       <div>
-        <CreateTree adjList={adjList} />
-        <button
-          onClick={() => {
-            pause = false;
-            stop = false;
-            dfs(adjList, getPauseStatus, getStopStatus, buildNodePath);
-          }}
-        >
-          DFS traverse
-        </button>
-        <button
-          onClick={() => {
-            pause = false;
-            stop = false;
-            bfs(adjList, getPauseStatus, getStopStatus, buildNodePath);
-          }}
-        >
-          BFS traverse
-        </button>
-        <button
-          onClick={() => {
-            stop = true;
-            setpauseMessage('Pause');
-            pause = false;
-            reset();
-          }}
-        >
-          Reset
-        </button>
-        <button
-          onClick={() => {
-            pause = !pause;
-            if (pauseMessage === 'Pause') {
-              setpauseMessage('Unpause');
-            } else {
-              setpauseMessage('Pause');
-            }
-          }}
-        >
-          {pauseMessage}
-        </button>
+        <div>
+          <CreateTree adjList={this.adjList} />
+          <button
+            onClick={() => {
+              this.setState({ pause: false, stop: false });
+              dfs(
+                this.adjList,
+                this.getPauseStatus,
+                this.getStopStatus,
+                this.buildNodePath
+              );
+            }}
+          >
+            DFS traverse
+          </button>
+          <button
+            onClick={() => {
+              this.setState({ pause: false, stop: false });
+              bfs(
+                this.adjList,
+                this.getPauseStatus,
+                this.getStopStatus,
+                this.buildNodePath
+              );
+            }}
+          >
+            BFS traverse
+          </button>
+          <button
+            onClick={() => {
+              this.setState({ pause: false, stop: true });
+              this.reset();
+            }}
+          >
+            Reset
+          </button>
+          <button
+            onClick={() => {
+              this.setState({ pause: !this.state.pause });
+            }}
+          >
+            {this.state.pause ? 'UnPause' : 'Pause'}
+          </button>
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+}
 
-export default TreeTraversals;
-
-function resetOrderList(outputEl) {
+function resetTraversalList(outputEl) {
   outputEl.style.fontSize = '30px';
   outputEl
     .appendChild(document.createElement('UL'))
@@ -127,3 +133,11 @@ function resetOrderList(outputEl) {
   ul.style.listStyleType = 'none';
   ul.style.fontSize = '20px';
 }
+
+function createListItem(node) {
+  let li = document.createElement('LI');
+  li.style.textAlign = 'center';
+  li.appendChild(document.createTextNode(node));
+  document.getElementById('nodeHistory').appendChild(li);
+}
+export default TreeTraversals;

@@ -3,36 +3,27 @@ import './tree-styles.css';
 async function dfs(g, getPauseStatus, getStopStatus, buildNodePath) {
   let linkList = [];
   let root = 'a';
-  console.log(root);
   let visited = {};
-  for (let node of Object.keys(g)) {
-    visited[node] = false;
-  }
+  Object.keys(g).map((node) => (visited[node] = false));
   visited[root] = true;
   let stack = [root];
   while (stack.length > 0) {
-    let s = stack.pop();
-    let nodeElement = document.getElementById(s);
-    let linkElement = document.getElementById(s + 'link');
+    let currentNode = stack.pop();
+
     await new Promise((r) => setTimeout(r, 1000));
+    await checkPauseStatus(getPauseStatus);
+    if (getStopStatus()) return;
 
-    while (getPauseStatus() === true) {
-      await new Promise((r) => setTimeout(r, 1000));
-      continue;
-    }
-    if (getStopStatus() === true) {
-      linkList.forEach((el) => el.classList.remove('link-traversed'));
-      return;
-    }
-    if (linkElement) {
-      linkElement.classList.add('link-traversed');
-      linkList.push(linkElement);
-    }
+    activateLink(currentNode, linkList);
+
     await new Promise((r) => setTimeout(r, 700));
-    nodeElement.classList.add('visited-node-dfs');
-    buildNodePath(s);
+    await checkPauseStatus(getPauseStatus);
+    if (getStopStatus()) return;
 
-    for (let child of g[s]) {
+    activateVisitedNode(currentNode);
+    buildNodePath(currentNode);
+
+    for (let child of g[currentNode]) {
       if (visited[child] === false) {
         visited[child] = true;
         stack.push(child);
@@ -40,7 +31,26 @@ async function dfs(g, getPauseStatus, getStopStatus, buildNodePath) {
     }
   }
   linkList.forEach((el) => el.classList.remove('link-traversed'));
-
 }
 
 export default dfs;
+
+function activateLink(currentNode, linkList) {
+  let linkElement = document.getElementById(currentNode + 'link');
+  if (linkElement) {
+    linkElement.classList.add('link-traversed');
+    linkList.push(linkElement);
+  }
+}
+
+function activateVisitedNode(currentNode) {
+  let nodeElement = document.getElementById(currentNode);
+  nodeElement.classList.add('visited-node-dfs');
+}
+
+async function checkPauseStatus(getPauseStatus) {
+  while (getPauseStatus()) {
+    await new Promise((r) => setTimeout(r, 1000));
+    continue;
+  }
+}
