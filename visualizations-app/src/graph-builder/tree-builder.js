@@ -7,7 +7,7 @@ function buildTreeDataFromAdjList(adjList) {
     if (root === true) {
       treeData[node] = {
         name: node,
-        value: 15,
+        value: 10,
         type: 'black',
         level: '',
         children: [],
@@ -18,7 +18,7 @@ function buildTreeDataFromAdjList(adjList) {
       if (!treeData[child]) {
         treeData[child] = {
           name: child,
-          value: 15,
+          value: 10,
           type: 'black',
           level: '',
           children: [],
@@ -32,7 +32,7 @@ function buildTreeDataFromAdjList(adjList) {
 
 function createTree(adjList) {
   let treeData = buildTreeDataFromAdjList(adjList)['a'];
-
+  let myScale = 1.5;
   // set the dimensions and margins of the diagram
   const margin = { top: 20, right: 90, bottom: 30, left: -50 },
     width = 900 - margin.left - margin.right,
@@ -73,21 +73,21 @@ function createTree(adjList) {
     .attr('d', (d) => {
       return (
         'M' +
-        d.x +
+        d.x / myScale +
         ',' +
-        d.y +
+        d.y / myScale +
         'C' +
-        (d.x + d.parent.x) / 2 +
+        (d.x + d.parent.x) / myScale / 2 +
         ',' +
-        d.y +
+        d.y / myScale +
         ' ' +
-        (d.x + d.parent.x) / 2 +
+        (d.x + d.parent.x) / myScale / 2 +
         ',' +
-        d.parent.y +
+        d.parent.y / myScale +
         ' ' +
-        d.parent.x +
+        d.parent.x / myScale +
         ',' +
-        d.parent.y
+        d.parent.y / myScale
       );
     });
 
@@ -101,7 +101,10 @@ function createTree(adjList) {
       'class',
       (d) => 'node' + (d.children ? ' node--internal' : ' node--leaf')
     )
-    .attr('transform', (d) => 'translate(' + d.x + ',' + d.y + ')');
+    .attr(
+      'transform',
+      (d) => 'translate(' + d.x / myScale + ',' + d.y / myScale + ')'
+    );
 
   // adds the circle to the node
   node
@@ -109,6 +112,7 @@ function createTree(adjList) {
     .attr('r', (d) => d.data.value)
     .attr('id', (d) => d.data.name)
     .style('stroke', (d) => d.data.type)
+    .style('stroke-width', '1px')
     .style('fill', (d) => d.data.level);
 
   // adds the text to the node
