@@ -20,7 +20,7 @@ button {
 
 .link-traversed {
   fill: none;
-  stroke: green;
+  stroke: #ff0000;
   stroke-width: 4px;
   animation: fadein 1s;
 }
@@ -37,7 +37,7 @@ button {
 }
 
 .node .visited-node-dfs {
-  fill: red;
+  fill: #eb72ed;
   animation: colorindfs 1s;
 }
 @keyframes colorindfs {
@@ -45,12 +45,12 @@ button {
     fill: #fff;
   }
   to {
-    fill: red;
+    fill: #eb72ed;
   }
 }
 
 .node .visited-node-bfs {
-  fill: orange;
+  fill: #8de4f7;
   animation: colorinbfs 1s;
 }
 @keyframes colorinbfs {
@@ -58,7 +58,7 @@ button {
     fill: #fff;
   }
   to {
-    fill: orange;
+    fill: #8de4f7;
   }
 }
 .node circle {

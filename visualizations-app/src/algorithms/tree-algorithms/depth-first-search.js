@@ -1,4 +1,4 @@
-import './tree-styles.css';
+import '../../styles/tree-styles.css';
 
 async function dfs(g, getPauseStatus, getStopStatus, buildNodePath) {
   let linkList = [];

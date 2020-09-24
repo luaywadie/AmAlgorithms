@@ -1,4 +1,4 @@
-import './tree-styles.css';
+import '../../styles/tree-styles.css';
 
 async function bfs(g, getPauseStatus, getStopStatus, buildNodePath) {
   let linkList = [];

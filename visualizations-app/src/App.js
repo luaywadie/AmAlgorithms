@@ -1,14 +1,9 @@
 import React from 'react';
-import './App.css';
-
-import TreeTraversals from './Components/Tree-Traversals';
+import './styles/App.css';
+import NavigationBar from './Components/NavigationBar';
 
 function App() {
-  return (
-    <div className="app-width">
-      <TreeTraversals />
-    </div>
-  );
+  return <NavigationBar />;
 }
 
 export default App;

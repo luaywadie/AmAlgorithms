@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import bfs from '../algorithms/breadth-first-search';
-import dfs from '../algorithms/depth-first-search';
-import CreateTree from './graph-builder/tree-builder';
+import bfs from '../algorithms/tree-algorithms/breadth-first-search';
+import dfs from '../algorithms/tree-algorithms/depth-first-search';
+import createTree from '../graph-builder/tree-builder';
 
 class TreeTraversals extends Component {
   outputEl;
   adjList;
+  tree;
 
   constructor(props) {
     super(props);
@@ -42,13 +43,24 @@ class TreeTraversals extends Component {
       y: [],
       z: [],
     };
+    this.tree = document.getElementById('tree-img');
+    console.log(this.tree);
   }
 
   componentDidMount() {
     this.outputEl = document.getElementById('output');
-    let heading = document.createTextNode('Traversal Ordering');
-    this.outputEl.appendChild(heading);
-    resetTraversalList(this.outputEl);
+    if (!this.outputEl.hasChildNodes()) {
+      let heading = document.createTextNode('Traversal Ordering');
+      this.outputEl.appendChild(heading);
+      resetTraversalList(this.outputEl);
+    }
+    createTree(this.adjList);
+  }
+  componentWillUnmount() {
+    let svg = document.getElementById('tree-svg');
+    if (this.tree.hasChildNodes()) this.tree.removeChild(svg);
+    let outputElement = document.getElementById('output');
+    outputElement.innerHTML = '';
   }
 
   getPauseStatus = () => this.state.pause;
@@ -76,7 +88,6 @@ class TreeTraversals extends Component {
     return (
       <div>
         <div>
-          <CreateTree adjList={this.adjList} />
           <button
             onClick={() => {
               this.setState({ pause: false, stop: false });

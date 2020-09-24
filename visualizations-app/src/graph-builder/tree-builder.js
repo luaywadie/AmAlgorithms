@@ -1,19 +1,5 @@
 import * as d3 from 'd3';
 
-import React from 'react';
-let called = false;
-
-const CreateTree = (props) => {
-  if (called == false) {
-    createTree(props.adjList);
-    called = true;
-  }
-
-  return <div></div>;
-};
-
-export default CreateTree;
-
 function buildTreeDataFromAdjList(adjList) {
   let treeData = {};
   let root = true;
@@ -67,6 +53,7 @@ function createTree(adjList) {
   const svg = d3
       .select('#tree-img')
       .append('svg')
+      .attr('id', 'tree-svg')
       .attr('width', width + margin.left + margin.right)
       .attr('height', height + margin.top + margin.bottom),
     g = svg
@@ -134,4 +121,5 @@ function createTree(adjList) {
     .text((d) => d.data.name);
 }
 
-// export default createTree;
+export default createTree;
+// export default buildTreeDataFromAdjList;
