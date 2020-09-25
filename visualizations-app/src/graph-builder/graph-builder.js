@@ -2,40 +2,84 @@ import * as d3 from 'd3';
 
 function createGraph() {
   let nodes = [
-    { id: 'mammal', group: 0, level: 1 },
-    { id: 'dog', group: 0, level: 2 },
-    { id: 'cat', group: 0, level: 2 },
-    { id: 'fox', group: 0, level: 2 },
-    { id: 'elk', group: 0, level: 2 },
-    { id: 'insect', group: 1, level: 1 },
-    { id: 'ant', group: 1, level: 2 },
-    { id: 'bee', group: 1, level: 2 },
-    { id: 'fish', group: 2, level: 1 },
-    { id: 'carp', group: 2, level: 2 },
-    { id: 'pike', group: 2, level: 2 },
+    { id: 'a', level: 2 },
+    { id: 'b', level: 2 },
+    { id: 'c', level: 2 },
+    { id: 'd', level: 2 },
+    { id: 'e', level: 2 },
+    { id: 'f', level: 2 },
+    { id: 'g', level: 2 },
+    { id: 'h', level: 2 },
+    { id: 'i', level: 2 },
+    { id: 'j', level: 2 },
+    { id: 'k', level: 2 },
+    { id: 'l', level: 2 },
+    { id: 'm', level: 2 },
+    { id: 'n', level: 2 },
+    { id: 'o', level: 2 },
+    { id: 'p', level: 2 },
+    { id: 'q', level: 2 },
+    { id: 's', level: 2 },
+    { id: 'source', level: 1 },
+    { id: 't', level: 2 },
+    { id: 'target', level: 1 },
   ];
 
-  let groupRef = {
-    0: 'mammal',
-    1: 'insect',
-    2: 'fish',
-  };
-
+  let strength = 0.001;
   let links = [
-    { target: 'mammal', source: 'dog', strength: 0.7 },
-    { target: 'mammal', source: 'cat', strength: 0.7 },
-    { target: 'mammal', source: 'fox', strength: 0.7 },
-    { target: 'mammal', source: 'elk', strength: 0.7 },
-    { target: 'insect', source: 'ant', strength: 0.7 },
-    { target: 'insect', source: 'bee', strength: 0.7 },
-    { target: 'fish', source: 'carp', strength: 0.7 },
-    { target: 'fish', source: 'pike', strength: 0.7 },
-    { target: 'cat', source: 'elk', strength: 0.7 },
-    { target: 'carp', source: 'ant', strength: 0.7 },
-    { target: 'elk', source: 'bee', strength: 0.7 },
-    { target: 'dog', source: 'cat', strength: 0.7 },
-    { target: 'fox', source: 'ant', strength: 0.7 },
-    { target: 'pike', source: 'dog', strength: 0.7 },
+    { target: 'a', source: 'b', strength: strength, cost: 10 },
+    { target: 'a', source: 'c', strength: strength, cost: 10 },
+    { target: 'a', source: 'd', strength: 20 * strength, cost: 10 },
+    { target: 'b', source: 'd', strength: 20 * strength, cost: 10 },
+    { target: 'b', source: 'e', strength: strength, cost: 10 },
+    { target: 'e', source: 'c', strength: strength, cost: 10 },
+    { target: 'f', source: 'c', strength: 0.05, cost: 10 },
+    { target: 'f', source: 'b', strength: 0.05, cost: 10 },
+    { target: 'f', source: 'a', strength: 0.05, cost: 10 },
+    { target: 'f', source: 'e', strength: 0.05, cost: 10 },
+    { target: 'a', source: 'g', strength: 0.26, cost: 10 },
+    { target: 'h', source: 'g', strength: 0.26, cost: 10 },
+    { target: 'a', source: 'g', strength: 0.026, cost: 10 },
+    { target: 'c', source: 'h', strength: 0.6, cost: 10 },
+    { target: 'i', source: 'g', strength: 0.026, cost: 10 },
+    { target: 'a', source: 'i', strength: strength, cost: 10 },
+    { target: 'd', source: 'i', strength: 20 * strength, cost: 10 },
+    { target: 'j', source: 'b', strength: strength, cost: 10 },
+    { target: 'j', source: 'e', strength: strength, cost: 10 },
+    { target: 'i', source: 'k', strength: 15 * strength, cost: 10 },
+    { target: 'c', source: 'k', strength: 15 * strength, cost: 10 },
+    { target: 'e', source: 'k', strength: 15 * strength, cost: 10 },
+    { target: 'g', source: 'k', strength: 15 * strength, cost: 10 },
+    { target: 'l', source: 'j', strength: 20 * strength, cost: 10 },
+    { target: 'l', source: 'd', strength: 20 * strength, cost: 10 },
+    { target: 'l', source: 'b', strength: 20 * strength, cost: 10 },
+
+    { target: 'm', source: 'e', strength: 20 * strength, cost: 10 },
+    { target: 'm', source: 'k', strength: 20 * strength, cost: 10 },
+    { target: 'm', source: 'j', strength: 20 * strength, cost: 10 },
+    { target: 'n', source: 'i', strength: 40 * strength, cost: 10 },
+    { target: 'n', source: 'k', strength: 40 * strength, cost: 10 },
+
+    { target: 'o', source: 'l', strength: 40 * strength, cost: 10 },
+    { target: 'o', source: 'j', strength: 40 * strength, cost: 10 },
+
+    { target: 'p', source: 'm', strength: 40 * strength, cost: 10 },
+    { target: 'p', source: 'k', strength: 40 * strength, cost: 10 },
+
+    { target: 'q', source: 'd', strength: 40 * strength, cost: 10 },
+    { target: 'q', source: 'i', strength: 40 * strength, cost: 10 },
+
+    { target: 's', source: 'b', strength: 100 * strength, cost: 10 },
+    { target: 's', source: 'e', strength: 40 * strength, cost: 10 },
+    { target: 's', source: 'j', strength: 40 * strength, cost: 10 },
+
+    { target: 'source', source: 'q', strength: 100 * strength, cost: 10 },
+    { target: 'target', source: 'm', strength: strength, cost: 10 },
+    { target: 'target', source: 'j', strength: 20 * strength, cost: 10 },
+
+    // { target: 'o', source: 'd', strength: 20 * strength, cost: 10 },
+    // { target: 'o', source: 'b', strength: 20 * strength, cost: 10 },
+    // { target: 'h', source: 'j', strength: strength, cost: 10 },
   ];
   const margin = { top: 20, right: 90, bottom: 30, left: -50 },
     width = 900 - margin.left - margin.right,
@@ -51,14 +95,6 @@ function createGraph() {
   var svg = d3.select('svg');
 
   svg.attr('width', width).attr('height', height);
-  // .attr('id', String)
-  // .attr('refX', 30)
-  // .attr('refY', -4.5)
-  // .attr('markerWidth', 6)
-  // .attr('markerHeight', 6)
-  // .attr('orient', 'auto');
-  // .append('svg:line')
-  // .attr('d', 'M0,-5L10,0L0,5');
 
   // simulation setup with all forces
   var linkForce = d3
@@ -73,7 +109,7 @@ function createGraph() {
   var simulation = d3
     .forceSimulation()
     .force('link', linkForce)
-    .force('charge', d3.forceManyBody().strength(-120))
+    .force('charge', d3.forceManyBody().strength(-170))
     .force('center', d3.forceCenter(width / 2, height / 2));
 
   var linkElements = svg
@@ -84,97 +120,21 @@ function createGraph() {
     .enter()
     .append('line')
     .attr('stroke-width', 1)
-    .attr('stroke', 'rgba(50, 50, 50, 0.2)')
-    .attr('class', function (d) {
-      return 'link ' + d.type;
-    })
-    .attr('id', function (d, i) {
-      return 'linkId_' + i;
-    })
-    .attr('marker-end', function (d) {
-      return 'url(#' + d.source + '-' + d.target + ')';
-    });
+    .attr('stroke', 'rgba(50, 50, 50, 0.2)');
 
-  var edgelabels = svg.append('g').selectAll('.edgelabel').data(links);
-  edgelabels
+  var linkTextElements = svg
+    .append('g')
+    .attr('class', 'link_texts')
+    .selectAll('text')
+    .data(links)
     .enter()
     .append('text')
-    .style('pointer-events', 'none')
-    .attr({
-      class: 'edgelabel',
-      id: function (d, i) {
-        return 'edgelabel' + i;
-      },
-      dx: 80,
-      dy: 0,
-      'font-size': 10,
-      fill: '#aaa',
-    });
-
-  edgelabels
-    .append('textPath')
-    .attr('xlink:href', function (d, i) {
-      return '#edgepath' + i;
+    .text(function (link) {
+      return link.cost;
     })
-    .style('pointer-events', 'none')
-    .text(function (d, i) {
-      return 'label ' + i;
-    });
-
-  svg
-    .append('defs')
-    .append('marker')
-    .attr('id', 'arrowhead')
-    .attr('viewBox', '-0 -5 10 10')
-    .attr('refX', '25')
-    .attr('refY', '0')
-    .attr('orient', 'auto')
-    .attr('markerWidth', '10')
-    .attr('markerHeight', '10')
-    .attr('xoverflow', 'visible')
-    .append('svg:path')
-    .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
-    .attr('fill', '#ccc')
-    .attr('stroke', '#ccc');
-
-  // var linktext = svg.append('g').selectAll('g.linklabelholder').data(links);
-
-  // linktext
-  //   .enter()
-  //   .append('g')
-  //   .attr('class', 'linklabelholder')
-  //   .append('text')
-  //   .attr('class', 'linklabel')
-  //   .style('font-size', '13px')
-  //   .attr('x', '50')
-  //   .attr('y', '-20')
-  //   .attr('text-anchor', 'start')
-  //   .style('fill', '#100')
-  //   .append('textPath')
-  //   .attr('xlink:href', function (d, i) {
-  //     return '#link_ID' + i;
-  //   })
-  //   .text(function (d) {
-  //     return d.strength;
-  //   });
-
-  // var linktext = svg.append('g').selectAll('g.linklabelholder').data(links);
-
-  // linktext
-  //   .enter()
-  //   .append('g')
-  //   .attr('class', 'linklabelholder')
-  //   .append('text')
-  //   .attr('class', 'linklabel')
-  //   .style('font-size', '13px')
-  //   .attr('x', '50')
-  //   .attr('y', '-20')
-  //   .attr('text-anchor', 'start')
-  //   .style('fill', '#000')
-  //   .attr('text-anchor', 'middle')
-  //   .append('textPath')
-  //   .attr('xlink:href', (d, i) => d.source + '-' + d.target)
-  //   .text((d) => d.source + '-' + d.target);
+    .attr('font-size', 15)
+    .attr('dx', 0)
+    .attr('dy', 0);
 
   var nodeElements = svg
     .append('g')
@@ -186,7 +146,7 @@ function createGraph() {
     .attr('r', 10)
     .attr('fill', getNodeColor);
 
-  var textElements = svg
+  var nodeTextElements = svg
     .append('g')
     .attr('class', 'texts')
     .selectAll('text')
@@ -208,7 +168,7 @@ function createGraph() {
       .attr('cy', function (node) {
         return node.y;
       });
-    textElements
+    nodeTextElements
       .attr('x', function (node) {
         return node.x;
       })
@@ -230,16 +190,13 @@ function createGraph() {
         return link.target.y;
       });
 
-    edgelabels.attr('transform', function (d, i) {
-      if (d.target.x < d.source.x) {
-        let bbox = this.getBBox();
-        let rx = bbox.x + bbox.width / 2;
-        let ry = bbox.y + bbox.height / 2;
-        return 'rotate(180 ' + rx + ' ' + ry + ')';
-      } else {
-        return 'rotate(0)';
-      }
-    });
+    linkTextElements
+      .attr('x', function (link) {
+        return (link.source.x + link.target.x) / 2;
+      })
+      .attr('y', function (link) {
+        return (link.source.y + link.target.y) / 2;
+      });
   });
 
   simulation.force('link').links(links);
