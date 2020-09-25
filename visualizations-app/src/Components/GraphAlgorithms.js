@@ -154,9 +154,6 @@ class GraphAlgorithms extends Component {
     this.outputEl.style.fontSize = '20px';
   }
   componentDidMount() {
-    if (!this.outputEl.hasChildNodes()) {
-      resetOutput(this.outputEl);
-    }
     createGraph();
   }
 
@@ -265,8 +262,6 @@ class GraphAlgorithms extends Component {
 }
 
 export default GraphAlgorithms;
-
-function resetOutput(outputEl) {}
 
 function createTable(distances, parents, outputEl) {
   let table = document.createElement('table');
