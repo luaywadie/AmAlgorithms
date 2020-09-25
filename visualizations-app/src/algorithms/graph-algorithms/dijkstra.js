@@ -3,24 +3,29 @@ import '../../styles/dijkstra.css';
 const { Heap: PriorityQueue } = require('../../data-structures/Heap.js');
 // [cost, node]
 
-async function djikstra(g, root, target, getPauseStatus, getStopStatus) {
+async function djikstra(
+  g,
+  root,
+  target,
+  getPauseStatus,
+  getStopStatus,
+  updateDistancesAndParents
+) {
   let pq = new PriorityQueue();
 
-  let parents = [];
-  let distances = [];
-  for (let key of Object.keys(g)) {
-    if (key == root) {
-      distances[key] = 0;
-    } else {
-      distances[key] = Infinity;
-    }
-    parents[key] = null;
-  }
+  let parents = {};
+  let distances = {};
+  Object.keys(g).map((node) => {
+    distances[node] = Infinity;
+    parents[node] = null;
+  });
+  distances[root] = 0;
 
   pq.insert([0, root]);
   let activeLinks = [];
 
   while (pq.size > 0) {
+    updateDistancesAndParents(distances, parents);
     let currentNode = pq.removeRoot()[1];
     console.log(currentNode);
 

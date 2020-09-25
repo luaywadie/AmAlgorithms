@@ -9,7 +9,8 @@ class GraphAlgorithms extends Component {
     this.state = {
       pause: false,
       stop: false,
-      nodePath: [],
+      distances: {},
+      parents: {},
     };
     this.adjList = {
       a: [
@@ -148,14 +149,16 @@ class GraphAlgorithms extends Component {
       ],
     };
     this.graph = document.getElementById('tree-img');
+    this.outputEl = document.getElementById('output');
+    this.outputEl.style.fontSize = '20px';
   }
   componentDidMount() {
-    this.outputEl = document.getElementById('output');
-    // if (!this.outputEl.hasChildNodes()) {
-    //   let heading = document.createTextNode('Output');
-    //   this.outputEl.appendChild(heading);
-    // resetOutput(this.outputEl);
-    // }
+    // this.outputEl = document.getElementById('output');
+    if (!this.outputEl.hasChildNodes()) {
+      // let heading = document.createTextNode('Output');
+      // this.outputEl.appendChild(heading);
+      resetOutput(this.outputEl);
+    }
     createGraph();
   }
 
@@ -165,6 +168,16 @@ class GraphAlgorithms extends Component {
     let outputElement = document.getElementById('output');
     outputElement.innerHTML = '';
   }
+
+  updateDistancesAndParents = async (distance, parent) => {
+    await this.setState({ distances: distance, parents: parent });
+    // let parentsHeading = document.getElementById('parents');
+    if (!document.getElementById('distances')) {
+      createTable(this.state.distances, this.state.parents, this.outputEl);
+    } else {
+      updateTable(this.state.distances, this.state.parents);
+    }
+  };
   getPauseStatus = () => this.state.pause;
   getStopStatus = () => this.state.stop;
 
@@ -173,8 +186,8 @@ class GraphAlgorithms extends Component {
       let nodeElement = document.getElementById(e);
       nodeElement.classList.remove('node-visited');
     });
-    // this.outputEl.removeChild(document.getElementById('nodeHistory'));
-    // resetTraversalList(this.outputEl);
+    let outputElement = document.getElementById('output');
+    outputElement.innerHTML = '';
   };
 
   render() {
@@ -189,7 +202,8 @@ class GraphAlgorithms extends Component {
               'source',
               'target',
               this.getPauseStatus,
-              this.getStopStatus
+              this.getStopStatus,
+              this.updateDistancesAndParents
             );
           }}
         >
@@ -219,12 +233,48 @@ class GraphAlgorithms extends Component {
 
 export default GraphAlgorithms;
 
-function resetOutput(outputEl) {
-  outputEl.style.fontSize = '30px';
-  outputEl
-    .appendChild(document.createElement('UL'))
-    .setAttribute('id', 'nodeHistory');
-  let ul = document.getElementById('nodeHistory');
-  ul.style.listStyleType = 'none';
-  ul.style.fontSize = '20px';
+function resetOutput(outputEl) {}
+
+function createTable(distances, parents, outputEl) {
+  let table = document.createElement('table');
+  table.setAttribute('id', 'distances');
+  table.setAttribute('class', 'distance-table');
+  outputEl.appendChild(table);
+
+  let tBody = document.createElement('tBody');
+  let nodeTh = document.createElement('th');
+  let parentTh = document.createElement('th');
+  let DistanceTh = document.createElement('th');
+  nodeTh.appendChild(document.createTextNode('Node'));
+  DistanceTh.appendChild(document.createTextNode('Distance'));
+  parentTh.appendChild(document.createTextNode('Parent'));
+  let tr = document.createElement('tr');
+  tr.appendChild(nodeTh);
+  tr.appendChild(DistanceTh);
+  tr.appendChild(parentTh);
+
+  tBody.appendChild(tr);
+  Object.keys(distances).forEach((key) => {
+    tr = document.createElement('tr');
+    tr.setAttribute('id', key + '-row');
+    let nodeTd = document.createElement('td');
+    nodeTd.appendChild(document.createTextNode(key));
+    tr.appendChild(nodeTd);
+    let distanceTd = document.createElement('td');
+    distanceTd.appendChild(document.createTextNode(distances[key]));
+    let parentTd = document.createElement('td');
+    parentTd.appendChild(document.createTextNode(parents[key]));
+    tr.appendChild(distanceTd);
+    tr.appendChild(parentTd);
+    tBody.appendChild(tr);
+    table.appendChild(tBody);
+  });
+}
+function updateTable(distances, parents) {
+  Object.keys(distances).forEach((key) => {
+    let row = document.getElementById(key + '-row');
+    let td = row.getElementsByTagName('td');
+    td[1].innerHTML = distances[key];
+    td[2].innerHTML = parents[key];
+  });
 }

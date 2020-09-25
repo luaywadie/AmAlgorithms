@@ -65,3 +65,14 @@
 .graph-button {
   z-index: 10;
 }
+
+table {
+  border-collapse: collapse;
+  text-align: center;
+}
+
+table,
+th,
+td {
+  border: 1px solid black;
+}
