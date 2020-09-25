@@ -61,3 +61,7 @@
 #graph-svg {
   z-index: -1;
 }
+
+.graph-button {
+  z-index: 10;
+}

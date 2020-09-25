@@ -20,9 +20,9 @@ function createGraph() {
     { id: 'p', level: 2 },
     { id: 'q', level: 2 },
     { id: 's', level: 2 },
-    { id: 'source', level: 1 },
-    { id: 't', level: 2 },
     { id: 'target', level: 1 },
+    { id: 't', level: 2 },
+    { id: 'source', level: 1 },
   ];
 
   let strength = 0.001;
@@ -66,24 +66,25 @@ function createGraph() {
     { target: 's', source: 'b', strength: 100 * strength, cost: 4 },
     { target: 's', source: 'e', strength: 40 * strength, cost: 9 },
     { target: 's', source: 'j', strength: 40 * strength, cost: 3 },
-    { target: 'source', source: 'q', strength: 100 * strength, cost: 3 },
-    { target: 'target', source: 'm', strength: strength, cost: 6 },
-    { target: 'target', source: 'j', strength: 20 * strength, cost: 15 },
-    { target: 'target', source: 'p', strength: 20 * strength, cost: 9 },
+    { target: 'target', source: 'q', strength: 100 * strength, cost: 3 },
+    { target: 'target', source: 'd', strength: 100 * strength, cost: 4 },
+    { target: 'source', source: 'm', strength: strength, cost: 6 },
+    { target: 'source', source: 'j', strength: 20 * strength, cost: 15 },
+    { target: 'source', source: 'p', strength: 20 * strength, cost: 9 },
     { target: 't', source: 'd', strength: 100 * strength, cost: 6 },
     { target: 't', source: 'l', strength: 100 * strength, cost: 4 },
   ];
-  const margin = { top: -100, right: 90, bottom: 30, left: -10 },
-    width = 900 - margin.left - margin.right,
-    height = 900 - margin.top - margin.bottom;
+  const margin = { top: 20, right: 50, bottom: 50, left: -10 },
+    width = 800 - margin.left - margin.right,
+    height = 800 - margin.top - margin.bottom;
 
   function getNodeColor(node) {
     return node.level === 1 ? 'red' : 'gray';
   }
 
-  var svg = d3.select('svg');
-
-  svg
+  var svg = d3
+    .select('#tree-img')
+    .append('svg')
     .attr('width', width)
     .attr('height', height)
     .attr('id', 'graph-svg')
@@ -96,7 +97,7 @@ function createGraph() {
       return link.id;
     })
     .strength(function (link) {
-      return link.strength;
+      return link.strength / 0.9;
     });
 
   var simulation = d3

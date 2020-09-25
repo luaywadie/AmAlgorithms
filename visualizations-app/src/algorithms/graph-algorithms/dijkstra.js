@@ -2,138 +2,6 @@
 import '../../styles/dijkstra.css';
 const { Heap: PriorityQueue } = require('../../data-structures/Heap.js');
 // [cost, node]
-let adjList = {
-  a: [
-    [3, 'g'],
-    [5, 'i'],
-    [7, 'c'],
-    [6, 'f'],
-    [10, 'b'],
-    [8, 'd'],
-  ],
-  b: [
-    [10, 'a'],
-    [8, 'f'],
-    [11, 'e'],
-    [4, 's'],
-    [8, 'j'],
-    [8, 'l'],
-    [9, 'b'],
-  ],
-  c: [
-    [5, 'k'],
-    [2, 'h'],
-    [9, 'e'],
-    [7, 'f'],
-    [7, 'a'],
-  ],
-  d: [
-    [5, 'q'],
-    [10, 'i'],
-    [8, 'a'],
-    [9, 'b'],
-    [9, 'l'],
-    [6, 't'],
-  ],
-  e: [
-    [6, 'm'],
-    [10, 'j'],
-    [9, 's'],
-    [11, 'b'],
-    [6, 'f'],
-    [9, 'c'],
-    [10, 'k'],
-  ],
-  f: [
-    [6, 'a'],
-    [7, 'c'],
-    [6, 'e'],
-    [8, 'b'],
-  ],
-  g: [
-    [3, 'h'],
-    [10, 'k'],
-    [4, 'i'],
-    [3, 'a'],
-  ],
-  h: [
-    [2, 'c'],
-    [3, 'g'],
-  ],
-  i: [
-    [8, 'q'],
-    [10, 'd'],
-    [5, 'a'],
-    [4, 'g'],
-    [14, 'k'],
-    [7, 'n'],
-  ],
-  j: [
-    [6, 'o'],
-    [10, 'l'],
-    [8, 'b'],
-    [3, 's'],
-    [10, 'e'],
-    [11, 'm'],
-    [15, 'target'],
-  ],
-  k: [
-    [6, 'n'],
-    [14, 'i'],
-    [10, 'g'],
-    [5, 'c'],
-    [10, 'e'],
-    [8, 'm'],
-    [6, 'p'],
-  ],
-  l: [
-    [4, 't'],
-    [9, 'd'],
-    [8, 'b'],
-    [10, 'j'],
-    [5, 'o'],
-  ],
-  m: [
-    [8, 'k'],
-    [6, 'e'],
-    [11, 'j'],
-    [6, 'target'],
-    [7, 'p'],
-  ],
-  n: [
-    [6, 'k'],
-    [7, 'i'],
-  ],
-  o: [
-    [5, 'l'],
-    [6, 'j'],
-  ],
-  p: [
-    [6, 'k'],
-    [7, 'm'],
-    [9, 'target'],
-  ],
-  q: [
-    [3, 'source'],
-    [8, 'i'],
-    [5, 'd'],
-  ],
-  s: [
-    [9, 'e'],
-    [4, 'b'],
-    [3, 'j'],
-  ],
-  t: [
-    [6, 'd'],
-    [4, 'l'],
-  ],
-  source: [[3, 'q']],
-  target: [
-    [9, 'p'],
-    [6, 'm'],
-    [15, 'j'],
-  ],
-};
 
 async function djikstra(g, root, target, getPauseStatus, getStopStatus) {
   let pq = new PriorityQueue();
@@ -157,7 +25,7 @@ async function djikstra(g, root, target, getPauseStatus, getStopStatus) {
     console.log(currentNode);
 
     let currentNodeElement = activateCurrentNode(currentNode);
-    await new Promise((r) => setTimeout(r, 1000));
+    await new Promise((r) => setTimeout(r, 500));
     await checkPauseStatus(getPauseStatus);
     if (getStopStatus()) {
       cleanUpActiveLinksAndCurrentNode(activeLinks, currentNode);
@@ -174,7 +42,7 @@ async function djikstra(g, root, target, getPauseStatus, getStopStatus) {
     for (let [neighborNodeWeight, neighborNode] of g[currentNode]) {
       let linkOfInterestElement = activateLink(currentNode, neighborNode);
       activeLinks.push(linkOfInterestElement);
-      await new Promise((r) => setTimeout(r, 1000));
+      await new Promise((r) => setTimeout(r, 900));
 
       await checkPauseStatus(getPauseStatus);
       if (getStopStatus()) {

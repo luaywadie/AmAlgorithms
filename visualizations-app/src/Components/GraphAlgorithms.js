@@ -3,6 +3,7 @@ import createGraph from '../graph-builder/graph-builder';
 import dijkstra from '../algorithms/graph-algorithms/dijkstra';
 class GraphAlgorithms extends Component {
   adjList;
+  outputEl;
   constructor(props) {
     super(props);
     this.state = {
@@ -26,7 +27,7 @@ class GraphAlgorithms extends Component {
         [4, 's'],
         [8, 'j'],
         [8, 'l'],
-        [9, 'b'],
+        [9, 'd'],
       ],
       c: [
         [5, 'k'],
@@ -42,6 +43,7 @@ class GraphAlgorithms extends Component {
         [9, 'b'],
         [9, 'l'],
         [6, 't'],
+        [4, 'target'],
       ],
       e: [
         [6, 'm'],
@@ -83,7 +85,7 @@ class GraphAlgorithms extends Component {
         [3, 's'],
         [10, 'e'],
         [11, 'm'],
-        [15, 'target'],
+        [15, 'source'],
       ],
       k: [
         [6, 'n'],
@@ -105,7 +107,7 @@ class GraphAlgorithms extends Component {
         [8, 'k'],
         [6, 'e'],
         [11, 'j'],
-        [6, 'target'],
+        [6, 'source'],
         [7, 'p'],
       ],
       n: [
@@ -119,10 +121,10 @@ class GraphAlgorithms extends Component {
       p: [
         [6, 'k'],
         [7, 'm'],
-        [9, 'target'],
+        [9, 'source'],
       ],
       q: [
-        [3, 'source'],
+        [3, 'target'],
         [8, 'i'],
         [5, 'd'],
       ],
@@ -135,16 +137,33 @@ class GraphAlgorithms extends Component {
         [6, 'd'],
         [4, 'l'],
       ],
-      source: [[3, 'q']],
       target: [
+        [3, 'q'],
+        [4, 'd'],
+      ],
+      source: [
         [9, 'p'],
         [6, 'm'],
         [15, 'j'],
       ],
     };
+    this.graph = document.getElementById('tree-img');
   }
   componentDidMount() {
+    this.outputEl = document.getElementById('output');
+    // if (!this.outputEl.hasChildNodes()) {
+    //   let heading = document.createTextNode('Output');
+    //   this.outputEl.appendChild(heading);
+    // resetOutput(this.outputEl);
+    // }
     createGraph();
+  }
+
+  componentWillUnmount() {
+    let svg = document.getElementById('graph-svg');
+    if (this.graph.hasChildNodes()) this.graph.removeChild(svg);
+    let outputElement = document.getElementById('output');
+    outputElement.innerHTML = '';
   }
   getPauseStatus = () => this.state.pause;
   getStopStatus = () => this.state.stop;
@@ -153,10 +172,6 @@ class GraphAlgorithms extends Component {
     Object.keys(this.adjList).forEach((e) => {
       let nodeElement = document.getElementById(e);
       nodeElement.classList.remove('node-visited');
-      // let linkElement = document.getElementById(e + 'link');
-      // if (linkElement) {
-      //   linkElement.classList.remove('link-traversed');
-      // }
     });
     // this.outputEl.removeChild(document.getElementById('nodeHistory'));
     // resetTraversalList(this.outputEl);
@@ -166,6 +181,7 @@ class GraphAlgorithms extends Component {
     return (
       <div>
         <button
+          className="graph-button"
           onClick={() => {
             this.setState({ pause: false, stop: false });
             dijkstra(
@@ -180,6 +196,7 @@ class GraphAlgorithms extends Component {
           Dijkstra!
         </button>
         <button
+          className="graph-button"
           onClick={() => {
             this.setState({ pause: false, stop: true });
             this.reset();
@@ -188,6 +205,7 @@ class GraphAlgorithms extends Component {
           Reset
         </button>
         <button
+          className="graph-button"
           onClick={() => {
             this.setState({ pause: !this.state.pause });
           }}
@@ -200,3 +218,13 @@ class GraphAlgorithms extends Component {
 }
 
 export default GraphAlgorithms;
+
+function resetOutput(outputEl) {
+  outputEl.style.fontSize = '30px';
+  outputEl
+    .appendChild(document.createElement('UL'))
+    .setAttribute('id', 'nodeHistory');
+  let ul = document.getElementById('nodeHistory');
+  ul.style.listStyleType = 'none';
+  ul.style.fontSize = '20px';
+}
