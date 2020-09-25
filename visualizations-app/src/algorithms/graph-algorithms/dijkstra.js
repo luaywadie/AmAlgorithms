@@ -9,7 +9,9 @@ async function djikstra(
   target,
   getPauseStatus,
   getStopStatus,
-  updateDistancesAndParents
+  updateDistancesAndParents,
+  getShortestPathPath,
+  getSpeedRequest
 ) {
   let pq = new PriorityQueue();
 
@@ -27,17 +29,16 @@ async function djikstra(
   while (pq.size > 0) {
     updateDistancesAndParents(distances, parents);
     let currentNode = pq.removeRoot()[1];
-    console.log(currentNode);
 
     let currentNodeElement = activateCurrentNode(currentNode);
-    await new Promise((r) => setTimeout(r, 500));
+    await new Promise((r) => setTimeout(r, 500 / getSpeedRequest()));
     await checkPauseStatus(getPauseStatus);
     if (getStopStatus()) {
       cleanUpActiveLinksAndCurrentNode(activeLinks, currentNode);
       return;
     }
     activeLinks = removeActiveLinks(activeLinks);
-    await new Promise((r) => setTimeout(r, 300));
+    await new Promise((r) => setTimeout(r, 300 / getSpeedRequest()));
     await checkPauseStatus(getPauseStatus);
     if (getStopStatus()) {
       cleanUpActiveLinksAndCurrentNode(activeLinks, currentNode);
@@ -47,7 +48,7 @@ async function djikstra(
     for (let [neighborNodeWeight, neighborNode] of g[currentNode]) {
       let linkOfInterestElement = activateLink(currentNode, neighborNode);
       activeLinks.push(linkOfInterestElement);
-      await new Promise((r) => setTimeout(r, 900));
+      await new Promise((r) => setTimeout(r, 900 / getSpeedRequest()));
 
       await checkPauseStatus(getPauseStatus);
       if (getStopStatus()) {
@@ -66,8 +67,6 @@ async function djikstra(
     fadeOutLinks(activeLinks);
     updateCurrentNodeToBeVisited(currentNodeElement);
   }
-  console.log(distances);
-  console.log(parents);
 
   let end = target;
   let stack = [end];
@@ -75,10 +74,7 @@ async function djikstra(
     stack.push(parents[end]);
     end = parents[end];
   }
-  let its = stack.length;
-  for (let i = 0; i < its; i++) {
-    console.log(stack.pop());
-  }
+  getShortestPathPath(stack.reverse().slice(1), distances['target']);
 }
 
 export default djikstra;
@@ -90,9 +86,11 @@ function activateCurrentNode(currentNode) {
 }
 
 function removeActiveLinks(activeLinks) {
-  activeLinks.forEach((e) =>
-    e.classList.remove('fade-out-link', 'link-of-interest')
-  );
+  activeLinks.forEach((e) => {
+    if (e) {
+      e.classList.remove('fade-out-link', 'link-of-interest');
+    }
+  });
   return [];
 }
 
@@ -103,7 +101,8 @@ function activateLink(currentNode, neighborNode) {
       : neighborNode + '-' + currentNode;
 
   let linkOfInterestElement = document.getElementById(linkString);
-  linkOfInterestElement.classList.add('link-of-interest');
+  if (linkOfInterestElement)
+    linkOfInterestElement.classList.add('link-of-interest');
   return linkOfInterestElement;
 }
 
@@ -113,7 +112,11 @@ function updateCurrentNodeToBeVisited(currentNodeElement) {
 }
 
 function fadeOutLinks(activeLinks) {
-  activeLinks.forEach((e) => e.classList.add('fade-out-link'));
+  activeLinks.forEach((e) => {
+    if (e) {
+      e.classList.add('fade-out-link');
+    }
+  });
 }
 
 async function checkPauseStatus(getPauseStatus) {

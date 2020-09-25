@@ -1,6 +1,12 @@
 import '../../styles/tree-styles.css';
 
-async function bfs(g, getPauseStatus, getStopStatus, buildNodePath) {
+async function bfs(
+  g,
+  getPauseStatus,
+  getStopStatus,
+  buildNodePath,
+  getSpeedRequest
+) {
   let linkList = [];
   let root = 'a';
   let visited = {};
@@ -11,13 +17,13 @@ async function bfs(g, getPauseStatus, getStopStatus, buildNodePath) {
     let currentNode = queue[0];
     queue.shift();
 
-    await new Promise((r) => setTimeout(r, 1000));
+    await new Promise((r) => setTimeout(r, 1000 / getSpeedRequest()));
     await checkPauseStatus(getPauseStatus);
     if (getStopStatus()) return;
 
     activateLink(currentNode, linkList);
 
-    await new Promise((r) => setTimeout(r, 700));
+    await new Promise((r) => setTimeout(r, 700 / getSpeedRequest()));
     await checkPauseStatus(getPauseStatus);
     if (getStopStatus()) return;
 
@@ -46,7 +52,7 @@ function activateLink(currentNode, linkList) {
 
 function activateVisitedNode(currentNode) {
   let nodeElement = document.getElementById(currentNode);
-  nodeElement.classList.add('visited-node-bfs');
+  if (nodeElement) nodeElement.classList.add('visited-node-bfs');
 }
 async function checkPauseStatus(getPauseStatus) {
   while (getPauseStatus()) {

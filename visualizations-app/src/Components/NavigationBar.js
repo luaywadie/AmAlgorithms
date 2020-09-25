@@ -13,6 +13,7 @@ import TreeTraversals from '../Components/TreeTraversals';
 import GraphAlgorithms from '../Components/GraphAlgorithms';
 
 import '../styles/navigation-bar.css';
+import MainPage from './MainPage';
 
 const NavigationBar = () => {
   return (
@@ -42,6 +43,7 @@ const NavigationBar = () => {
       </Container>
       <Route path="/tree_traversals" component={TreeTraversals} />
       <Route path="/graph_algorithms" component={GraphAlgorithms} />
+      <Route exact path="/" component={MainPage} />
     </Router>
   );
 };

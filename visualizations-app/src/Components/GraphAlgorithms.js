@@ -9,6 +9,7 @@ class GraphAlgorithms extends Component {
     this.state = {
       pause: false,
       stop: false,
+      speed: 1,
       distances: {},
       parents: {},
     };
@@ -153,10 +154,7 @@ class GraphAlgorithms extends Component {
     this.outputEl.style.fontSize = '20px';
   }
   componentDidMount() {
-    // this.outputEl = document.getElementById('output');
     if (!this.outputEl.hasChildNodes()) {
-      // let heading = document.createTextNode('Output');
-      // this.outputEl.appendChild(heading);
       resetOutput(this.outputEl);
     }
     createGraph();
@@ -165,13 +163,13 @@ class GraphAlgorithms extends Component {
   componentWillUnmount() {
     let svg = document.getElementById('graph-svg');
     if (this.graph.hasChildNodes()) this.graph.removeChild(svg);
-    let outputElement = document.getElementById('output');
-    outputElement.innerHTML = '';
+    document.getElementById('output').innerHTML = '';
+    document.getElementById('shortest-path').innerHTML = '';
+    this.reset();
   }
 
   updateDistancesAndParents = async (distance, parent) => {
     await this.setState({ distances: distance, parents: parent });
-    // let parentsHeading = document.getElementById('parents');
     if (!document.getElementById('distances')) {
       createTable(this.state.distances, this.state.parents, this.outputEl);
     } else {
@@ -180,14 +178,28 @@ class GraphAlgorithms extends Component {
   };
   getPauseStatus = () => this.state.pause;
   getStopStatus = () => this.state.stop;
+  getSpeedRequest = () => this.state.speed;
+
+  getShortestPath = (path, dist) => {
+    let pathStr = '  Shortest Path: ';
+    path.forEach((node) => {
+      pathStr += node + ' -> ';
+    });
+    pathStr = pathStr.slice(0, -3);
+    document
+      .getElementById('shortest-path')
+      .appendChild(document.createTextNode(pathStr + '; Cost: ' + dist));
+  };
 
   reset = () => {
     Object.keys(this.adjList).forEach((e) => {
-      let nodeElement = document.getElementById(e);
-      nodeElement.classList.remove('node-visited');
+      let el = document.getElementById(e);
+      if (el) {
+        el.classList.remove('node-visited');
+      }
     });
-    let outputElement = document.getElementById('output');
-    outputElement.innerHTML = '';
+    document.getElementById('output').innerHTML = '';
+    document.getElementById('shortest-path').innerHTML = '';
   };
 
   render() {
@@ -197,13 +209,16 @@ class GraphAlgorithms extends Component {
           className="graph-button"
           onClick={() => {
             this.setState({ pause: false, stop: false });
+            this.reset();
             dijkstra(
               this.adjList,
               'source',
               'target',
               this.getPauseStatus,
               this.getStopStatus,
-              this.updateDistancesAndParents
+              this.updateDistancesAndParents,
+              this.getShortestPath,
+              this.getSpeedRequest
             );
           }}
         >
@@ -226,6 +241,24 @@ class GraphAlgorithms extends Component {
         >
           {this.state.pause ? 'UnPause' : 'Pause'}
         </button>
+        <span id="shortest-path"></span>
+
+        <form onSubmit={(event) => event.preventDefault()}>
+          <label>
+            Speed:
+            <input
+              style={{ width: '50px' }}
+              type="number"
+              value={this.state.speed}
+              onChange={(event) => {
+                event.preventDefault();
+                this.setState({
+                  speed: event.target.value,
+                });
+              }}
+            />
+          </label>
+        </form>
       </div>
     );
   }
@@ -263,7 +296,7 @@ function createTable(distances, parents, outputEl) {
     let distanceTd = document.createElement('td');
     distanceTd.appendChild(document.createTextNode(distances[key]));
     let parentTd = document.createElement('td');
-    parentTd.appendChild(document.createTextNode(parents[key]));
+    parentTd.appendChild(document.createTextNode(''));
     tr.appendChild(distanceTd);
     tr.appendChild(parentTd);
     tBody.appendChild(tr);

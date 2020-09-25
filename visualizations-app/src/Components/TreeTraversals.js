@@ -13,6 +13,7 @@ class TreeTraversals extends Component {
     this.state = {
       pause: false,
       stop: false,
+      speed: 1,
       nodePath: [],
     };
     this.adjList = {
@@ -65,6 +66,7 @@ class TreeTraversals extends Component {
 
   getPauseStatus = () => this.state.pause;
   getStopStatus = () => this.state.stop;
+  getSpeedRequest = () => this.state.speed;
 
   buildNodePath = (node) => {
     this.setState({ nodePath: (oldA) => [...oldA, node] });
@@ -95,7 +97,8 @@ class TreeTraversals extends Component {
                 this.adjList,
                 this.getPauseStatus,
                 this.getStopStatus,
-                this.buildNodePath
+                this.buildNodePath,
+                this.getSpeedRequest
               );
             }}
           >
@@ -108,7 +111,8 @@ class TreeTraversals extends Component {
                 this.adjList,
                 this.getPauseStatus,
                 this.getStopStatus,
-                this.buildNodePath
+                this.buildNodePath,
+                this.getSpeedRequest
               );
             }}
           >
@@ -130,6 +134,21 @@ class TreeTraversals extends Component {
             {this.state.pause ? 'UnPause' : 'Pause'}
           </button>
         </div>
+        <form onSubmit={(event) => event.preventDefault()}>
+          <label>
+            Speed:
+            <input
+              style={{ width: '50px' }}
+              type="number"
+              value={this.state.speed}
+              onChange={(event) =>
+                this.setState({
+                  speed: event.target.value,
+                })
+              }
+            />
+          </label>
+        </form>
       </div>
     );
   }
@@ -149,6 +168,7 @@ function createListItem(node) {
   let li = document.createElement('LI');
   li.style.textAlign = 'center';
   li.appendChild(document.createTextNode(node));
-  document.getElementById('nodeHistory').appendChild(li);
+  let nodeHistory = document.getElementById('nodeHistory');
+  if (nodeHistory) nodeHistory.appendChild(li);
 }
 export default TreeTraversals;
