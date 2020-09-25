@@ -28,60 +28,52 @@ function createGraph() {
   let strength = 0.001;
   let links = [
     { target: 'a', source: 'b', strength: strength, cost: 10 },
-    { target: 'a', source: 'c', strength: strength, cost: 10 },
-    { target: 'a', source: 'd', strength: 20 * strength, cost: 10 },
-    { target: 'b', source: 'd', strength: 20 * strength, cost: 10 },
-    { target: 'b', source: 'e', strength: strength, cost: 10 },
-    { target: 'e', source: 'c', strength: strength, cost: 10 },
-    { target: 'f', source: 'c', strength: 0.05, cost: 10 },
-    { target: 'f', source: 'b', strength: 0.05, cost: 10 },
-    { target: 'f', source: 'a', strength: 0.05, cost: 10 },
-    { target: 'f', source: 'e', strength: 0.05, cost: 10 },
-    { target: 'a', source: 'g', strength: 0.26, cost: 10 },
-    { target: 'h', source: 'g', strength: 0.26, cost: 10 },
-    { target: 'a', source: 'g', strength: 0.026, cost: 10 },
-    { target: 'c', source: 'h', strength: 0.6, cost: 10 },
-    { target: 'i', source: 'g', strength: 0.026, cost: 10 },
-    { target: 'a', source: 'i', strength: strength, cost: 10 },
+    { target: 'a', source: 'c', strength: strength, cost: 7 },
+    { target: 'a', source: 'd', strength: 20 * strength, cost: 8 },
+    { target: 'b', source: 'd', strength: 20 * strength, cost: 9 },
+    { target: 'b', source: 'e', strength: strength, cost: 11 },
+    { target: 'e', source: 'c', strength: strength, cost: 9 },
+    { target: 'f', source: 'c', strength: 0.05, cost: 7 },
+    { target: 'f', source: 'b', strength: 0.05, cost: 8 },
+    { target: 'f', source: 'a', strength: 0.05, cost: 6 },
+    { target: 'f', source: 'e', strength: 0.05, cost: 6 },
+    { target: 'a', source: 'g', strength: 0.26, cost: 3 },
+    { target: 'h', source: 'g', strength: 0.26, cost: 3 },
+    { target: 'c', source: 'h', strength: 0.6, cost: 2 },
+    { target: 'i', source: 'g', strength: 0.026, cost: 4 },
+    { target: 'a', source: 'i', strength: strength, cost: 5 },
     { target: 'd', source: 'i', strength: 20 * strength, cost: 10 },
-    { target: 'j', source: 'b', strength: strength, cost: 10 },
+    { target: 'j', source: 'b', strength: strength, cost: 8 },
     { target: 'j', source: 'e', strength: strength, cost: 10 },
-    { target: 'i', source: 'k', strength: 15 * strength, cost: 10 },
-    { target: 'c', source: 'k', strength: 15 * strength, cost: 10 },
+    { target: 'i', source: 'k', strength: 15 * strength, cost: 14 },
+    { target: 'c', source: 'k', strength: 15 * strength, cost: 5 },
     { target: 'e', source: 'k', strength: 15 * strength, cost: 10 },
     { target: 'g', source: 'k', strength: 15 * strength, cost: 10 },
     { target: 'l', source: 'j', strength: 20 * strength, cost: 10 },
-    { target: 'l', source: 'd', strength: 20 * strength, cost: 10 },
-    { target: 'l', source: 'b', strength: 20 * strength, cost: 10 },
-
-    { target: 'm', source: 'e', strength: 20 * strength, cost: 10 },
-    { target: 'm', source: 'k', strength: 20 * strength, cost: 10 },
-    { target: 'm', source: 'j', strength: 20 * strength, cost: 10 },
-    { target: 'n', source: 'i', strength: 40 * strength, cost: 10 },
-    { target: 'n', source: 'k', strength: 40 * strength, cost: 10 },
-
-    { target: 'o', source: 'l', strength: 40 * strength, cost: 10 },
-    { target: 'o', source: 'j', strength: 40 * strength, cost: 10 },
-
-    { target: 'p', source: 'm', strength: 40 * strength, cost: 10 },
-    { target: 'p', source: 'k', strength: 40 * strength, cost: 10 },
-
-    { target: 'q', source: 'd', strength: 40 * strength, cost: 10 },
-    { target: 'q', source: 'i', strength: 40 * strength, cost: 10 },
-
-    { target: 's', source: 'b', strength: 100 * strength, cost: 10 },
-    { target: 's', source: 'e', strength: 40 * strength, cost: 10 },
-    { target: 's', source: 'j', strength: 40 * strength, cost: 10 },
-
-    { target: 'source', source: 'q', strength: 100 * strength, cost: 10 },
-    { target: 'target', source: 'm', strength: strength, cost: 10 },
-    { target: 'target', source: 'j', strength: 20 * strength, cost: 10 },
-
-    // { target: 'o', source: 'd', strength: 20 * strength, cost: 10 },
-    // { target: 'o', source: 'b', strength: 20 * strength, cost: 10 },
-    // { target: 'h', source: 'j', strength: strength, cost: 10 },
+    { target: 'l', source: 'd', strength: 20 * strength, cost: 9 },
+    { target: 'l', source: 'b', strength: 20 * strength, cost: 8 },
+    { target: 'm', source: 'e', strength: 20 * strength, cost: 6 },
+    { target: 'm', source: 'k', strength: 20 * strength, cost: 8 },
+    { target: 'm', source: 'j', strength: 20 * strength, cost: 11 },
+    { target: 'n', source: 'i', strength: 40 * strength, cost: 7 },
+    { target: 'n', source: 'k', strength: 50 * strength, cost: 6 },
+    { target: 'o', source: 'l', strength: 40 * strength, cost: 5 },
+    { target: 'o', source: 'j', strength: 40 * strength, cost: 6 },
+    { target: 'p', source: 'm', strength: 40 * strength, cost: 7 },
+    { target: 'p', source: 'k', strength: 40 * strength, cost: 6 },
+    { target: 'q', source: 'd', strength: 80 * strength, cost: 5 },
+    { target: 'q', source: 'i', strength: 40 * strength, cost: 8 },
+    { target: 's', source: 'b', strength: 100 * strength, cost: 4 },
+    { target: 's', source: 'e', strength: 40 * strength, cost: 9 },
+    { target: 's', source: 'j', strength: 40 * strength, cost: 3 },
+    { target: 'source', source: 'q', strength: 100 * strength, cost: 3 },
+    { target: 'target', source: 'm', strength: strength, cost: 6 },
+    { target: 'target', source: 'j', strength: 20 * strength, cost: 15 },
+    { target: 'target', source: 'p', strength: 20 * strength, cost: 9 },
+    { target: 't', source: 'd', strength: 100 * strength, cost: 6 },
+    { target: 't', source: 'l', strength: 100 * strength, cost: 4 },
   ];
-  const margin = { top: 20, right: 90, bottom: 30, left: -50 },
+  const margin = { top: -100, right: 90, bottom: 30, left: -10 },
     width = 900 - margin.left - margin.right,
     height = 900 - margin.top - margin.bottom;
 
@@ -89,12 +81,13 @@ function createGraph() {
     return node.level === 1 ? 'red' : 'gray';
   }
 
-  // var width = window.innerWidth
-  // var height = window.innerHeight
-
   var svg = d3.select('svg');
 
-  svg.attr('width', width).attr('height', height);
+  svg
+    .attr('width', width)
+    .attr('height', height)
+    .attr('id', 'graph-svg')
+    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
   // simulation setup with all forces
   var linkForce = d3
@@ -120,7 +113,13 @@ function createGraph() {
     .enter()
     .append('line')
     .attr('stroke-width', 1)
-    .attr('stroke', 'rgba(50, 50, 50, 0.2)');
+    .attr('stroke', 'rgba(50, 50, 50, 0.2)')
+    .attr('id', (d) => {
+      if (d.source < d.target) {
+        return d.source + '-' + d.target;
+      }
+      return d.target + '-' + d.source;
+    });
 
   var linkTextElements = svg
     .append('g')
@@ -144,7 +143,8 @@ function createGraph() {
     .enter()
     .append('circle')
     .attr('r', 10)
-    .attr('fill', getNodeColor);
+    .attr('fill', getNodeColor)
+    .attr('id', (d) => d.id);
 
   var nodeTextElements = svg
     .append('g')
