@@ -1,6 +1,14 @@
 import '../../styles/prim.css';
 
-async function prim(g, root, getSpeedRequest, updatePrimDistancesAndParents) {
+async function prim(
+  g,
+  root,
+  getSpeedRequest,
+  updatePrimDistancesAndParents,
+  calculateCumulativeDistance,
+  getPauseStatus,
+  getStopStatus
+) {
   let costMap = {};
   let parents = {};
   let mstSet = {};
@@ -12,23 +20,42 @@ async function prim(g, root, getSpeedRequest, updatePrimDistancesAndParents) {
   parents[root] = -1;
   costMap[root] = 0;
 
+  let activeLinks = [];
   for (let i = 0; i < Object.keys(g).length; i++) {
     updatePrimDistancesAndParents(costMap, parents);
     let minNode = findMin(costMap, mstSet);
     mstSet[minNode] = true;
 
     await new Promise((r) => setTimeout(r, 1000 / getSpeedRequest()));
+    await checkPauseStatus(getPauseStatus);
+    if (getStopStatus()) {
+      cleanUpActiveLinksAndCurrentNode(activeLinks, minNode);
+      return;
+    }
     let minNodeEl = activateCurrentNode(minNode);
     await new Promise((r) => setTimeout(r, 500 / getSpeedRequest()));
+    await checkPauseStatus(getPauseStatus);
+    if (getStopStatus()) {
+      cleanUpActiveLinksAndCurrentNode(activeLinks, minNode);
+      return;
+    }
 
     for (let node of Object.keys(costMap)) {
       for (let [cost, neighbor] of g[minNode]) {
         if (neighbor == node) {
           if (mstSet[node] == false) {
             if (costMap[node] > cost) {
-              deActivateOldLink(node, parents[node], getSpeedRequest);
-              activateLink(minNode, node);
+              let el = deActivateOldLink(node, parents[node], getSpeedRequest);
+              if (el) activeLinks.filter((e) => e != el);
+
+              activateLink(minNode, node, activeLinks);
+
               await new Promise((r) => setTimeout(r, 1000 / getSpeedRequest()));
+              await checkPauseStatus(getPauseStatus);
+              if (getStopStatus()) {
+                cleanUpActiveLinksAndCurrentNode(activeLinks, minNode);
+                return;
+              }
               costMap[node] = cost;
               parents[node] = minNode;
             }
@@ -40,6 +67,7 @@ async function prim(g, root, getSpeedRequest, updatePrimDistancesAndParents) {
     updateCurrentNodeToBeVisited(minNodeEl);
   }
   console.log([costMap, parents]);
+  calculateCumulativeDistance(costMap, parents, activeLinks);
 }
 
 function findMin(key, mstSet) {
@@ -62,15 +90,17 @@ function activateCurrentNode(currentNode) {
   return currentNodeElement;
 }
 
-function activateLink(currentNode, neighborNode) {
+function activateLink(currentNode, neighborNode, activeLinks) {
   let linkString =
     currentNode < neighborNode
       ? currentNode + '-' + neighborNode
       : neighborNode + '-' + currentNode;
 
   let linkOfInterestElement = document.getElementById(linkString);
-  if (linkOfInterestElement)
+  if (linkOfInterestElement) {
     linkOfInterestElement.classList.add('link-of-interest');
+    activeLinks.push(linkOfInterestElement);
+  }
   return linkOfInterestElement;
 }
 
@@ -79,13 +109,40 @@ function updateCurrentNodeToBeVisited(currentNodeElement) {
   currentNodeElement.classList.add('node-visited');
 }
 
-async function deActivateOldLink(node, oldChild, getSpeedRequest) {
+async function deActivateOldLink(node, oldChild, getSpeedRequest, activeLinks) {
   let linkString =
     node < oldChild ? node + '-' + oldChild : oldChild + '-' + node;
   let el = document.getElementById(linkString);
   if (el) {
     el.classList.add('fade-out-link');
     await new Promise((r) => setTimeout(r, 1000 / getSpeedRequest()));
-    el.classList.remove('link-of-interest');
+    el.classList.remove('link-of-interest', 'fade-out-link');
+    return el;
   }
+}
+
+async function checkPauseStatus(getPauseStatus) {
+  while (getPauseStatus()) {
+    await new Promise((r) => setTimeout(r, 1000));
+    continue;
+  }
+}
+
+function cleanUpActiveLinksAndCurrentNode(activeLinks, currentNode) {
+  let currentNodeElement = document.getElementById(currentNode);
+  if (currentNodeElement) {
+    currentNodeElement.classList.remove('current-node-of-interest');
+  }
+  if (activeLinks.length > 0) {
+    removeActiveLinks(activeLinks);
+  }
+}
+
+function removeActiveLinks(activeLinks) {
+  activeLinks.forEach((e) => {
+    if (e) {
+      e.classList.remove('fade-out-link', 'link-of-interest');
+    }
+  });
+  return [];
 }

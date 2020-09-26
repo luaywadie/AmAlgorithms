@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import createGraph from '../graph-builder/graph-builder';
 import dijkstra from '../algorithms/graph-algorithms/dijkstra';
 import prim from '../algorithms/graph-algorithms/prims_mst';
+let activeLinks;
 class GraphAlgorithms extends Component {
   adjList;
   outputEl;
@@ -181,14 +182,10 @@ class GraphAlgorithms extends Component {
 
   updatePrimDistancesAndParents = async (distance, parent) => {
     await this.setState({ distances: distance, parents: parent });
-    if (!document.getElementById('distance-table')) {
-      createDistanceTable(
-        this.state.distances,
-        this.state.parents,
-        this.outputEl
-      );
+    if (!document.getElementById('prim-table')) {
+      createPrimTable(this.state.distances, this.state.parents, this.outputEl);
     } else {
-      updateDistanceTable(this.state.distances, this.state.parents);
+      updatePrimTable(this.state.distances, this.state.parents);
     }
   };
 
@@ -207,6 +204,21 @@ class GraphAlgorithms extends Component {
       .appendChild(document.createTextNode(pathStr + '; Cost: ' + dist));
   };
 
+  async calculateCumulativeDistance(costMap, parents, aLinks) {
+    activeLinks = aLinks;
+    let cumCostMap = {};
+    for (let node of Object.keys(costMap)) {
+      let currentNode = parents[node];
+      let cost = costMap[node];
+      while (currentNode != -1) {
+        cost += costMap[currentNode];
+        currentNode = parents[currentNode];
+      }
+      cumCostMap[node] = cost;
+    }
+    addCumulativeDistanceToPrimTable(cumCostMap);
+  }
+
   reset = () => {
     Object.keys(this.adjList).forEach((e) => {
       let el = document.getElementById(e);
@@ -216,6 +228,13 @@ class GraphAlgorithms extends Component {
     });
     document.getElementById('output').innerHTML = '';
     document.getElementById('shortest-path').innerHTML = '';
+    if (activeLinks) {
+      activeLinks.forEach((e) => {
+        if (e) {
+          e.classList.remove('link-of-interest');
+        }
+      });
+    }
   };
 
   render() {
@@ -238,7 +257,7 @@ class GraphAlgorithms extends Component {
             );
           }}
         >
-          Dijkstra!
+          Dijkstra
         </button>
 
         <button
@@ -250,11 +269,14 @@ class GraphAlgorithms extends Component {
               this.adjList,
               'source',
               this.getSpeedRequest,
-              this.updatePrimDistancesAndParents
+              this.updatePrimDistancesAndParents,
+              this.calculateCumulativeDistance,
+              this.getPauseStatus,
+              this.getStopStatus
             );
           }}
         >
-          Prim MST!
+          Prim MST
         </button>
         <button
           className="graph-button"
@@ -339,5 +361,63 @@ function updateDistanceTable(distances, parents) {
     let td = row.getElementsByTagName('td');
     td[1].innerHTML = distances[key];
     td[2].innerHTML = parents[key];
+  });
+}
+
+function createPrimTable(distances, parents, outputEl) {
+  let table = document.createElement('table');
+  table.setAttribute('id', 'prim-table');
+  table.setAttribute('class', 'distance-table');
+  outputEl.appendChild(table);
+
+  let tBody = document.createElement('tBody');
+  let nodeTh = document.createElement('th');
+  let parentTh = document.createElement('th');
+  let DistanceTh = document.createElement('th');
+  let totalDistanceTh = document.createElement('th');
+  nodeTh.appendChild(document.createTextNode('Node'));
+  parentTh.appendChild(document.createTextNode('Parent'));
+  DistanceTh.appendChild(document.createTextNode('Distance'));
+  totalDistanceTh.appendChild(document.createTextNode('Cumulative Distance'));
+  let tr = document.createElement('tr');
+  tr.appendChild(nodeTh);
+  tr.appendChild(parentTh);
+  tr.appendChild(DistanceTh);
+  tr.appendChild(totalDistanceTh);
+
+  tBody.appendChild(tr);
+  Object.keys(distances).forEach((key) => {
+    tr = document.createElement('tr');
+    tr.setAttribute('id', key + '-row');
+    let nodeTd = document.createElement('td');
+    nodeTd.appendChild(document.createTextNode(key));
+    let totalDistanceTd = document.createElement('td');
+    totalDistanceTd.appendChild(document.createTextNode(''));
+    let distanceTd = document.createElement('td');
+    distanceTd.appendChild(document.createTextNode(distances[key]));
+    let parentTd = document.createElement('td');
+    parentTd.appendChild(document.createTextNode(''));
+    tr.appendChild(nodeTd);
+    tr.appendChild(parentTd);
+    tr.appendChild(distanceTd);
+    tr.appendChild(totalDistanceTd);
+    tBody.appendChild(tr);
+    table.appendChild(tBody);
+  });
+}
+function updatePrimTable(distances, parents) {
+  Object.keys(distances).forEach((key) => {
+    let row = document.getElementById(key + '-row');
+    let td = row.getElementsByTagName('td');
+    td[1].innerHTML = parents[key];
+    td[2].innerHTML = distances[key];
+  });
+}
+
+function addCumulativeDistanceToPrimTable(cumulativeCostMap) {
+  Object.keys(cumulativeCostMap).forEach((key) => {
+    let row = document.getElementById(key + '-row');
+    let td = row.getElementsByTagName('td');
+    td[3].innerHTML = cumulativeCostMap[key];
   });
 }
