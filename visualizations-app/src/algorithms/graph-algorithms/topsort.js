@@ -1,6 +1,12 @@
 import '../../styles/topsort.css';
 
-async function topSort(g, getPauseStatus, getStopStatus, getSpeedRequest) {
+async function topSort(
+  g,
+  getPauseStatus,
+  getStopStatus,
+  getSpeedRequest,
+  getOrdering
+) {
   let stack = [];
   let visited = {};
   for (let key of Object.keys(g)) {
@@ -11,13 +17,32 @@ async function topSort(g, getPauseStatus, getStopStatus, getSpeedRequest) {
   for (let node of Object.keys(g)) {
     if (visited[node] == 0) {
       await new Promise((r) => setTimeout(r, 1000 / getSpeedRequest()));
+      await checkPauseStatus(getPauseStatus);
+      if (getStopStatus()) {
+        cleanUpActiveLinksAndCurrentNode(activeLinks, g);
+        return;
+      }
       if (
-        (await visit(g, node, stack, visited, getSpeedRequest, activeLinks)) ==
-        false
+        (await visit(
+          g,
+          node,
+          stack,
+          visited,
+          getSpeedRequest,
+          activeLinks,
+          getPauseStatus,
+          getStopStatus,
+          getOrdering
+        )) == false
       ) {
         return null;
       }
       await new Promise((r) => setTimeout(r, 1000 / getSpeedRequest()));
+      await checkPauseStatus(getPauseStatus);
+      if (getStopStatus()) {
+        cleanUpActiveLinksAndCurrentNode(activeLinks, g);
+        return;
+      }
       document
         .getElementById(node)
         .classList.remove('current-node-of-interest');
@@ -27,8 +52,23 @@ async function topSort(g, getPauseStatus, getStopStatus, getSpeedRequest) {
   return stack.reverse();
 }
 // 2 = permenant mark, 1 = temp mark (if we encounter 1 again, we have cycle)
-async function visit(g, node, stack, visited, getSpeedRequest, activeLinks) {
+async function visit(
+  g,
+  node,
+  stack,
+  visited,
+  getSpeedRequest,
+  activeLinks,
+  getPauseStatus,
+  getStopStatus,
+  getOrdering
+) {
   await new Promise((r) => setTimeout(r, 500 / getSpeedRequest()));
+  await checkPauseStatus(getPauseStatus);
+  if (getStopStatus()) {
+    cleanUpActiveLinksAndCurrentNode(activeLinks, g);
+    return;
+  }
 
   if (visited[node] == 2) {
     return true;
@@ -39,14 +79,29 @@ async function visit(g, node, stack, visited, getSpeedRequest, activeLinks) {
   visited[node] = 1;
   for (let neighbor of g[node]) {
     await new Promise((r) => setTimeout(r, 500 / getSpeedRequest()));
+    await checkPauseStatus(getPauseStatus);
+    if (getStopStatus()) {
+      cleanUpActiveLinksAndCurrentNode(activeLinks, g);
+      return;
+    }
 
     let activeLink = activateLink(node, neighbor);
     activeLinks = updateActiveLinks(activeLink, activeLinks, node);
 
     await new Promise((r) => setTimeout(r, 500 / getSpeedRequest()));
+    await checkPauseStatus(getPauseStatus);
+    if (getStopStatus()) {
+      cleanUpActiveLinksAndCurrentNode(activeLinks, g);
+      return;
+    }
     activateNeighbor(neighbor);
 
     await new Promise((r) => setTimeout(r, 1000 / getSpeedRequest()));
+    await checkPauseStatus(getPauseStatus);
+    if (getStopStatus()) {
+      cleanUpActiveLinksAndCurrentNode(activeLinks, g);
+      return;
+    }
     if (
       (await visit(
         g,
@@ -54,21 +109,36 @@ async function visit(g, node, stack, visited, getSpeedRequest, activeLinks) {
         stack,
         visited,
         getSpeedRequest,
-        activeLinks
+        activeLinks,
+        getPauseStatus,
+        getStopStatus,
+        getOrdering
       )) == false
     ) {
       return false;
     }
   }
+
   stack.push(node);
+  getOrdering(stack.slice().reverse());
   visited[node] = 2;
-  
+
   await new Promise((r) => setTimeout(r, 1000 / getSpeedRequest()));
+  await checkPauseStatus(getPauseStatus);
+  if (getStopStatus()) {
+    cleanUpActiveLinksAndCurrentNode(activeLinks, g);
+    return;
+  }
 
   markNodeComplete(node);
   removeOutgoingLinks(activeLinks, node);
 
   await new Promise((r) => setTimeout(r, 500 / getSpeedRequest()));
+  await checkPauseStatus(getPauseStatus);
+  if (getStopStatus()) {
+    cleanUpActiveLinksAndCurrentNode(activeLinks, g);
+    return;
+  }
 
   return true;
 }
@@ -127,4 +197,22 @@ function markNodeComplete(node) {
 
   document.getElementById(node).classList.remove('current-node-of-interest');
   document.getElementById(node).classList.add('node-done');
+}
+
+function cleanUpActiveLinksAndCurrentNode(activeLinks, g) {
+  for (let [key, val] of Object.entries(activeLinks)) {
+    val.forEach((link) => link.classList.remove('ts-link-of-interest'));
+  }
+
+  Object.keys(g).forEach((node) => {
+    let nodeElement = document.getElementById(node);
+    if (nodeElement) nodeElement.classList = '';
+  });
+}
+
+async function checkPauseStatus(getPauseStatus) {
+  while (getPauseStatus()) {
+    await new Promise((r) => setTimeout(r, 1000));
+    continue;
+  }
 }

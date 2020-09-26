@@ -4,14 +4,14 @@ import createDirectedGraph from '../graph-builder/directed-graph-builder';
 
 class DirectedGraphAlgorithms extends Component {
   adjList;
+  outputEl;
   constructor(props) {
     super(props);
     this.state = {
       pause: false,
       stop: false,
       speed: 1,
-      // distances: {},
-      // parents: {},
+      ordering: [],
     };
     this.adjList = {
       a: ['b', 'f'],
@@ -26,6 +26,9 @@ class DirectedGraphAlgorithms extends Component {
       j: ['e'],
     };
     this.graph = document.getElementById('tree-img');
+    this.outputEl = document.getElementById('output');
+    this.outputEl.style.fontSize = '20px';
+    this.outputEl.style.textAlign = 'center';
   }
   componentDidMount() {
     createDirectedGraph();
@@ -34,10 +37,19 @@ class DirectedGraphAlgorithms extends Component {
   componentWillUnmount() {
     let svg = document.getElementById('dir-graph-svg');
     if (this.graph.hasChildNodes()) this.graph.removeChild(svg);
-    // document.getElementById('output').innerHTML = '';
+    document.getElementById('output').innerHTML = '';
     // document.getElementById('shortest-path').innerHTML = '';
-    // this.reset();
+    this.reset();
   }
+  getOrdering = async (stack) => {
+    await this.setState({ ordering: stack });
+    if (this.outputEl.innerHTML == '') {
+      this.outputEl.appendChild(document.createTextNode('Potential Ordering'));
+      this.outputEl.appendChild(document.createElement('br'));
+    }
+    this.outputEl.appendChild(document.createTextNode(this.state.ordering[0]));
+    this.outputEl.appendChild(document.createElement('br'));
+  };
 
   getPauseStatus = () => this.state.pause;
   getStopStatus = () => this.state.stop;
@@ -46,9 +58,7 @@ class DirectedGraphAlgorithms extends Component {
   reset = () => {
     Object.keys(this.adjList).forEach((e) => {
       let el = document.getElementById(e);
-      if (el) {
-        el.classList.remove('node-visited');
-      }
+      if (el) el.classList = '';
     });
     document.getElementById('output').innerHTML = '';
   };
@@ -65,12 +75,48 @@ class DirectedGraphAlgorithms extends Component {
               this.adjList,
               this.getPauseStatus,
               this.getStopStatus,
-              this.getSpeedRequest
+              this.getSpeedRequest,
+              this.getOrdering
             );
           }}
         >
           Topological Sort
         </button>
+
+        <button
+          className="graph-button"
+          onClick={() => {
+            this.setState({ pause: false, stop: true });
+            this.reset();
+          }}
+        >
+          Reset
+        </button>
+        <button
+          className="graph-button"
+          onClick={() => {
+            this.setState({ pause: !this.state.pause });
+          }}
+        >
+          {this.state.pause ? 'UnPause' : 'Pause'}
+        </button>
+
+        <form onSubmit={(event) => event.preventDefault()}>
+          <label>
+            Speed:
+            <input
+              style={{ width: '50px' }}
+              type="number"
+              value={this.state.speed}
+              onChange={(event) => {
+                event.preventDefault();
+                this.setState({
+                  speed: event.target.value,
+                });
+              }}
+            />
+          </label>
+        </form>
       </div>
     );
   }
