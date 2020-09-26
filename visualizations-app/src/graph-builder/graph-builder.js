@@ -65,7 +65,7 @@ function createGraph() {
     { target: 'q', source: 'i', strength: 40 * strength, cost: 8 },
     { target: 's', source: 'b', strength: 100 * strength, cost: 4 },
     { target: 's', source: 'e', strength: 40 * strength, cost: 9 },
-    { target: 's', source: 'j', strength: 40 * strength, cost: 3 },
+    { target: 's', source: 'j', strength: 40 * strength, cost: 5 },
     { target: 'target', source: 'q', strength: 100 * strength, cost: 3 },
     { target: 'target', source: 'd', strength: 100 * strength, cost: 4 },
     { target: 'source', source: 'm', strength: strength, cost: 6 },

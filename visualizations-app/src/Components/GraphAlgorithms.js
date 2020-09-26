@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import createGraph from '../graph-builder/graph-builder';
 import dijkstra from '../algorithms/graph-algorithms/dijkstra';
 import prim from '../algorithms/graph-algorithms/prims_mst';
-let activeLinks;
 class GraphAlgorithms extends Component {
   adjList;
   outputEl;
+  shortestPath = [];
+  mevar = [];
   constructor(props) {
     super(props);
     this.state = {
@@ -86,7 +87,7 @@ class GraphAlgorithms extends Component {
         [6, 'o'],
         [10, 'l'],
         [8, 'b'],
-        [3, 's'],
+        [5, 's'],
         [10, 'e'],
         [11, 'm'],
         [15, 'source'],
@@ -135,7 +136,7 @@ class GraphAlgorithms extends Component {
       s: [
         [9, 'e'],
         [4, 'b'],
-        [3, 'j'],
+        [5, 'j'],
       ],
       t: [
         [6, 'd'],
@@ -191,9 +192,10 @@ class GraphAlgorithms extends Component {
 
   getPauseStatus = () => this.state.pause;
   getStopStatus = () => this.state.stop;
-  getSpeedRequest = () => this.state.speed;
+  getSpeedRequest = () => Number(this.state.speed) + 0.1;
 
   getShortestPath = (path, dist) => {
+    this.shortestPath = path;
     let pathStr = '  Shortest Path: ';
     path.forEach((node) => {
       pathStr += node + ' -> ';
@@ -204,8 +206,8 @@ class GraphAlgorithms extends Component {
       .appendChild(document.createTextNode(pathStr + '; Cost: ' + dist));
   };
 
-  async calculateCumulativeDistance(costMap, parents, aLinks) {
-    activeLinks = aLinks;
+  calculateCumulativeDistance = (costMap, parents, aLinks) => {
+    this.activeLinks = aLinks;
     let cumCostMap = {};
     for (let node of Object.keys(costMap)) {
       let currentNode = parents[node];
@@ -217,7 +219,7 @@ class GraphAlgorithms extends Component {
       cumCostMap[node] = cost;
     }
     addCumulativeDistanceToPrimTable(cumCostMap);
-  }
+  };
 
   reset = () => {
     Object.keys(this.adjList).forEach((e) => {
@@ -228,12 +230,24 @@ class GraphAlgorithms extends Component {
     });
     document.getElementById('output').innerHTML = '';
     document.getElementById('shortest-path').innerHTML = '';
-    if (activeLinks) {
-      activeLinks.forEach((e) => {
+    if (this.activeLinks) {
+      this.activeLinks.forEach((e) => {
         if (e) {
           e.classList.remove('link-of-interest');
         }
       });
+    }
+    if (this.shortestPath.length > 0) {
+      for (let i = 1; i < this.shortestPath.length; i++) {
+        let prev = this.shortestPath[i - 1];
+        let current = this.shortestPath[i];
+        let linkString =
+          current < prev ? current + '-' + prev : prev + '-' + current;
+
+        let linkOfInterestElement = document.getElementById(linkString);
+        if (linkOfInterestElement)
+          linkOfInterestElement.classList.remove('link-of-interest');
+      }
     }
   };
 
@@ -359,8 +373,21 @@ function updateDistanceTable(distances, parents) {
   Object.keys(distances).forEach((key) => {
     let row = document.getElementById(key + '-row');
     let td = row.getElementsByTagName('td');
-    td[1].innerHTML = distances[key];
-    td[2].innerHTML = parents[key];
+    if (td[1].outerText !== String(distances[key])) {
+      td[1].innerHTML = distances[key];
+      td[1].style.backgroundColor = 'yellow';
+    } else {
+      td[1].style.backgroundColor = '';
+
+      td[1].innerHTML = distances[key];
+    }
+    if (parents[key] !== null && td[2].outerText !== String(parents[key])) {
+      td[2].innerHTML = parents[key];
+      td[2].style.backgroundColor = 'orange';
+    } else {
+      td[2].style.backgroundColor = '';
+      td[2].innerHTML = parents[key];
+    }
   });
 }
 

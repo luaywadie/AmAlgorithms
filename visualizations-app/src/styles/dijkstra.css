@@ -13,7 +13,7 @@
 
 .node-visited {
   fill: blue;
-  animation: node-visited 0.5s;
+  animation: node-visited 1s;
 }
 @keyframes node-visited {
   from {

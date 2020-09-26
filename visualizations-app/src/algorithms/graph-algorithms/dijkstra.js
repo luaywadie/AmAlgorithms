@@ -31,14 +31,14 @@ async function djikstra(
     let currentNode = pq.removeRoot()[1];
 
     let currentNodeElement = activateCurrentNode(currentNode);
-    await new Promise((r) => setTimeout(r, 500 / getSpeedRequest()));
+    await new Promise((r) => setTimeout(r, 2000 / getSpeedRequest()));
     await checkPauseStatus(getPauseStatus);
     if (getStopStatus()) {
       cleanUpActiveLinksAndCurrentNode(activeLinks, currentNode);
       return;
     }
     activeLinks = removeActiveLinks(activeLinks);
-    await new Promise((r) => setTimeout(r, 300 / getSpeedRequest()));
+    await new Promise((r) => setTimeout(r, 100 / getSpeedRequest()));
     await checkPauseStatus(getPauseStatus);
     if (getStopStatus()) {
       cleanUpActiveLinksAndCurrentNode(activeLinks, currentNode);
@@ -48,7 +48,7 @@ async function djikstra(
     for (let [neighborNodeWeight, neighborNode] of g[currentNode]) {
       let linkOfInterestElement = activateLink(currentNode, neighborNode);
       activeLinks.push(linkOfInterestElement);
-      await new Promise((r) => setTimeout(r, 900 / getSpeedRequest()));
+      await new Promise((r) => setTimeout(r, 2000 / getSpeedRequest()));
 
       await checkPauseStatus(getPauseStatus);
       if (getStopStatus()) {
@@ -74,7 +74,13 @@ async function djikstra(
     stack.push(parents[end]);
     end = parents[end];
   }
-  getShortestPathPath(stack.reverse().slice(1), distances['target']);
+  let shortestPath = stack.reverse().slice(1);
+  for (let i = 1; i < shortestPath.length; i++) {
+    let prev = shortestPath[i - 1];
+    let current = shortestPath[i];
+    activateLink(prev, current);
+  }
+  getShortestPathPath(shortestPath, distances['target']);
 }
 
 export default djikstra;
