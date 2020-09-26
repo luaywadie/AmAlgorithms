@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import createGraph from '../graph-builder/graph-builder';
 import dijkstra from '../algorithms/graph-algorithms/dijkstra';
+import prim from '../algorithms/graph-algorithms/prims_mst';
 class GraphAlgorithms extends Component {
   adjList;
   outputEl;
@@ -167,12 +168,30 @@ class GraphAlgorithms extends Component {
 
   updateDistancesAndParents = async (distance, parent) => {
     await this.setState({ distances: distance, parents: parent });
-    if (!document.getElementById('distances')) {
-      createTable(this.state.distances, this.state.parents, this.outputEl);
+    if (!document.getElementById('distance-table')) {
+      createDistanceTable(
+        this.state.distances,
+        this.state.parents,
+        this.outputEl
+      );
     } else {
-      updateTable(this.state.distances, this.state.parents);
+      updateDistanceTable(this.state.distances, this.state.parents);
     }
   };
+
+  updatePrimDistancesAndParents = async (distance, parent) => {
+    await this.setState({ distances: distance, parents: parent });
+    if (!document.getElementById('distance-table')) {
+      createDistanceTable(
+        this.state.distances,
+        this.state.parents,
+        this.outputEl
+      );
+    } else {
+      updateDistanceTable(this.state.distances, this.state.parents);
+    }
+  };
+
   getPauseStatus = () => this.state.pause;
   getStopStatus = () => this.state.stop;
   getSpeedRequest = () => this.state.speed;
@@ -221,6 +240,22 @@ class GraphAlgorithms extends Component {
         >
           Dijkstra!
         </button>
+
+        <button
+          className="graph-button"
+          onClick={() => {
+            this.setState({ pause: false, stop: false });
+            this.reset();
+            prim(
+              this.adjList,
+              'source',
+              this.getSpeedRequest,
+              this.updatePrimDistancesAndParents
+            );
+          }}
+        >
+          Prim MST!
+        </button>
         <button
           className="graph-button"
           onClick={() => {
@@ -263,9 +298,9 @@ class GraphAlgorithms extends Component {
 
 export default GraphAlgorithms;
 
-function createTable(distances, parents, outputEl) {
+function createDistanceTable(distances, parents, outputEl) {
   let table = document.createElement('table');
-  table.setAttribute('id', 'distances');
+  table.setAttribute('id', 'distance-table');
   table.setAttribute('class', 'distance-table');
   outputEl.appendChild(table);
 
@@ -298,7 +333,7 @@ function createTable(distances, parents, outputEl) {
     table.appendChild(tBody);
   });
 }
-function updateTable(distances, parents) {
+function updateDistanceTable(distances, parents) {
   Object.keys(distances).forEach((key) => {
     let row = document.getElementById(key + '-row');
     let td = row.getElementsByTagName('td');
