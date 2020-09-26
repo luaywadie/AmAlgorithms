@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import createGraph from '../graph-builder/graph-builder';
 import dijkstra from '../algorithms/graph-algorithms/dijkstra';
 import prim from '../algorithms/graph-algorithms/prims_mst';
+
 class GraphAlgorithms extends Component {
   adjList;
   outputEl;
   shortestPath = [];
-  mevar = [];
+  cumulativeCostMap = {};
   constructor(props) {
     super(props);
     this.state = {
@@ -155,6 +156,7 @@ class GraphAlgorithms extends Component {
     this.graph = document.getElementById('tree-img');
     this.outputEl = document.getElementById('output');
     this.outputEl.style.fontSize = '20px';
+    this.outputEl.style.marginTop = '-50px';
   }
   componentDidMount() {
     createGraph();
@@ -181,12 +183,24 @@ class GraphAlgorithms extends Component {
     }
   };
 
+  clearLastUpdatedCells = () => {
+    updatePrimTable(
+      this.state.distances,
+      this.state.parents,
+      this.cumulativeCostMap
+    );
+  };
+
   updatePrimDistancesAndParents = async (distance, parent) => {
     await this.setState({ distances: distance, parents: parent });
     if (!document.getElementById('prim-table')) {
       createPrimTable(this.state.distances, this.state.parents, this.outputEl);
     } else {
-      updatePrimTable(this.state.distances, this.state.parents);
+      updatePrimTable(
+        this.state.distances,
+        this.state.parents,
+        this.cumulativeCostMap
+      );
     }
   };
 
@@ -210,6 +224,9 @@ class GraphAlgorithms extends Component {
     this.activeLinks = aLinks;
     let cumCostMap = {};
     for (let node of Object.keys(costMap)) {
+      if (parents[node] == null) {
+        continue;
+      }
       let currentNode = parents[node];
       let cost = costMap[node];
       while (currentNode != -1) {
@@ -218,7 +235,7 @@ class GraphAlgorithms extends Component {
       }
       cumCostMap[node] = cost;
     }
-    addCumulativeDistanceToPrimTable(cumCostMap);
+    this.cumulativeCostMap = cumCostMap;
   };
 
   reset = () => {
@@ -286,7 +303,8 @@ class GraphAlgorithms extends Component {
               this.updatePrimDistancesAndParents,
               this.calculateCumulativeDistance,
               this.getPauseStatus,
-              this.getStopStatus
+              this.getStopStatus,
+              this.clearLastUpdatedCells
             );
           }}
         >
@@ -432,19 +450,42 @@ function createPrimTable(distances, parents, outputEl) {
     table.appendChild(tBody);
   });
 }
-function updatePrimTable(distances, parents) {
+function updatePrimTable(distances, parents, cumulativeCostMap) {
   Object.keys(distances).forEach((key) => {
     let row = document.getElementById(key + '-row');
     let td = row.getElementsByTagName('td');
-    td[1].innerHTML = parents[key];
-    td[2].innerHTML = distances[key];
+    if (td[2].outerText !== String(distances[key])) {
+      td[2].innerHTML = distances[key];
+      td[2].style.backgroundColor = 'yellow';
+    } else {
+      td[2].style.backgroundColor = '';
+
+      td[2].innerHTML = distances[key];
+    }
+    if (parents[key] !== null && td[1].outerText !== String(parents[key])) {
+      td[1].innerHTML = parents[key];
+      td[1].style.backgroundColor = 'orange';
+    } else {
+      td[1].style.backgroundColor = '';
+      td[1].innerHTML = parents[key];
+    }
   });
+  addCumulativeDistanceToPrimTable(cumulativeCostMap);
 }
 
 function addCumulativeDistanceToPrimTable(cumulativeCostMap) {
   Object.keys(cumulativeCostMap).forEach((key) => {
     let row = document.getElementById(key + '-row');
     let td = row.getElementsByTagName('td');
-    td[3].innerHTML = cumulativeCostMap[key];
+    if (cumulativeCostMap[key] == 'Infinity') {
+      td[3].innerHTML = '';
+      return;
+    }
+    if (String(cumulativeCostMap[key]) !== td[3].outerText) {
+      td[3].innerHTML = cumulativeCostMap[key];
+      td[3].style.backgroundColor = 'burlywood';
+    } else {
+      td[3].style.backgroundColor = '';
+    }
   });
 }

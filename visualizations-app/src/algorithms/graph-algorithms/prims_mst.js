@@ -7,7 +7,8 @@ async function prim(
   updatePrimDistancesAndParents,
   calculateCumulativeDistance,
   getPauseStatus,
-  getStopStatus
+  getStopStatus,
+  clearLastUpdatedCells
 ) {
   let costMap = {};
   let parents = {};
@@ -22,6 +23,7 @@ async function prim(
 
   let activeLinks = [];
   for (let i = 0; i < Object.keys(g).length; i++) {
+    calculateCumulativeDistance(costMap, parents, activeLinks);
     updatePrimDistancesAndParents(costMap, parents);
     let minNode = findMin(costMap, mstSet);
     mstSet[minNode] = true;
@@ -68,6 +70,7 @@ async function prim(
   }
   console.log([costMap, parents]);
   calculateCumulativeDistance(costMap, parents, activeLinks);
+  clearLastUpdatedCells();
 }
 
 function findMin(key, mstSet) {
