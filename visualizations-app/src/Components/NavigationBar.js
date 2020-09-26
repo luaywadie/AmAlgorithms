@@ -11,6 +11,7 @@ import {
 
 import TreeTraversals from '../Components/TreeTraversals';
 import GraphAlgorithms from '../Components/GraphAlgorithms';
+import DirectedGraphAlgorithms from '../Components/DirectedGraphAlgorithms';
 
 import '../styles/navigation-bar.css';
 import MainPage from './MainPage';
@@ -31,7 +32,10 @@ const NavigationBar = () => {
               Tree Traversals
             </Nav.Link>
             <Nav.Link as={Link} to="/graph_algorithms">
-              Graph Algorithms
+              Undirected Graph Algorithms
+            </Nav.Link>
+            <Nav.Link as={Link} to="/directed_graph_algorithms">
+              Directed Graph Algorithms
             </Nav.Link>
           </Nav>
           <Form inline>
@@ -43,6 +47,10 @@ const NavigationBar = () => {
       </Container>
       <Route path="/tree_traversals" component={TreeTraversals} />
       <Route path="/graph_algorithms" component={GraphAlgorithms} />
+      <Route
+        path="/directed_graph_algorithms"
+        component={DirectedGraphAlgorithms}
+      />
       <Route exact path="/" component={MainPage} />
     </Router>
   );

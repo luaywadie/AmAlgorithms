@@ -35,7 +35,7 @@ async function prim(
       return;
     }
     let minNodeEl = activateCurrentNode(minNode);
-    await new Promise((r) => setTimeout(r, 500 / getSpeedRequest()));
+    await new Promise((r) => setTimeout(r, 1000 / getSpeedRequest()));
     await checkPauseStatus(getPauseStatus);
     if (getStopStatus()) {
       cleanUpActiveLinksAndCurrentNode(activeLinks, minNode);
