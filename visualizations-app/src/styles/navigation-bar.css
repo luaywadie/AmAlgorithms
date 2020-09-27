@@ -1,0 +1,10 @@
+.header-logo {
+  box-shadow: 0 0 10px 10px #6390d6;
+  border-radius: 50px;
+  width: 100px;
+  margin-top: -7;
+}
+
+.nav-link {
+  text-shadow: 0 0 3px #d663c3;
+}

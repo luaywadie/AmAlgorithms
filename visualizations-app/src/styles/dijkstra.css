@@ -1,0 +1,79 @@
+.current-node-of-interest {
+  fill: green;
+  animation: colorin-current-node-of-interest 0.1s;
+}
+@keyframes colorin-current-node-of-interest {
+  from {
+    fill: grey;
+  }
+  to {
+    fill: green;
+  }
+}
+
+.node-visited {
+  fill: blue;
+  animation: node-visited 1s;
+}
+@keyframes node-visited {
+  from {
+    fill: green;
+  }
+  to {
+    fill: blue;
+  }
+}
+
+.link-of-interest {
+  fill: none;
+  stroke: #ff0000;
+  stroke-width: 4px;
+  animation: fadein 1s;
+}
+
+@keyframes fadein {
+  from {
+    stroke: #ccc;
+    stroke-width: 2px;
+  }
+  to {
+    stroke: 'green';
+    stroke-width: 4px;
+  }
+}
+
+.fade-out-link {
+  animation: fadeout 0.5s ease-in;
+  fill: none;
+  stroke: rgba(50, 50, 50, 0.2);
+  stroke-width: 1px;
+}
+@keyframes fadeout {
+  from {
+    stroke: #ff0000;
+    stroke-width: 4px;
+  }
+  to {
+    stroke: rgba(50, 50, 50, 0.2);
+    stroke-width: 1px;
+  }
+}
+#graph-svg {
+  z-index: -1;
+}
+
+.graph-button {
+  z-index: 10;
+}
+
+table {
+  border-collapse: collapse;
+  text-align: center;
+}
+
+td {
+  border: 1px solid black;
+}
+table {
+  margin-bottom: 100px;
+}
