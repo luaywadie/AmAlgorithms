@@ -79,3 +79,17 @@
     stroke: blue;
   }
 }
+
+.updated-value {
+  animation: fadeinoutcell 1s;
+}
+
+@keyframes fadeinoutcell {
+  0%,
+  100% {
+    background-color: '';
+  }
+  70% {
+    background-color: yellow;
+  }
+}

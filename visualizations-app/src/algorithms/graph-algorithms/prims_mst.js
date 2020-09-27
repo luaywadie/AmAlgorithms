@@ -3,11 +3,11 @@ import '../../styles/prim.css';
 async function prim(
   g,
   root,
+  getPauseStatus,
+  getStopStatus,
   getSpeedRequest,
   updatePrimDistancesAndParents,
   calculateCumulativeDistance,
-  getPauseStatus,
-  getStopStatus,
   clearLastUpdatedCells
 ) {
   let costMap = {};
@@ -34,7 +34,9 @@ async function prim(
       cleanUpActiveLinksAndCurrentNode(activeLinks, minNode);
       return;
     }
+
     let minNodeEl = activateCurrentNode(minNode);
+
     await new Promise((r) => setTimeout(r, 1000 / getSpeedRequest()));
     await checkPauseStatus(getPauseStatus);
     if (getStopStatus()) {
@@ -44,11 +46,11 @@ async function prim(
 
     for (let node of Object.keys(costMap)) {
       for (let [cost, neighbor] of g[minNode]) {
-        if (neighbor == node) {
-          if (mstSet[node] == false) {
+        if (neighbor === node) {
+          if (mstSet[node] === false) {
             if (costMap[node] > cost) {
               let el = deActivateOldLink(node, parents[node], getSpeedRequest);
-              if (el) activeLinks.filter((e) => e != el);
+              if (el) activeLinks.filter((e) => e !== el);
 
               activateLink(minNode, node, activeLinks);
 
@@ -58,6 +60,7 @@ async function prim(
                 cleanUpActiveLinksAndCurrentNode(activeLinks, minNode);
                 return;
               }
+
               costMap[node] = cost;
               parents[node] = minNode;
             }
@@ -65,10 +68,8 @@ async function prim(
         }
       }
     }
-
     updateCurrentNodeToBeVisited(minNodeEl);
   }
-  console.log([costMap, parents]);
   calculateCumulativeDistance(costMap, parents, activeLinks);
   clearLastUpdatedCells();
 }
@@ -77,7 +78,7 @@ function findMin(key, mstSet) {
   let min = Infinity;
   let minNode = null;
   for (let node of Object.keys(key)) {
-    if (key[node] < min && mstSet[node] == false) {
+    if (key[node] < min && mstSet[node] === false) {
       min = key[node];
       minNode = node;
     }

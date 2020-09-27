@@ -32,23 +32,20 @@ class DirectedGraphAlgorithms extends Component {
   }
   componentDidMount() {
     createDirectedGraph();
+    createOrderTable(this.adjList, this.outputEl);
   }
 
   componentWillUnmount() {
     let svg = document.getElementById('dir-graph-svg');
     if (this.graph.hasChildNodes()) this.graph.removeChild(svg);
     document.getElementById('output').innerHTML = '';
-    // document.getElementById('shortest-path').innerHTML = '';
     this.reset();
   }
   getOrdering = async (stack) => {
     await this.setState({ ordering: stack });
-    if (this.outputEl.innerHTML == '') {
-      this.outputEl.appendChild(document.createTextNode('Potential Ordering'));
-      this.outputEl.appendChild(document.createElement('br'));
+    if (this.outputEl.innerHTML !== '') {
+      updateOrderTable(this.state.ordering, Object.keys(this.adjList).length);
     }
-    this.outputEl.appendChild(document.createTextNode(this.state.ordering[0]));
-    this.outputEl.appendChild(document.createElement('br'));
   };
 
   getPauseStatus = () => this.state.pause;
@@ -60,7 +57,9 @@ class DirectedGraphAlgorithms extends Component {
       let el = document.getElementById(e);
       if (el) el.classList = '';
     });
-    document.getElementById('output').innerHTML = '';
+    if (this.outputEl.innerHTML !== '') {
+      clearOrderTable(Object.keys(this.adjList).length);
+    }
   };
 
   render() {
@@ -124,231 +123,45 @@ class DirectedGraphAlgorithms extends Component {
 
 export default DirectedGraphAlgorithms;
 
-// import React, { Component } from 'react';
-// import createGraph from '../graph-builder/graph-builder';
-// import dijkstra from '../algorithms/graph-algorithms/dijkstra';
-// import prim from '../algorithms/graph-algorithms/prims_mst';
+function createOrderTable(adjList, outputEl) {
+  let table = document.createElement('table');
+  table.setAttribute('id', 'order-table');
+  table.setAttribute('class', 'order-table');
+  outputEl.appendChild(table);
 
-// class GraphAlgorithms extends Component {
+  let tBody = document.createElement('tBody');
+  let orderTh = document.createElement('th');
+  orderTh.appendChild(document.createTextNode('Potential Ordering'));
+  let tr = document.createElement('tr');
+  tr.appendChild(orderTh);
+  tBody.appendChild(tr);
 
-//   render() {
-//     return (
-//       <div>
-//         <button
-//           className="graph-button"
-//           onClick={() => {
-//             this.setState({ pause: false, stop: false });
-//             this.reset();
-//             dijkstra(
-//               this.adjList,
-//               'source',
-//               'target',
-//               this.getPauseStatus,
-//               this.getStopStatus,
-//               this.updateDistancesAndParents,
-//               this.getShortestPath,
-//               this.getSpeedRequest
-//             );
-//           }}
-//         >
-//           Dijkstra
-//         </button>
+  for (let i = 0; i < Object.keys(adjList).length; i++) {
+    tr = document.createElement('tr');
+    tr.setAttribute('id', 'row' + i);
+    let nodeTd = document.createElement('td');
+    nodeTd.appendChild(document.createTextNode('?'));
+    tr.appendChild(nodeTd);
+    tBody.appendChild(tr);
+  }
+  table.appendChild(tBody);
+}
 
-//         <button
-//           className="graph-button"
-//           onClick={() => {
-//             this.setState({ pause: false, stop: false });
-//             this.reset();
-//             prim(
-//               this.adjList,
-//               'source',
-//               this.getSpeedRequest,
-//               this.updatePrimDistancesAndParents,
-//               this.calculateCumulativeDistance,
-//               this.getPauseStatus,
-//               this.getStopStatus,
-//               this.clearLastUpdatedCells
-//             );
-//           }}
-//         >
-//           Prim MST
-//         </button>
-//         <button
-//           className="graph-button"
-//           onClick={() => {
-//             this.setState({ pause: false, stop: true });
-//             this.reset();
-//           }}
-//         >
-//           Reset
-//         </button>
-//         <button
-//           className="graph-button"
-//           onClick={() => {
-//             this.setState({ pause: !this.state.pause });
-//           }}
-//         >
-//           {this.state.pause ? 'UnPause' : 'Pause'}
-//         </button>
-//         <span id="shortest-path"></span>
+function updateOrderTable(stack, size) {
+  for (let i = size - 1; i >= size - stack.length; i--) {
+    let row = document.getElementById('row' + i);
+    let td = row.getElementsByTagName('td');
+    if (td[0].innerText === '?') {
+      td[0].innerHTML = stack[0];
+      td[0].className = 'updated-value';
+    }
+  }
+}
 
-//         <form onSubmit={(event) => event.preventDefault()}>
-//           <label>
-//             Speed:
-//             <input
-//               style={{ width: '50px' }}
-//               type="number"
-//               value={this.state.speed}
-//               onChange={(event) => {
-//                 event.preventDefault();
-//                 this.setState({
-//                   speed: event.target.value,
-//                 });
-//               }}
-//             />
-//           </label>
-//         </form>
-//       </div>
-//     );
-//   }
-// }
-
-// export default GraphAlgorithms;
-
-// function createDistanceTable(distances, parents, outputEl) {
-//   let table = document.createElement('table');
-//   table.setAttribute('id', 'distance-table');
-//   table.setAttribute('class', 'distance-table');
-//   outputEl.appendChild(table);
-
-//   let tBody = document.createElement('tBody');
-//   let nodeTh = document.createElement('th');
-//   let parentTh = document.createElement('th');
-//   let DistanceTh = document.createElement('th');
-//   nodeTh.appendChild(document.createTextNode('Node'));
-//   DistanceTh.appendChild(document.createTextNode('Distance'));
-//   parentTh.appendChild(document.createTextNode('Parent'));
-//   let tr = document.createElement('tr');
-//   tr.appendChild(nodeTh);
-//   tr.appendChild(DistanceTh);
-//   tr.appendChild(parentTh);
-
-//   tBody.appendChild(tr);
-//   Object.keys(distances).forEach((key) => {
-//     tr = document.createElement('tr');
-//     tr.setAttribute('id', key + '-row');
-//     let nodeTd = document.createElement('td');
-//     nodeTd.appendChild(document.createTextNode(key));
-//     tr.appendChild(nodeTd);
-//     let distanceTd = document.createElement('td');
-//     distanceTd.appendChild(document.createTextNode(distances[key]));
-//     let parentTd = document.createElement('td');
-//     parentTd.appendChild(document.createTextNode(''));
-//     tr.appendChild(distanceTd);
-//     tr.appendChild(parentTd);
-//     tBody.appendChild(tr);
-//     table.appendChild(tBody);
-//   });
-// }
-// function updateDistanceTable(distances, parents) {
-//   Object.keys(distances).forEach((key) => {
-//     let row = document.getElementById(key + '-row');
-//     let td = row.getElementsByTagName('td');
-//     if (td[1].outerText !== String(distances[key])) {
-//       td[1].innerHTML = distances[key];
-//       td[1].style.backgroundColor = 'yellow';
-//     } else {
-//       td[1].style.backgroundColor = '';
-
-//       td[1].innerHTML = distances[key];
-//     }
-//     if (parents[key] !== null && td[2].outerText !== String(parents[key])) {
-//       td[2].innerHTML = parents[key];
-//       td[2].style.backgroundColor = 'orange';
-//     } else {
-//       td[2].style.backgroundColor = '';
-//       td[2].innerHTML = parents[key];
-//     }
-//   });
-// }
-
-// function createPrimTable(distances, parents, outputEl) {
-//   let table = document.createElement('table');
-//   table.setAttribute('id', 'prim-table');
-//   table.setAttribute('class', 'distance-table');
-//   outputEl.appendChild(table);
-
-//   let tBody = document.createElement('tBody');
-//   let nodeTh = document.createElement('th');
-//   let parentTh = document.createElement('th');
-//   let DistanceTh = document.createElement('th');
-//   let totalDistanceTh = document.createElement('th');
-//   nodeTh.appendChild(document.createTextNode('Node'));
-//   parentTh.appendChild(document.createTextNode('Parent'));
-//   DistanceTh.appendChild(document.createTextNode('Distance'));
-//   totalDistanceTh.appendChild(document.createTextNode('Cumulative Distance'));
-//   let tr = document.createElement('tr');
-//   tr.appendChild(nodeTh);
-//   tr.appendChild(parentTh);
-//   tr.appendChild(DistanceTh);
-//   tr.appendChild(totalDistanceTh);
-
-//   tBody.appendChild(tr);
-//   Object.keys(distances).forEach((key) => {
-//     tr = document.createElement('tr');
-//     tr.setAttribute('id', key + '-row');
-//     let nodeTd = document.createElement('td');
-//     nodeTd.appendChild(document.createTextNode(key));
-//     let totalDistanceTd = document.createElement('td');
-//     totalDistanceTd.appendChild(document.createTextNode(''));
-//     let distanceTd = document.createElement('td');
-//     distanceTd.appendChild(document.createTextNode(distances[key]));
-//     let parentTd = document.createElement('td');
-//     parentTd.appendChild(document.createTextNode(''));
-//     tr.appendChild(nodeTd);
-//     tr.appendChild(parentTd);
-//     tr.appendChild(distanceTd);
-//     tr.appendChild(totalDistanceTd);
-//     tBody.appendChild(tr);
-//     table.appendChild(tBody);
-//   });
-// }
-// function updatePrimTable(distances, parents, cumulativeCostMap) {
-//   Object.keys(distances).forEach((key) => {
-//     let row = document.getElementById(key + '-row');
-//     let td = row.getElementsByTagName('td');
-//     if (td[2].outerText !== String(distances[key])) {
-//       td[2].innerHTML = distances[key];
-//       td[2].style.backgroundColor = 'yellow';
-//     } else {
-//       td[2].style.backgroundColor = '';
-
-//       td[2].innerHTML = distances[key];
-//     }
-//     if (parents[key] !== null && td[1].outerText !== String(parents[key])) {
-//       td[1].innerHTML = parents[key];
-//       td[1].style.backgroundColor = 'orange';
-//     } else {
-//       td[1].style.backgroundColor = '';
-//       td[1].innerHTML = parents[key];
-//     }
-//   });
-//   addCumulativeDistanceToPrimTable(cumulativeCostMap);
-// }
-
-// function addCumulativeDistanceToPrimTable(cumulativeCostMap) {
-//   Object.keys(cumulativeCostMap).forEach((key) => {
-//     let row = document.getElementById(key + '-row');
-//     let td = row.getElementsByTagName('td');
-//     if (cumulativeCostMap[key] == 'Infinity') {
-//       td[3].innerHTML = '';
-//       return;
-//     }
-//     if (String(cumulativeCostMap[key]) !== td[3].outerText) {
-//       td[3].innerHTML = cumulativeCostMap[key];
-//       td[3].style.backgroundColor = 'burlywood';
-//     } else {
-//       td[3].style.backgroundColor = '';
-//     }
-//   });
-// }
+function clearOrderTable(size) {
+  for (let i = 0; i < size; i++) {
+    let row = document.getElementById('row' + i);
+    let td = row.getElementsByTagName('td');
+    td[0].innerHTML = '?';
+  }
+}

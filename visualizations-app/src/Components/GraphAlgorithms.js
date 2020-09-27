@@ -170,14 +170,10 @@ class GraphAlgorithms extends Component {
     this.reset();
   }
 
-  updateDistancesAndParents = async (distance, parent) => {
-    await this.setState({ distances: distance, parents: parent });
+  updateDistancesAndParents = async (distances, parents) => {
+    await this.setState({ distances, parents });
     if (!document.getElementById('distance-table')) {
-      createDistanceTable(
-        this.state.distances,
-        this.state.parents,
-        this.outputEl
-      );
+      createDistanceTable(this.state.distances, this.outputEl);
     } else {
       updateDistanceTable(this.state.distances, this.state.parents);
     }
@@ -229,7 +225,7 @@ class GraphAlgorithms extends Component {
       }
       let currentNode = parents[node];
       let cost = costMap[node];
-      while (currentNode != -1) {
+      while (currentNode !== -1) {
         cost += costMap[currentNode];
         currentNode = parents[currentNode];
       }
@@ -282,9 +278,9 @@ class GraphAlgorithms extends Component {
               'target',
               this.getPauseStatus,
               this.getStopStatus,
+              this.getSpeedRequest,
               this.updateDistancesAndParents,
-              this.getShortestPath,
-              this.getSpeedRequest
+              this.getShortestPath
             );
           }}
         >
@@ -299,11 +295,11 @@ class GraphAlgorithms extends Component {
             prim(
               this.adjList,
               'source',
+              this.getPauseStatus,
+              this.getStopStatus,
               this.getSpeedRequest,
               this.updatePrimDistancesAndParents,
               this.calculateCumulativeDistance,
-              this.getPauseStatus,
-              this.getStopStatus,
               this.clearLastUpdatedCells
             );
           }}
@@ -352,7 +348,7 @@ class GraphAlgorithms extends Component {
 
 export default GraphAlgorithms;
 
-function createDistanceTable(distances, parents, outputEl) {
+function createDistanceTable(distances, outputEl) {
   let table = document.createElement('table');
   table.setAttribute('id', 'distance-table');
   table.setAttribute('class', 'distance-table');
@@ -477,7 +473,7 @@ function addCumulativeDistanceToPrimTable(cumulativeCostMap) {
   Object.keys(cumulativeCostMap).forEach((key) => {
     let row = document.getElementById(key + '-row');
     let td = row.getElementsByTagName('td');
-    if (cumulativeCostMap[key] == 'Infinity') {
+    if (cumulativeCostMap[key] === 'Infinity') {
       td[3].innerHTML = '';
       return;
     }

@@ -34,7 +34,7 @@ function createDirectedGraph() {
   ];
   const margin = { top: 20, right: 50, bottom: 50, left: -10 },
     width = 800 - margin.left - margin.right,
-    height = 800 - margin.top - margin.bottom;
+    height = 600 - margin.top - margin.bottom;
 
   function getNodeColor(node) {
     return node.level === 1 ? 'red' : 'gray';

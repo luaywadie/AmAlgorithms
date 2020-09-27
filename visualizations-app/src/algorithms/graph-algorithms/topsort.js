@@ -9,13 +9,11 @@ async function topSort(
 ) {
   let stack = [];
   let visited = {};
-  for (let key of Object.keys(g)) {
-    visited[key] = 0;
-  }
+  Object.keys(g).map((key) => (visited[key] = 0));
   let activeLinks = {};
 
   for (let node of Object.keys(g)) {
-    if (visited[node] == 0) {
+    if (visited[node] === 0) {
       await new Promise((r) => setTimeout(r, 1000 / getSpeedRequest()));
       await checkPauseStatus(getPauseStatus);
       if (getStopStatus()) {
@@ -28,12 +26,12 @@ async function topSort(
           node,
           stack,
           visited,
-          getSpeedRequest,
           activeLinks,
           getPauseStatus,
           getStopStatus,
+          getSpeedRequest,
           getOrdering
-        )) == false
+        )) === false
       ) {
         return null;
       }
@@ -57,10 +55,10 @@ async function visit(
   node,
   stack,
   visited,
-  getSpeedRequest,
   activeLinks,
   getPauseStatus,
   getStopStatus,
+  getSpeedRequest,
   getOrdering
 ) {
   await new Promise((r) => setTimeout(r, 500 / getSpeedRequest()));
@@ -70,9 +68,9 @@ async function visit(
     return;
   }
 
-  if (visited[node] == 2) {
+  if (visited[node] === 2) {
     return true;
-  } else if (visited[node] == 1) {
+  } else if (visited[node] === 1) {
     return false;
   }
   activateCurrentNode(node);
@@ -108,19 +106,18 @@ async function visit(
         neighbor,
         stack,
         visited,
-        getSpeedRequest,
         activeLinks,
         getPauseStatus,
         getStopStatus,
+        getSpeedRequest,
         getOrdering
-      )) == false
+      )) === false
     ) {
       return false;
     }
   }
 
   stack.push(node);
-  getOrdering(stack.slice().reverse());
   visited[node] = 2;
 
   await new Promise((r) => setTimeout(r, 1000 / getSpeedRequest()));
@@ -139,6 +136,7 @@ async function visit(
     cleanUpActiveLinksAndCurrentNode(activeLinks, g);
     return;
   }
+  getOrdering(stack.slice().reverse());
 
   return true;
 }

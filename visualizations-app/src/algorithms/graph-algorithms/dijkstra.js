@@ -9,9 +9,9 @@ async function djikstra(
   target,
   getPauseStatus,
   getStopStatus,
+  getSpeedRequest,
   updateDistancesAndParents,
-  getShortestPathPath,
-  getSpeedRequest
+  getShortestPath
 ) {
   let pq = new PriorityQueue();
 
@@ -29,15 +29,17 @@ async function djikstra(
   while (pq.size > 0) {
     updateDistancesAndParents(distances, parents);
     let currentNode = pq.removeRoot()[1];
-
     let currentNodeElement = activateCurrentNode(currentNode);
+
     await new Promise((r) => setTimeout(r, 2000 / getSpeedRequest()));
     await checkPauseStatus(getPauseStatus);
     if (getStopStatus()) {
       cleanUpActiveLinksAndCurrentNode(activeLinks, currentNode);
       return;
     }
+
     activeLinks = removeActiveLinks(activeLinks);
+
     await new Promise((r) => setTimeout(r, 100 / getSpeedRequest()));
     await checkPauseStatus(getPauseStatus);
     if (getStopStatus()) {
@@ -48,8 +50,8 @@ async function djikstra(
     for (let [neighborNodeWeight, neighborNode] of g[currentNode]) {
       let linkOfInterestElement = activateLink(currentNode, neighborNode);
       activeLinks.push(linkOfInterestElement);
-      await new Promise((r) => setTimeout(r, 2000 / getSpeedRequest()));
 
+      await new Promise((r) => setTimeout(r, 2000 / getSpeedRequest()));
       await checkPauseStatus(getPauseStatus);
       if (getStopStatus()) {
         cleanUpActiveLinksAndCurrentNode(activeLinks, currentNode);
@@ -75,12 +77,8 @@ async function djikstra(
     end = parents[end];
   }
   let shortestPath = stack.reverse().slice(1);
-  for (let i = 1; i < shortestPath.length; i++) {
-    let prev = shortestPath[i - 1];
-    let current = shortestPath[i];
-    activateLink(prev, current);
-  }
-  getShortestPathPath(shortestPath, distances['target']);
+  highlightShortestPath(shortestPath);
+  getShortestPath(shortestPath, distances['target']);
 }
 
 export default djikstra;
@@ -138,5 +136,13 @@ function cleanUpActiveLinksAndCurrentNode(activeLinks, currentNode) {
   }
   if (activeLinks.length > 0) {
     removeActiveLinks(activeLinks);
+  }
+}
+
+function highlightShortestPath(shortestPath) {
+  for (let i = 1; i < shortestPath.length; i++) {
+    let prev = shortestPath[i - 1];
+    let current = shortestPath[i];
+    activateLink(prev, current);
   }
 }
