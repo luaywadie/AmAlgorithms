@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import createGraph from '../graph-builder/undirected-graph-builder';
+import createGraph from '../graph-builders/undirected-graph-builder';
 import dijkstra from '../algorithms/graph-algorithms/dijkstra';
 import prim from '../algorithms/graph-algorithms/prims_mst';
 import '../styles/UndirectedGraphAlgorithms.css';

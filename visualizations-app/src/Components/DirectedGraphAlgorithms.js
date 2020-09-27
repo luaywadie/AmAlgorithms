@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import topSort from '../algorithms/graph-algorithms/topsort';
-import createDirectedGraph from '../graph-builder/directed-graph-builder';
+import createDirectedGraph from '../graph-builders/directed-graph-builder';
 
 class DirectedGraphAlgorithms extends Component {
   constructor(props) {
@@ -12,15 +12,15 @@ class DirectedGraphAlgorithms extends Component {
       ordering: [],
     };
     this.adjList = {
-      a: ['b', 'f'],
-      b: ['h'],
+      a: ['g', 'c', 'b'],
+      b: ['f'],
       c: [],
-      d: ['a', 'e', 'i'],
-      e: ['i'],
+      d: ['g', 'e', 'b'],
+      e: ['b'],
       f: [],
-      g: ['a', 'b', 'c'],
+      g: ['i', 'f'],
       h: [],
-      i: ['f'],
+      i: ['h'],
       j: ['e'],
     };
     this.graph = document.getElementById('graph-container');

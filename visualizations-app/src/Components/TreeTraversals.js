@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import bfs from '../algorithms/tree-algorithms/breadth-first-search';
 import dfs from '../algorithms/tree-algorithms/depth-first-search';
-import createTree from '../graph-builder/tree-builder';
+import createTree from '../graph-builders/tree-builder';
 
 class TreeTraversals extends Component {
   constructor(props) {
