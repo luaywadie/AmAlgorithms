@@ -10,7 +10,7 @@ import {
 } from 'react-bootstrap';
 
 import TreeTraversals from '../Components/TreeTraversals';
-import GraphAlgorithms from '../Components/GraphAlgorithms';
+import UndirectedGraphAlgorithms from '../Components/UndirectedGraphAlgorithms';
 import DirectedGraphAlgorithms from '../Components/DirectedGraphAlgorithms';
 
 import '../styles/navigation-bar.css';
@@ -31,7 +31,7 @@ const NavigationBar = () => {
             <Nav.Link as={Link} to="/tree_traversals" className="nav-link">
               Tree Traversals
             </Nav.Link>
-            <Nav.Link as={Link} to="/graph_algorithms">
+            <Nav.Link as={Link} to="/undirected_graph_algorithms">
               Undirected Graph Algorithms
             </Nav.Link>
             <Nav.Link as={Link} to="/directed_graph_algorithms">
@@ -46,7 +46,10 @@ const NavigationBar = () => {
         <br />
       </Container>
       <Route path="/tree_traversals" component={TreeTraversals} />
-      <Route path="/graph_algorithms" component={GraphAlgorithms} />
+      <Route
+        path="/undirected_graph_algorithms"
+        component={UndirectedGraphAlgorithms}
+      />
       <Route
         path="/directed_graph_algorithms"
         component={DirectedGraphAlgorithms}

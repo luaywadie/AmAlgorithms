@@ -1,4 +1,3 @@
-// import Heap from '';
 import '../../styles/dijkstra.css';
 const { Heap: PriorityQueue } = require('../../data-structures/Heap.js');
 // [cost, node]
@@ -10,8 +9,7 @@ async function djikstra(
   getPauseStatus,
   getStopStatus,
   getSpeedRequest,
-  updateDistancesAndParents,
-  getShortestPath
+  updateDistancesAndParents
 ) {
   let pq = new PriorityQueue();
 
@@ -78,7 +76,6 @@ async function djikstra(
   }
   let shortestPath = stack.reverse().slice(1);
   highlightShortestPath(shortestPath);
-  getShortestPath(shortestPath, distances['target']);
 }
 
 export default djikstra;

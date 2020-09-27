@@ -7,8 +7,7 @@ async function prim(
   getStopStatus,
   getSpeedRequest,
   updatePrimDistancesAndParents,
-  calculateCumulativeDistance,
-  clearLastUpdatedCells
+  
 ) {
   let costMap = {};
   let parents = {};
@@ -22,9 +21,10 @@ async function prim(
   costMap[root] = 0;
 
   let activeLinks = [];
+  let cumulativeCostMap = {};
   for (let i = 0; i < Object.keys(g).length; i++) {
-    calculateCumulativeDistance(costMap, parents, activeLinks);
-    updatePrimDistancesAndParents(costMap, parents);
+    cumulativeCostMap = calculateCumulativeDistance(costMap, parents);
+    updatePrimDistancesAndParents(costMap, parents, cumulativeCostMap);
     let minNode = findMin(costMap, mstSet);
     mstSet[minNode] = true;
 
@@ -70,8 +70,7 @@ async function prim(
     }
     updateCurrentNodeToBeVisited(minNodeEl);
   }
-  calculateCumulativeDistance(costMap, parents, activeLinks);
-  clearLastUpdatedCells();
+  calculateCumulativeDistance(costMap, parents);
 }
 
 function findMin(key, mstSet) {
@@ -149,4 +148,22 @@ function removeActiveLinks(activeLinks) {
     }
   });
   return [];
+}
+
+function calculateCumulativeDistance(costMap, parents) {
+  let cumCostMap = {};
+  for (let node of Object.keys(costMap)) {
+    if (parents[node] == null) {
+      cumCostMap[node] = '';
+      continue;
+    }
+    let currentNode = parents[node];
+    let cost = costMap[node];
+    while (currentNode !== -1) {
+      cost += costMap[currentNode];
+      currentNode = parents[currentNode];
+    }
+    cumCostMap[node] = cost;
+  }
+  return cumCostMap;
 }

@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import * as d3Shape from 'd3-shape';
+import '../styles/directed-graph-builder.css';
 
 function createDirectedGraph() {
   let nodes = [
@@ -41,12 +41,13 @@ function createDirectedGraph() {
   }
 
   var svg = d3
-    .select('#tree-img')
+    .select('#graph-container')
     .append('svg')
     .attr('width', width)
     .attr('height', height)
     .attr('id', 'dir-graph-svg')
-    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+    .attr('class', 'directed-graph');
 
   // simulation setup with all forces
   var linkForce = d3

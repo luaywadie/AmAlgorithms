@@ -4,10 +4,6 @@ import dfs from '../algorithms/tree-algorithms/depth-first-search';
 import createTree from '../graph-builder/tree-builder';
 
 class TreeTraversals extends Component {
-  outputEl;
-  adjList;
-  tree;
-
   constructor(props) {
     super(props);
     this.state = {
@@ -44,34 +40,23 @@ class TreeTraversals extends Component {
       y: [],
       z: [],
     };
-    this.tree = document.getElementById('tree-img');
-    console.log(this.tree);
+    this.tree = document.getElementById('graph-container');
   }
 
   componentDidMount() {
-    this.outputEl = document.getElementById('output');
-    if (!this.outputEl.hasChildNodes()) {
-      let heading = document.createTextNode('Traversal Ordering');
-      this.outputEl.appendChild(heading);
-      resetTraversalList(this.outputEl);
-    }
     createTree(this.adjList);
   }
   componentWillUnmount() {
     let svg = document.getElementById('tree-svg');
     if (this.tree.hasChildNodes()) this.tree.removeChild(svg);
-    let outputElement = document.getElementById('output');
-    outputElement.innerHTML = '';
   }
+  buildNodePath = async (nodePath) => {
+    await this.setState({ nodePath });
+  };
 
   getPauseStatus = () => this.state.pause;
   getStopStatus = () => this.state.stop;
-  getSpeedRequest = () => this.state.speed;
-
-  buildNodePath = (node) => {
-    this.setState({ nodePath: (oldA) => [...oldA, node] });
-    createListItem(node);
-  };
+  getSpeedRequest = () => Number(this.state.speed) + 0.1;
 
   reset = () => {
     Object.keys(this.adjList).forEach((e) => {
@@ -82,14 +67,31 @@ class TreeTraversals extends Component {
         linkElement.classList.remove('link-traversed');
       }
     });
-    this.outputEl.removeChild(document.getElementById('nodeHistory'));
-    resetTraversalList(this.outputEl);
+    this.setState({ nodePath: [] });
   };
+
+  renderTreeTraversalHeading() {
+    return (
+      <tr>
+        <th>Traversal Ordering</th>
+      </tr>
+    );
+  }
+
+  renderTreeTraversalData() {
+    return this.state.nodePath.map((node) => {
+      return (
+        <tr key={node}>
+          <td>{node}</td>
+        </tr>
+      );
+    });
+  }
 
   render() {
     return (
-      <div>
-        <div>
+      <div className={'row'}>
+        <div className={'col-6'}>
           <button
             onClick={() => {
               this.setState({ pause: false, stop: false });
@@ -97,8 +99,8 @@ class TreeTraversals extends Component {
                 this.adjList,
                 this.getPauseStatus,
                 this.getStopStatus,
-                this.buildNodePath,
-                this.getSpeedRequest
+                this.getSpeedRequest,
+                this.buildNodePath
               );
             }}
           >
@@ -111,8 +113,8 @@ class TreeTraversals extends Component {
                 this.adjList,
                 this.getPauseStatus,
                 this.getStopStatus,
-                this.buildNodePath,
-                this.getSpeedRequest
+                this.getSpeedRequest,
+                this.buildNodePath
               );
             }}
           >
@@ -133,42 +135,33 @@ class TreeTraversals extends Component {
           >
             {this.state.pause ? 'UnPause' : 'Pause'}
           </button>
+          <form onSubmit={(event) => event.preventDefault()}>
+            <label>
+              Speed:
+              <input
+                style={{ width: '50px' }}
+                type="number"
+                value={this.state.speed}
+                onChange={(event) =>
+                  this.setState({
+                    speed: event.target.value,
+                  })
+                }
+              />
+            </label>
+          </form>
         </div>
-        <form onSubmit={(event) => event.preventDefault()}>
-          <label>
-            Speed:
-            <input
-              style={{ width: '50px' }}
-              type="number"
-              value={this.state.speed}
-              onChange={(event) =>
-                this.setState({
-                  speed: event.target.value,
-                })
-              }
-            />
-          </label>
-        </form>
+        <div className={'col-6'}>
+          <table id={'tree-traversal-table'} className={'float-right'}>
+            <tbody>
+              {this.renderTreeTraversalHeading()}
+              {this.renderTreeTraversalData()}
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   }
 }
 
-function resetTraversalList(outputEl) {
-  outputEl.style.fontSize = '30px';
-  outputEl
-    .appendChild(document.createElement('UL'))
-    .setAttribute('id', 'nodeHistory');
-  let ul = document.getElementById('nodeHistory');
-  ul.style.listStyleType = 'none';
-  ul.style.fontSize = '20px';
-}
-
-function createListItem(node) {
-  let li = document.createElement('LI');
-  li.style.textAlign = 'center';
-  li.appendChild(document.createTextNode(node));
-  let nodeHistory = document.getElementById('nodeHistory');
-  if (nodeHistory) nodeHistory.appendChild(li);
-}
 export default TreeTraversals;

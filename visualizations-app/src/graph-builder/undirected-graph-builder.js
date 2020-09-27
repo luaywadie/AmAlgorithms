@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import '../styles/undirected-graph-builder.css';
 
 function createGraph() {
   let nodes = [
@@ -83,13 +84,13 @@ function createGraph() {
   }
 
   var svg = d3
-    .select('#tree-img')
+    .select('#graph-container')
     .append('svg')
     .attr('width', width)
     .attr('height', height)
     .attr('id', 'graph-svg')
-    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
+    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+    .attr('class', 'undirected-graph');
   // simulation setup with all forces
   var linkForce = d3
     .forceLink()

@@ -4,8 +4,8 @@ async function dfs(
   g,
   getPauseStatus,
   getStopStatus,
-  buildNodePath,
-  getSpeedRequest
+  getSpeedRequest,
+  buildNodePath
 ) {
   let linkList = [];
   let root = 'a';
@@ -13,6 +13,7 @@ async function dfs(
   Object.keys(g).map((node) => (visited[node] = false));
   visited[root] = true;
   let stack = [root];
+  let nodePath = [];
   while (stack.length > 0) {
     let currentNode = stack.pop();
 
@@ -27,7 +28,8 @@ async function dfs(
     if (getStopStatus()) return;
 
     activateVisitedNode(currentNode);
-    buildNodePath(currentNode);
+    nodePath.push(currentNode);
+    buildNodePath(nodePath);
 
     for (let child of g[currentNode]) {
       if (visited[child] === false) {

@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-
+import '../styles/tree-builder.css';
 function buildTreeDataFromAdjList(adjList) {
   let treeData = {};
   let root = true;
@@ -51,15 +51,15 @@ function createTree(adjList) {
   // appends a 'group' element to 'svg'
   // moves the 'group' element to the top left margin
   const svg = d3
-      .select('#tree-img')
+      .select('#graph-container')
       .append('svg')
       .attr('id', 'tree-svg')
       .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom),
+      .attr('height', height + margin.top + margin.bottom)
+      .attr('class', 'tree-graph'),
     g = svg
       .append('g')
       .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
   // adds the links between the nodes
   const link = g
     .selectAll('.link')

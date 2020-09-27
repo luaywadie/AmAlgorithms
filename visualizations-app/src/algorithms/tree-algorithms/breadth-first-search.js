@@ -4,8 +4,8 @@ async function bfs(
   g,
   getPauseStatus,
   getStopStatus,
-  buildNodePath,
-  getSpeedRequest
+  getSpeedRequest,
+  buildNodePath
 ) {
   let linkList = [];
   let root = 'a';
@@ -13,6 +13,7 @@ async function bfs(
   Object.keys(g).map((node) => (visited[node] = false));
   visited[root] = true;
   let queue = [root];
+  let nodePath = [];
   while (queue.length > 0) {
     let currentNode = queue[0];
     queue.shift();
@@ -28,7 +29,8 @@ async function bfs(
     if (getStopStatus()) return;
 
     activateVisitedNode(currentNode);
-    buildNodePath(currentNode);
+    nodePath.push(currentNode);
+    buildNodePath(nodePath);
 
     for (let child of g[currentNode]) {
       if (visited[child] === false) {

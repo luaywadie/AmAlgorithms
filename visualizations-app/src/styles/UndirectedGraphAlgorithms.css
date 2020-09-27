@@ -2,6 +2,10 @@
   margin-top: -100px;
 }
 
+.dijkstra-table {
+  margin-top: -100px;
+}
+
 .cell-updated {
   animation: fadeinoutcell 1.5s;
 }
