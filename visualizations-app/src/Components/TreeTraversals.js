@@ -46,6 +46,7 @@ class TreeTraversals extends Component {
   componentDidMount() {
     createTree(this.adjList);
   }
+  
   componentWillUnmount() {
     let svg = document.getElementById('tree-svg');
     if (this.tree.hasChildNodes()) this.tree.removeChild(svg);

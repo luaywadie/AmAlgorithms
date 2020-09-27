@@ -28,6 +28,7 @@ async function dfs(
     if (getStopStatus()) return;
 
     activateVisitedNode(currentNode);
+    
     nodePath.push(currentNode);
     buildNodePath(nodePath);
 
