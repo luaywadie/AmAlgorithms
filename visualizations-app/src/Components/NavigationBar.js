@@ -13,7 +13,7 @@ import TreeTraversals from '../Components/TreeTraversals';
 import UndirectedGraphAlgorithms from '../Components/UndirectedGraphAlgorithms';
 import DirectedGraphAlgorithms from '../Components/DirectedGraphAlgorithms';
 
-import '../styles/navigation-bar.css';
+import '../styles/navigation-bar.scss';
 import MainPage from './MainPage';
 
 const NavigationBar = () => {

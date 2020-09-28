@@ -1,4 +1,4 @@
-import '../../styles/dijkstra.css';
+// import '../../styles/dijkstra.scss';
 const { Heap: PriorityQueue } = require('../../data-structures/Heap.js');
 // [cost, node]
 
@@ -83,13 +83,14 @@ export default djikstra;
 function activateCurrentNode(currentNode) {
   let currentNodeElement = document.getElementById(currentNode);
   currentNodeElement.classList.add('current-node-of-interest');
+
   return currentNodeElement;
 }
 
 function removeActiveLinks(activeLinks) {
   activeLinks.forEach((e) => {
     if (e) {
-      e.classList.remove('fade-out-link', 'link-of-interest');
+      e.classList.remove('fade-out-link', 'link-traversed');
     }
   });
   return [];
@@ -103,13 +104,13 @@ function activateLink(currentNode, neighborNode) {
 
   let linkOfInterestElement = document.getElementById(linkString);
   if (linkOfInterestElement)
-    linkOfInterestElement.classList.add('link-of-interest');
+    linkOfInterestElement.classList.add('link-traversed');
   return linkOfInterestElement;
 }
 
 function updateCurrentNodeToBeVisited(currentNodeElement) {
   currentNodeElement.classList.remove('current-node-of-interest');
-  currentNodeElement.classList.add('node-visited');
+  currentNodeElement.classList.add('node-complete-tree');
 }
 
 function fadeOutLinks(activeLinks) {

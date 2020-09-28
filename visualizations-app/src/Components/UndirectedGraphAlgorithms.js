@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import createGraph from '../graph-builders/undirected-graph-builder';
 import dijkstra from '../algorithms/graph-algorithms/dijkstra';
 import prim from '../algorithms/graph-algorithms/prims_mst';
-import '../styles/UndirectedGraphAlgorithms.css';
 
 class UndirectedGraphAlgorithms extends Component {
   constructor(props) {
@@ -188,7 +187,7 @@ class UndirectedGraphAlgorithms extends Component {
     Object.keys(this.adjList).forEach((e) => {
       let el = document.getElementById(e);
       if (el) {
-        el.classList.remove('node-visited');
+        el.classList.remove('node-complete-tree');
       }
     });
     let lines = document.getElementsByTagName('line');

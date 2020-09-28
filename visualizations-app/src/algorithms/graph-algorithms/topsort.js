@@ -1,5 +1,3 @@
-import '../../styles/topsort.css';
-
 async function topSort(
   g,
   getPauseStatus,
@@ -149,9 +147,7 @@ function activateCurrentNode(node) {
     document
       .getElementById(node)
       .classList.remove('current-neighbor-of-interest');
-    document
-      .getElementById(node)
-      .classList.add('current-node-of-interest-from-blue');
+    document.getElementById(node).classList.add('child-to-current');
   } else {
     document.getElementById(node).classList.add('current-node-of-interest');
   }
@@ -165,7 +161,7 @@ function activateNeighbor(neighbor) {
 
 function activateLink(node, neighbor) {
   let lineElement = document.getElementById(node + '-' + neighbor);
-  if (lineElement) lineElement.classList.add('ts-link-of-interest');
+  if (lineElement) lineElement.classList.add('link-of-interest-ts');
   return lineElement;
 }
 
@@ -183,7 +179,7 @@ function updateActiveLinks(activeLink, activeLinks, node) {
 function removeOutgoingLinks(activeLinks, node) {
   if (activeLinks[node] && activeLinks[node].length > 0) {
     activeLinks[node].forEach((e) => {
-      e.classList.remove('ts-link-of-interest');
+      e.classList.remove('link-of-interest-ts');
     });
   }
 }
@@ -194,12 +190,12 @@ function markNodeComplete(node) {
     .classList.remove('current-neighbor-of-interest');
 
   document.getElementById(node).classList.remove('current-node-of-interest');
-  document.getElementById(node).classList.add('node-done');
+  document.getElementById(node).classList.add('node-complete-directed');
 }
 
 function cleanUpActiveLinksAndCurrentNode(activeLinks, g) {
   for (let [key, val] of Object.entries(activeLinks)) {
-    val.forEach((link) => link.classList.remove('ts-link-of-interest'));
+    val.forEach((link) => link.classList.remove('link-of-interest-ts'));
   }
 
   Object.keys(g).forEach((node) => {

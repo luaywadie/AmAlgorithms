@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import '../styles/tree-builder.css';
+
 function buildTreeDataFromAdjList(adjList) {
   let treeData = {};
   let root = true;
@@ -56,7 +56,7 @@ function createTree(adjList) {
       .attr('id', 'tree-svg')
       .attr('width', width + margin.left + margin.right)
       .attr('height', height + margin.top + margin.bottom)
-      .attr('class', 'tree-graph'),
+      .attr('class', 'graph'),
     g = svg
       .append('g')
       .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
@@ -110,11 +110,7 @@ function createTree(adjList) {
   node
     .append('circle')
     .attr('r', (d) => d.data.value)
-    .attr('id', (d) => d.data.name)
-    .style('stroke', (d) => d.data.type)
-    .style('stroke-width', '1px')
-    .style('fill', (d) => d.data.level);
-
+    .attr('id', (d) => d.data.name);
   // adds the text to the node
   node
     .append('text')

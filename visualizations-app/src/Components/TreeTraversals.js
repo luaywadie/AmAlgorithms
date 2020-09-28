@@ -46,7 +46,7 @@ class TreeTraversals extends Component {
   componentDidMount() {
     createTree(this.adjList);
   }
-  
+
   componentWillUnmount() {
     let svg = document.getElementById('tree-svg');
     if (this.tree.hasChildNodes()) this.tree.removeChild(svg);
@@ -62,7 +62,7 @@ class TreeTraversals extends Component {
   reset = () => {
     Object.keys(this.adjList).forEach((e) => {
       let nodeElement = document.getElementById(e);
-      nodeElement.classList.remove('visited-node-bfs', 'visited-node-dfs');
+      nodeElement.classList.remove('node-complete-tree');
       let linkElement = document.getElementById(e + 'link');
       if (linkElement) {
         linkElement.classList.remove('link-traversed');

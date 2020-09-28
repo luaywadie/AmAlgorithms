@@ -1,0 +1,93 @@
+// Blue == Active Node
+// Green == Complete
+.node {
+  circle {
+    fill: #fff;
+    stroke: black;
+    stroke-width: 1px;
+  }
+  // Directed Graph Styles
+  .current-node-of-interest {
+    fill: blue;
+    animation: colorin-current-node-of-interest 0.5s;
+  }
+  @keyframes colorin-current-node-of-interest {
+    from {
+      fill: white;
+    }
+    to {
+      fill: blue;
+    }
+  }
+
+  .child-to-current {
+    fill: blue;
+    animation: colorin-child-to-current 0.5s;
+  }
+  @keyframes colorin-child-to-current {
+    from {
+      fill: #75dfff;
+    }
+    to {
+      fill: blue;
+    }
+  }
+
+  .current-neighbor-of-interest {
+    fill: #75dfff;
+    animation: colorin-current-neighbor-of-interest 0.5s;
+  }
+  @keyframes colorin-current-neighbor-of-interest {
+    from {
+      fill: white;
+    }
+    to {
+      fill: #75dfff;
+    }
+  }
+
+  .node-complete-directed {
+    fill: green;
+    animation: done-node 0.5s;
+  }
+  @keyframes done-node {
+    from {
+      fill: #75dfff;
+    }
+    to {
+      fill: green;
+    }
+  }
+
+  // Tree Styles
+  text {
+    font: 16px sans-serif;
+  }
+
+  .node-complete-tree {
+    fill: green;
+    animation: color-in-visited-node-tree 1s;
+  }
+  @keyframes color-in-visited-node-tree {
+    from {
+      fill: #fff;
+    }
+    to {
+      fill: green;
+    }
+  }
+  // Undirected Graph Styling
+  // node-visited
+  .node-complete-undirected {
+    fill: green;
+    animation: node-visited 1s;
+  }
+  @keyframes node-visited {
+    from {
+      fill: blue;
+    }
+    to {
+      fill: green;
+    }
+  }
+}

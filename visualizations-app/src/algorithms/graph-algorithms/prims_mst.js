@@ -1,4 +1,4 @@
-import '../../styles/prim.css';
+// import '../../styles/prim.scss';
 
 async function prim(
   g,
@@ -6,8 +6,7 @@ async function prim(
   getPauseStatus,
   getStopStatus,
   getSpeedRequest,
-  updatePrimDistancesAndParents,
-  
+  updatePrimDistancesAndParents
 ) {
   let costMap = {};
   let parents = {};
@@ -101,7 +100,7 @@ function activateLink(currentNode, neighborNode, activeLinks) {
 
   let linkOfInterestElement = document.getElementById(linkString);
   if (linkOfInterestElement) {
-    linkOfInterestElement.classList.add('link-of-interest');
+    linkOfInterestElement.classList.add('link-traversed');
     activeLinks.push(linkOfInterestElement);
   }
   return linkOfInterestElement;
@@ -109,7 +108,7 @@ function activateLink(currentNode, neighborNode, activeLinks) {
 
 function updateCurrentNodeToBeVisited(currentNodeElement) {
   currentNodeElement.classList.remove('current-node-of-interest');
-  currentNodeElement.classList.add('node-visited');
+  currentNodeElement.classList.add('node-complete-tree');
 }
 
 async function deActivateOldLink(node, oldChild, getSpeedRequest, activeLinks) {
@@ -119,7 +118,7 @@ async function deActivateOldLink(node, oldChild, getSpeedRequest, activeLinks) {
   if (el) {
     el.classList.add('fade-out-link');
     await new Promise((r) => setTimeout(r, 1000 / getSpeedRequest()));
-    el.classList.remove('link-of-interest', 'fade-out-link');
+    el.classList.remove('link-traversed', 'fade-out-link');
     return el;
   }
 }
@@ -144,7 +143,7 @@ function cleanUpActiveLinksAndCurrentNode(activeLinks, currentNode) {
 function removeActiveLinks(activeLinks) {
   activeLinks.forEach((e) => {
     if (e) {
-      e.classList.remove('fade-out-link', 'link-of-interest');
+      e.classList.remove('fade-out-link', 'link-traversed');
     }
   });
   return [];

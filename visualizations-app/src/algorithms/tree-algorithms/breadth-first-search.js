@@ -1,5 +1,3 @@
-import '../../styles/tree-styles.css';
-
 async function bfs(
   g,
   getPauseStatus,
@@ -54,7 +52,7 @@ function activateLink(currentNode, linkList) {
 
 function activateVisitedNode(currentNode) {
   let nodeElement = document.getElementById(currentNode);
-  if (nodeElement) nodeElement.classList.add('visited-node-bfs');
+  if (nodeElement) nodeElement.classList.add('node-complete-tree');
 }
 async function checkPauseStatus(getPauseStatus) {
   while (getPauseStatus()) {

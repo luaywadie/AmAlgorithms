@@ -1,5 +1,4 @@
 import * as d3 from 'd3';
-import '../styles/directed-graph-builder.css';
 
 function createDirectedGraph() {
   let nodes = [
@@ -47,7 +46,7 @@ function createDirectedGraph() {
     .attr('height', height)
     .attr('id', 'dir-graph-svg')
     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-    .attr('class', 'directed-graph');
+    .attr('class', 'graph');
 
   // simulation setup with all forces
   var linkForce = d3
@@ -108,7 +107,7 @@ function createDirectedGraph() {
 
   var nodeElements = svg
     .append('g')
-    .attr('class', 'nodes')
+    .attr('class', 'node')
     .selectAll('circle')
     .data(nodes)
     .enter()

@@ -1,5 +1,3 @@
-import '../../styles/tree-styles.css';
-
 async function dfs(
   g,
   getPauseStatus,
@@ -28,7 +26,7 @@ async function dfs(
     if (getStopStatus()) return;
 
     activateVisitedNode(currentNode);
-    
+
     nodePath.push(currentNode);
     buildNodePath(nodePath);
 
@@ -54,7 +52,7 @@ function activateLink(currentNode, linkList) {
 
 function activateVisitedNode(currentNode) {
   let nodeElement = document.getElementById(currentNode);
-  if (nodeElement) nodeElement.classList.add('visited-node-dfs');
+  if (nodeElement) nodeElement.classList.add('node-complete-tree');
 }
 
 async function checkPauseStatus(getPauseStatus) {

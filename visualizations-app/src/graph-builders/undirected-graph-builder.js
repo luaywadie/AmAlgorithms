@@ -1,5 +1,4 @@
 import * as d3 from 'd3';
-import '../styles/undirected-graph-builder.css';
 
 function createGraph() {
   let nodes = [
@@ -90,7 +89,7 @@ function createGraph() {
     .attr('height', height)
     .attr('id', 'graph-svg')
     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-    .attr('class', 'undirected-graph');
+    .attr('class', 'graph');
   // simulation setup with all forces
   var linkForce = d3
     .forceLink()
@@ -139,7 +138,7 @@ function createGraph() {
 
   var nodeElements = svg
     .append('g')
-    .attr('class', 'nodes')
+    .attr('class', 'node')
     .selectAll('circle')
     .data(nodes)
     .enter()
