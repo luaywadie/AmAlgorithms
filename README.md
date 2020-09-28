@@ -1,3 +1,3 @@
-<img width="300px" src="https://github.com/luaywadie/AmAlgorithms/blob/master/assets/V2.png" />
+<img width="500px" src="https://raw.githubusercontent.com/luaywadie/AmAlgorithms/master/assets/Animated_Logo2.gif" />
 
 ## Description
