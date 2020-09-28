@@ -12,6 +12,8 @@ import {
 import TreeTraversals from '../Components/TreeTraversals';
 import UndirectedGraphAlgorithms from '../Components/UndirectedGraphAlgorithms';
 import DirectedGraphAlgorithms from '../Components/DirectedGraphAlgorithms';
+import ScatterPlotAlgorithms from '../Components/ScatterPlotAlgorithms';
+
 
 import '../styles/Navigation-bar.scss';
 import MainPage from './MainPage';
@@ -37,6 +39,9 @@ const NavigationBar = () => {
             <Nav.Link as={Link} to="/directed_graph_algorithms">
               Directed Graph Algorithms
             </Nav.Link>
+            <Nav.Link as={Link} to="/scatterplot_algorithms">
+            Scatterplot Algorithms
+          </Nav.Link>
           </Nav>
           <Form inline>
             <FormControl type="text" placeholder="Search" className="mr-sm-2" />
@@ -54,6 +59,10 @@ const NavigationBar = () => {
         path="/directed_graph_algorithms"
         component={DirectedGraphAlgorithms}
       />
+      <Route
+      path="/scatterplot_algorithms"
+      component={ScatterPlotAlgorithms}
+    />
       <Route exact path="/" component={MainPage} />
     </Router>
   );
