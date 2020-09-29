@@ -10,7 +10,7 @@ class BreadthFirstSearch extends Component {
     this.unMounting = true;
   }
 
-   bfs = async () => {
+  bfs = async () => {
     let linkList = [];
     let root = 'a';
     let visited = {};
@@ -26,12 +26,14 @@ class BreadthFirstSearch extends Component {
       await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
       await this.checkPauseStatus();
       if (this.props.stop) return;
+      if (this.unMounting) return;
 
       this.activateLink(currentNode, linkList);
 
       await new Promise((r) => setTimeout(r, 700 / this.props.speed));
       await this.checkPauseStatus();
       if (this.props.stop) return;
+      if (this.unMounting) return;
 
       this.activateVisitedNode(currentNode);
       nodePath.push(currentNode);
@@ -45,7 +47,7 @@ class BreadthFirstSearch extends Component {
       }
     }
     linkList.forEach((el) => el.classList.remove('link-traversed'));
-  }
+  };
 
   activateLink(currentNode, linkList) {
     let linkElement = document.getElementById(currentNode + 'link');
@@ -78,7 +80,6 @@ class BreadthFirstSearch extends Component {
       </button>
     );
   }
-
 }
 
 export default BreadthFirstSearch;

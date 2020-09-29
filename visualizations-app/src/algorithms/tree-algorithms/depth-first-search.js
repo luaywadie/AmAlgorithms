@@ -20,19 +20,19 @@ class DepthFirstSearch extends Component {
     let nodePath = [];
     while (stack.length > 0) {
       if (this.unMounting) return;
-      
       let currentNode = stack.pop();
 
       await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
       await this.checkPauseStatus(this.props.pause);
       if (this.props.stop) return;
+      if (this.unMounting) return;
 
       this.activateLink(currentNode, linkList);
-
 
       await new Promise((r) => setTimeout(r, 700 / this.props.speed));
       await this.checkPauseStatus();
       if (this.props.stop) return;
+      if (this.unMounting) return;
 
       this.activateVisitedNode(currentNode);
 
@@ -72,9 +72,7 @@ class DepthFirstSearch extends Component {
     return (
       <button
         onClick={() => {
-          this.dfs(
-
-          );
+          this.dfs();
         }}
       >
         DFS traverse

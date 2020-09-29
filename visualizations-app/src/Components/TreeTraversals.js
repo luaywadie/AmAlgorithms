@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import bfs from '../algorithms/tree-algorithms/breadth-first-search';
-// import dfs from '../algorithms/tree-algorithms/depth-first-search';
 import DepthFirstSearch from '../algorithms/tree-algorithms/depth-first-search';
 import BreathFirstSearch from '../algorithms/tree-algorithms/breadth-first-search';
 import createTree from '../graph-builders/tree-builder';
@@ -12,7 +10,7 @@ class TreeTraversals extends Component {
       pause: false,
       stop: false,
       speed: 1,
-      nodePath: []
+      nodePath: [],
     };
     this.adjList = {
       a: ['b', 'c', 'd'],

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import createGraph from '../graph-builders/undirected-graph-builder';
-import dijkstra from '../algorithms/graph-algorithms/dijkstra';
+import Dijkstra from '../algorithms/graph-algorithms/dijkstra';
 import prim from '../algorithms/graph-algorithms/prims_mst';
 
 class UndirectedGraphAlgorithms extends Component {
@@ -247,28 +247,15 @@ class UndirectedGraphAlgorithms extends Component {
     return (
       <div className={'row'}>
         <div className={'col-6'}>
-          <button
-            className="graph-button"
-            onClick={() => {
-              this.setState({
-                pause: false,
-                stop: false,
-                algorithmSelected: 'dijkstra',
-              });
-              this.reset();
-              dijkstra(
-                this.adjList,
-                'source',
-                'target',
-                this.getPauseStatus,
-                this.getStopStatus,
-                this.getSpeedRequest,
-                this.updateDistancesAndParents
-              );
-            }}
-          >
-            Dijkstra
-          </button>
+          <Dijkstra
+            g={this.adjList}
+            root={'source'}
+            target={'target'}
+            pause={this.state.pause}
+            stop={this.state.stop}
+            speed={this.state.speed}
+            updateDistancesAndParents={this.updateDistancesAndParents}
+          />
 
           <button
             className="graph-button"
