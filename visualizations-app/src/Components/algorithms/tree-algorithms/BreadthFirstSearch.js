@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class DepthFirstSearch extends Component {
+class BreadthFirstSearch extends Component {
   constructor(props) {
     super(props);
     this.unMounting = false;
@@ -10,39 +10,41 @@ class DepthFirstSearch extends Component {
     this.unMounting = true;
   }
 
-  dfs = async () => {
+  bfs = async () => {
+    this.props.reset();
+
     let linkList = [];
     let root = 'a';
     let visited = {};
     Object.keys(this.props.g).map((node) => (visited[node] = false));
     visited[root] = true;
-    let stack = [root];
+    let queue = [root];
     let nodePath = [];
-    while (stack.length > 0) {
+    while (queue.length > 0) {
       if (this.unMounting) return;
-      
-      let currentNode = stack.pop();
+      let currentNode = queue[0];
+      queue.shift();
 
       await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
-      await this.checkPauseStatus(this.props.pause);
+      await this.checkPauseStatus();
       if (this.props.stop) return;
+      if (this.unMounting) return;
 
       this.activateLink(currentNode, linkList);
-
 
       await new Promise((r) => setTimeout(r, 700 / this.props.speed));
       await this.checkPauseStatus();
       if (this.props.stop) return;
+      if (this.unMounting) return;
 
       this.activateVisitedNode(currentNode);
-
       nodePath.push(currentNode);
       this.props.buildNodePath(nodePath);
 
       for (let child of this.props.g[currentNode]) {
         if (visited[child] === false) {
           visited[child] = true;
-          stack.push(child);
+          queue.push(child);
         }
       }
     }
@@ -68,19 +70,19 @@ class DepthFirstSearch extends Component {
       continue;
     }
   }
+
   render() {
     return (
       <button
         onClick={() => {
-          this.dfs(
-
-          );
+          this.props.reset();
+          this.bfs();
         }}
       >
-        DFS traverse
+        BFS traverse
       </button>
     );
   }
 }
 
-export default DepthFirstSearch;
+export default BreadthFirstSearch;

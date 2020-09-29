@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import bfs from '../algorithms/tree-algorithms/breadth-first-search';
-// import dfs from '../algorithms/tree-algorithms/depth-first-search';
-import DepthFirstSearch from '../algorithms/tree-algorithms/depth-first-search';
-import BreathFirstSearch from '../algorithms/tree-algorithms/breadth-first-search';
+import DepthFirstSearch from './algorithms/tree-algorithms/DepthFirstSearch';
+import BreathFirstSearch from './algorithms/tree-algorithms/BreadthFirstSearch';
 import createTree from '../graph-builders/tree-builder';
 
 class TreeTraversals extends Component {
@@ -12,7 +10,7 @@ class TreeTraversals extends Component {
       pause: false,
       stop: false,
       speed: 1,
-      nodePath: []
+      nodePath: [],
     };
     this.adjList = {
       a: ['b', 'c', 'd'],
@@ -74,6 +72,12 @@ class TreeTraversals extends Component {
       }
     });
     this.setState({ nodePath: [] });
+    if (this.state.stop) {
+      this.setState({ stop: false, pause: false });
+    }
+  };
+  updateStopState = (val) => {
+    this.setState({ stop: val });
   };
 
   renderTreeTraversalHeading() {
@@ -104,6 +108,7 @@ class TreeTraversals extends Component {
             stop={this.state.stop}
             speed={this.state.speed}
             buildNodePath={this.buildNodePath}
+            reset={this.reset}
           />
 
           <BreathFirstSearch
@@ -112,6 +117,7 @@ class TreeTraversals extends Component {
             stop={this.state.stop}
             speed={this.state.speed}
             buildNodePath={this.buildNodePath}
+            reset={this.reset}
           />
 
           <button

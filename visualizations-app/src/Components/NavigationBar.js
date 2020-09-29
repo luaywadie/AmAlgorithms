@@ -23,6 +23,7 @@ const NavigationBar = () => {
         <Navbar bg="dark" variant="dark" style={{ borderRadius: '20px' }}>
           <Navbar.Brand as={Link} to="/">
             <img
+              alt={'logo'}
               className={'header-logo'}
               src={process.env.PUBLIC_URL + '/logo.png'}
             />
