@@ -17,7 +17,7 @@ class Dijkstra extends Component {
     let target = this.props.target;
     let parents = {};
     let distances = {};
-    Object.keys(this.props.g).map((node) => {
+    Object.keys(this.props.g).forEach((node) => {
       distances[node] = Infinity;
       parents[node] = null;
     });

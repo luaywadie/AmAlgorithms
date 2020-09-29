@@ -175,7 +175,7 @@ class Topsort extends Component {
   }
 
   cleanUpActiveLinksAndCurrentNode(activeLinks) {
-    for (let [key, val] of Object.entries(activeLinks)) {
+    for (let val of Object.values(activeLinks)) {
       val.forEach((link) => link.classList.remove('link-of-interest-ts'));
     }
 

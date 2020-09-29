@@ -13,7 +13,7 @@ class Prim extends Component {
     let costMap = {};
     let parents = {};
     let mstSet = {};
-    Object.keys(this.props.g).map((k) => {
+    Object.keys(this.props.g).forEach((k) => {
       costMap[k] = Infinity;
       parents[k] = null;
       mstSet[k] = false;
