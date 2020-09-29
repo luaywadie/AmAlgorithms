@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import createGraph from '../graph-builders/undirected-graph-builder';
 import Dijkstra from '../algorithms/graph-algorithms/dijkstra';
-import prim from '../algorithms/graph-algorithms/prims_mst';
+import Prim from '../algorithms/graph-algorithms/prims_mst';
 
 class UndirectedGraphAlgorithms extends Component {
   constructor(props) {
@@ -167,11 +167,7 @@ class UndirectedGraphAlgorithms extends Component {
     await this.setState({ distances, parents });
   };
 
-  updatePrimDistancesAndParents = async (
-    distances,
-    parents,
-    cumulativeCostMap
-  ) => {
+  updatePrimData = async (distances, parents, cumulativeCostMap) => {
     await this.setState({
       distances,
       parents,
@@ -257,27 +253,14 @@ class UndirectedGraphAlgorithms extends Component {
             updateDistancesAndParents={this.updateDistancesAndParents}
           />
 
-          <button
-            className="graph-button"
-            onClick={() => {
-              this.setState({
-                pause: false,
-                stop: false,
-                algorithmSelected: 'prim',
-              });
-              this.reset();
-              prim(
-                this.adjList,
-                'source',
-                this.getPauseStatus,
-                this.getStopStatus,
-                this.getSpeedRequest,
-                this.updatePrimDistancesAndParents
-              );
-            }}
-          >
-            Prim MST
-          </button>
+          <Prim
+            g={this.adjList}
+            root={'source'}
+            pause={this.state.pause}
+            stop={this.state.stop}
+            speed={this.state.speed}
+            updatePrimData={this.updatePrimData}
+          />
           <button
             className="graph-button"
             onClick={() => {
