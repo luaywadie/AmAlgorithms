@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Topsort from '../algorithms/graph-algorithms/topsort';
+import Topsort from './algorithms/graph-algorithms/Topsort';
 import createDirectedGraph from '../graph-builders/directed-graph-builder';
 
 class DirectedGraphAlgorithms extends Component {

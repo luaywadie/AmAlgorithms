@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-const { Heap: PriorityQueue } = require('../../data-structures/Heap.js');
+const { Heap: PriorityQueue } = require('../../../data-structures/Heap.js');
 // [cost, node]
 
 class Dijkstra extends Component {

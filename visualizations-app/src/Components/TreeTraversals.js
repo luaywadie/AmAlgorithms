@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import DepthFirstSearch from '../algorithms/tree-algorithms/depth-first-search';
-import BreathFirstSearch from '../algorithms/tree-algorithms/breadth-first-search';
+import DepthFirstSearch from './algorithms/tree-algorithms/DepthFirstSearch';
+import BreathFirstSearch from './algorithms/tree-algorithms/BreadthFirstSearch';
 import createTree from '../graph-builders/tree-builder';
 
 class TreeTraversals extends Component {

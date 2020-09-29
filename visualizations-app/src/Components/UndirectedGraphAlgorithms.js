@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import createGraph from '../graph-builders/undirected-graph-builder';
-import Dijkstra from '../algorithms/graph-algorithms/dijkstra';
-import Prim from '../algorithms/graph-algorithms/prims_mst';
+import Dijkstra from './algorithms/graph-algorithms/Dijkstra';
+import Prim from './algorithms/graph-algorithms/Prim';
 
 class UndirectedGraphAlgorithms extends Component {
   constructor(props) {
