@@ -11,6 +11,8 @@ class BreadthFirstSearch extends Component {
   }
 
   bfs = async () => {
+    this.props.reset();
+
     let linkList = [];
     let root = 'a';
     let visited = {};
@@ -73,6 +75,7 @@ class BreadthFirstSearch extends Component {
     return (
       <button
         onClick={() => {
+          this.props.reset();
           this.bfs();
         }}
       >

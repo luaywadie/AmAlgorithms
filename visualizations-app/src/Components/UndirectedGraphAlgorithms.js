@@ -10,9 +10,9 @@ class UndirectedGraphAlgorithms extends Component {
       pause: false,
       stop: false,
       speed: 1,
-      distances: {},
+      primDistances: {},
+      dijkstraDistances: {},
       parents: {},
-      algorithmSelected: '',
       cumulativeCostMap: {},
     };
     this.adjList = {
@@ -164,12 +164,12 @@ class UndirectedGraphAlgorithms extends Component {
   }
 
   updateDistancesAndParents = async (distances, parents) => {
-    await this.setState({ distances, parents });
+    await this.setState({ dijkstraDistances: distances, parents });
   };
 
   updatePrimData = async (distances, parents, cumulativeCostMap) => {
     await this.setState({
-      distances,
+      primDistances: distances,
       parents,
       cumulativeCostMap,
     });
@@ -190,16 +190,19 @@ class UndirectedGraphAlgorithms extends Component {
     for (let line of lines) {
       line.classList = '';
     }
-    this.setState({ distances: {}, parents: {} });
+    this.setState({ primDistances: {}, dijkstraDistances: {}, parents: {} });
+    if (this.state.stop) {
+      this.setState({ stop: false, pause: false });
+    }
   };
 
   renderDijkstraTableData() {
-    return Object.keys(this.state.distances).map((key, index) => {
+    return Object.keys(this.state.dijkstraDistances).map((key, index) => {
       return (
         <tr key={index}>
           <td>{key}</td>
           <td>{this.state.parents[key]}</td>
-          <td>{this.state.distances[key]}</td>
+          <td>{this.state.dijkstraDistances[key]}</td>
         </tr>
       );
     });
@@ -216,12 +219,12 @@ class UndirectedGraphAlgorithms extends Component {
   }
 
   renderPrimTableData() {
-    return Object.keys(this.state.distances).map((key, index) => {
+    return Object.keys(this.state.primDistances).map((key, index) => {
       return (
         <tr key={index}>
           <td>{key}</td>
           <td>{this.state.parents[key]}</td>
-          <td>{this.state.distances[key]}</td>
+          <td>{this.state.primDistances[key]}</td>
           <td>{this.state.cumulativeCostMap[key]}</td>
         </tr>
       );
@@ -251,6 +254,7 @@ class UndirectedGraphAlgorithms extends Component {
             stop={this.state.stop}
             speed={this.state.speed}
             updateDistancesAndParents={this.updateDistancesAndParents}
+            reset={this.reset}
           />
 
           <Prim
@@ -260,6 +264,7 @@ class UndirectedGraphAlgorithms extends Component {
             stop={this.state.stop}
             speed={this.state.speed}
             updatePrimData={this.updatePrimData}
+            reset={this.reset}
           />
           <button
             className="graph-button"
@@ -296,24 +301,18 @@ class UndirectedGraphAlgorithms extends Component {
           </form>
         </div>
         <div className={'col-6'} id={'output-tables'}>
-          {this.state.algorithmSelected === 'dijkstra' ? (
-            <table
-              id={'dijkstra-table'}
-              className={('dijkstra-table', 'float-right')}
-            >
-              <tbody>
-                {this.renderDijkstraHeading()}
-                {this.renderDijkstraTableData()}
-              </tbody>
-            </table>
-          ) : (
-            <table id={'prim-table'} className={('prim-table', 'float-right')}>
-              <tbody>
-                {this.renderPrimHeading()}
-                {this.renderPrimTableData()}
-              </tbody>
-            </table>
-          )}
+          <table
+            id={'undirected-graph-table'}
+            className={('undirected-graph-table', 'float-right')}
+          >
+            <tbody>
+              {!this.state.dijkstraDistances['target']
+                ? this.renderPrimHeading()
+                : this.renderDijkstraHeading()}
+              {this.renderDijkstraTableData()}
+              {this.renderPrimTableData()}
+            </tbody>
+          </table>
         </div>
       </div>
     );

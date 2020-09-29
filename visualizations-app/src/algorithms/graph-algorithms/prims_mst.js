@@ -182,6 +182,7 @@ class Prim extends Component {
       <button
         className="graph-button"
         onClick={() => {
+          this.props.reset();
           this.prim();
         }}
       >

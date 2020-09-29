@@ -72,6 +72,12 @@ class TreeTraversals extends Component {
       }
     });
     this.setState({ nodePath: [] });
+    if (this.state.stop) {
+      this.setState({ stop: false, pause: false });
+    }
+  };
+  updateStopState = (val) => {
+    this.setState({ stop: val });
   };
 
   renderTreeTraversalHeading() {
@@ -102,6 +108,7 @@ class TreeTraversals extends Component {
             stop={this.state.stop}
             speed={this.state.speed}
             buildNodePath={this.buildNodePath}
+            reset={this.reset}
           />
 
           <BreathFirstSearch
@@ -110,6 +117,7 @@ class TreeTraversals extends Component {
             stop={this.state.stop}
             speed={this.state.speed}
             buildNodePath={this.buildNodePath}
+            reset={this.reset}
           />
 
           <button

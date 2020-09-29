@@ -48,6 +48,9 @@ class DirectedGraphAlgorithms extends Component {
       if (el) el.classList = '';
     });
     this.setState({ ordering: [] });
+    if (this.state.stop) {
+      this.setState({ stop: false, pause: false });
+    }
   };
 
   renderTopsortTableData() {
@@ -78,6 +81,7 @@ class DirectedGraphAlgorithms extends Component {
             stop={this.state.stop}
             speed={this.state.speed}
             getOrdering={this.getOrdering}
+            reset={this.reset}
           />
 
           <button

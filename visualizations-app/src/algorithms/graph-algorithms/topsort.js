@@ -196,6 +196,7 @@ class Topsort extends Component {
       <button
         className="graph-button"
         onClick={() => {
+          this.props.reset();
           this.topSort();
         }}
       >

@@ -11,6 +11,7 @@ class DepthFirstSearch extends Component {
   }
 
   dfs = async () => {
+    this.props.reset();
     let linkList = [];
     let root = 'a';
     let visited = {};
@@ -72,6 +73,7 @@ class DepthFirstSearch extends Component {
     return (
       <button
         onClick={() => {
+          this.props.reset();
           this.dfs();
         }}
       >
