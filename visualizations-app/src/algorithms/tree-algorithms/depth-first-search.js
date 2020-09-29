@@ -1,63 +1,86 @@
-async function dfs(
-  g,
-  getPauseStatus,
-  getStopStatus,
-  getSpeedRequest,
-  buildNodePath
-) {
-  let linkList = [];
-  let root = 'a';
-  let visited = {};
-  Object.keys(g).map((node) => (visited[node] = false));
-  visited[root] = true;
-  let stack = [root];
-  let nodePath = [];
-  while (stack.length > 0) {
-    let currentNode = stack.pop();
+import React, { Component } from 'react';
 
-    await new Promise((r) => setTimeout(r, 1000 / getSpeedRequest()));
-    await checkPauseStatus(getPauseStatus);
-    if (getStopStatus()) return;
+class DepthFirstSearch extends Component {
+  constructor(props) {
+    super(props);
+    this.unMounting = false;
+  }
 
-    activateLink(currentNode, linkList);
+  componentWillUnmount() {
+    this.unMounting = true;
+  }
 
-    await new Promise((r) => setTimeout(r, 700 / getSpeedRequest()));
-    await checkPauseStatus(getPauseStatus);
-    if (getStopStatus()) return;
+  dfs = async () => {
+    let linkList = [];
+    let root = 'a';
+    let visited = {};
+    Object.keys(this.props.g).map((node) => (visited[node] = false));
+    visited[root] = true;
+    let stack = [root];
+    let nodePath = [];
+    while (stack.length > 0) {
+      if (this.unMounting) return;
+      
+      let currentNode = stack.pop();
 
-    activateVisitedNode(currentNode);
+      await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+      await this.checkPauseStatus(this.props.pause);
+      if (this.props.stop) return;
 
-    nodePath.push(currentNode);
-    buildNodePath(nodePath);
+      this.activateLink(currentNode, linkList);
 
-    for (let child of g[currentNode]) {
-      if (visited[child] === false) {
-        visited[child] = true;
-        stack.push(child);
+
+      await new Promise((r) => setTimeout(r, 700 / this.props.speed));
+      await this.checkPauseStatus();
+      if (this.props.stop) return;
+
+      this.activateVisitedNode(currentNode);
+
+      nodePath.push(currentNode);
+      this.props.buildNodePath(nodePath);
+
+      for (let child of this.props.g[currentNode]) {
+        if (visited[child] === false) {
+          visited[child] = true;
+          stack.push(child);
+        }
       }
     }
+    linkList.forEach((el) => el.classList.remove('link-traversed'));
+  };
+
+  activateLink(currentNode, linkList) {
+    let linkElement = document.getElementById(currentNode + 'link');
+    if (linkElement) {
+      linkElement.classList.add('link-traversed');
+      linkList.push(linkElement);
+    }
   }
-  linkList.forEach((el) => el.classList.remove('link-traversed'));
-}
 
-export default dfs;
+  activateVisitedNode(currentNode) {
+    let nodeElement = document.getElementById(currentNode);
+    if (nodeElement) nodeElement.classList.add('node-complete-tree');
+  }
 
-function activateLink(currentNode, linkList) {
-  let linkElement = document.getElementById(currentNode + 'link');
-  if (linkElement) {
-    linkElement.classList.add('link-traversed');
-    linkList.push(linkElement);
+  async checkPauseStatus() {
+    while (this.props.pause) {
+      await new Promise((r) => setTimeout(r, 1000));
+      continue;
+    }
+  }
+  render() {
+    return (
+      <button
+        onClick={() => {
+          this.dfs(
+
+          );
+        }}
+      >
+        DFS traverse
+      </button>
+    );
   }
 }
 
-function activateVisitedNode(currentNode) {
-  let nodeElement = document.getElementById(currentNode);
-  if (nodeElement) nodeElement.classList.add('node-complete-tree');
-}
-
-async function checkPauseStatus(getPauseStatus) {
-  while (getPauseStatus()) {
-    await new Promise((r) => setTimeout(r, 1000));
-    continue;
-  }
-}
+export default DepthFirstSearch;

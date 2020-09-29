@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import bfs from '../algorithms/tree-algorithms/breadth-first-search';
-import dfs from '../algorithms/tree-algorithms/depth-first-search';
+// import dfs from '../algorithms/tree-algorithms/depth-first-search';
+import DepthFirstSearch from '../algorithms/tree-algorithms/depth-first-search';
+import BreathFirstSearch from '../algorithms/tree-algorithms/breadth-first-search';
 import createTree from '../graph-builders/tree-builder';
 
 class TreeTraversals extends Component {
@@ -10,7 +12,7 @@ class TreeTraversals extends Component {
       pause: false,
       stop: false,
       speed: 1,
-      nodePath: [],
+      nodePath: []
     };
     this.adjList = {
       a: ['b', 'c', 'd'],
@@ -50,6 +52,7 @@ class TreeTraversals extends Component {
   componentWillUnmount() {
     let svg = document.getElementById('tree-svg');
     if (this.tree.hasChildNodes()) this.tree.removeChild(svg);
+    this.reset();
   }
   buildNodePath = async (nodePath) => {
     await this.setState({ nodePath });
@@ -62,7 +65,9 @@ class TreeTraversals extends Component {
   reset = () => {
     Object.keys(this.adjList).forEach((e) => {
       let nodeElement = document.getElementById(e);
-      nodeElement.classList.remove('node-complete-tree');
+      if (nodeElement) {
+        nodeElement.classList.remove('node-complete-tree');
+      }
       let linkElement = document.getElementById(e + 'link');
       if (linkElement) {
         linkElement.classList.remove('link-traversed');
@@ -93,34 +98,22 @@ class TreeTraversals extends Component {
     return (
       <div className={'row'}>
         <div className={'col-6'}>
-          <button
-            onClick={() => {
-              this.setState({ pause: false, stop: false });
-              dfs(
-                this.adjList,
-                this.getPauseStatus,
-                this.getStopStatus,
-                this.getSpeedRequest,
-                this.buildNodePath
-              );
-            }}
-          >
-            DFS traverse
-          </button>
-          <button
-            onClick={() => {
-              this.setState({ pause: false, stop: false });
-              bfs(
-                this.adjList,
-                this.getPauseStatus,
-                this.getStopStatus,
-                this.getSpeedRequest,
-                this.buildNodePath
-              );
-            }}
-          >
-            BFS traverse
-          </button>
+          <DepthFirstSearch
+            g={this.adjList}
+            pause={this.state.pause}
+            stop={this.state.stop}
+            speed={this.state.speed}
+            buildNodePath={this.buildNodePath}
+          />
+
+          <BreathFirstSearch
+            g={this.adjList}
+            pause={this.state.pause}
+            stop={this.state.stop}
+            speed={this.state.speed}
+            buildNodePath={this.buildNodePath}
+          />
+
           <button
             onClick={() => {
               this.setState({ pause: false, stop: true });
