@@ -9,7 +9,7 @@ function bfs(g, root) {
     let s = q[0];
     ordering.push(s);
     q.shift();
-    console.log(s);
+    // console.log(s);
     for (let child of g[s]) {
       if (visited[child] == false) {
         q.push(child);
