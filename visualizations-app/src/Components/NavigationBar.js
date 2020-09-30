@@ -12,6 +12,7 @@ import {
 import TreeTraversals from '../Components/TreeTraversals';
 import UndirectedGraphAlgorithms from '../Components/UndirectedGraphAlgorithms';
 import DirectedGraphAlgorithms from '../Components/DirectedGraphAlgorithms';
+import HeapComponent from '../Components/data-structures/HeapComponent';
 
 import '../styles/Navigation-bar.scss';
 import MainPage from './MainPage';
@@ -38,6 +39,9 @@ const NavigationBar = () => {
             <Nav.Link as={Link} to="/directed_graph_algorithms">
               Directed Graph Algorithms
             </Nav.Link>
+            <Nav.Link as={Link} to="/heap">
+              Heap
+            </Nav.Link>
           </Nav>
           <Form inline>
             <FormControl type="text" placeholder="Search" className="mr-sm-2" />
@@ -55,6 +59,8 @@ const NavigationBar = () => {
         path="/directed_graph_algorithms"
         component={DirectedGraphAlgorithms}
       />
+      <Route path="/heap" component={HeapComponent} />
+
       <Route exact path="/" component={MainPage} />
     </Router>
   );
