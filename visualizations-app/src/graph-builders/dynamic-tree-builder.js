@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+const { bfs } = require('../helpers/data-structures/bfs_helper.js');
 
 function buildTreeDataFromAdjList(adjList) {
   let treeData = {};
@@ -61,7 +62,7 @@ function createDynamicTree(adjList) {
 
   // maps the node data to the tree layout
   nodes = treemap(nodes);
-
+  let z = nodes.descendants();
   // append the svg object to the body of the page
   // appends a 'group' element to 'svg'
   // moves the 'group' element to the top left margin
@@ -81,10 +82,13 @@ function createDynamicTree(adjList) {
     .data(nodes.descendants().slice(1))
     .enter()
     .append('path')
-    .attr('class', (d) => 'link' + d.data.name, 'link')
-    .attr('class', 'link')
+    .attr(
+      'class',
+      (d) => 'heap-link ' + d.data.name + 'link ' + ' heap-link-' + d.data.name
+    )
     .attr('id', (d) => d.data.name + 'link') // d.parent.data.name + '-' + d.data.name
-    .style('stroke', (d) => d.data.level)
+    .style('stroke', 0)
+    .style('stroke-width', 2)
     .attr('d', (d) => {
       return (
         'M' +
@@ -105,7 +109,17 @@ function createDynamicTree(adjList) {
         d.parent.y / myScale
       );
     });
-
+  // let totalDelay2 = 0;
+  // Object.keys(adjList).forEach((key, i) => {
+  //   // d3.select('.heap-link-' + key)
+  //   //   .transition()
+  //   //   .duration(100)
+  //   //   .delay(() => {
+  //   //     totalDelay2 += 1000;
+  //   //     return totalDelay2;
+  //   //   })
+  //   //   .attr('stroke', '#ccc');
+  // });
   // adds each node as a group
   const node = g
     .selectAll('.node')
@@ -114,28 +128,73 @@ function createDynamicTree(adjList) {
     .append('g')
     .attr(
       'class',
-      (d) => 'node' + (d.children ? ' node--internal' : ' node--leaf')
+      (d) =>
+        'node ' +
+        (d.children ? ' node--internal ' : ' node--leaf ') +
+        ' g-node-' +
+        d.data.name
     )
     .attr(
       'transform',
       (d) => 'translate(' + d.x / myScale + ',' + d.y / myScale + ')'
     );
-
-  // adds the circle to the node
   node
     .append('circle')
-    .attr('r', (d) => d.data.value)
+    .attr('r', (d) => 0)
+    .attr('class', (d) => 'node-' + d.data.name)
     .attr('id', (d) => d.data.name);
+
+  let min = Infinity;
+  Object.keys(adjList).forEach((key) => {
+    if (Number(key) < min) {
+      min = Number(key);
+    }
+  });
+
+  let bfsA = bfs(adjList, min);
+  let totalDelay = 0;
+  bfsA.forEach((key, i) => {
+    let prevDelay = totalDelay;
+    d3.select('.heap-link-' + key)
+      .transition()
+      .duration(100)
+      .delay(() => {
+        totalDelay += 1000;
+        return totalDelay;
+      })
+      .attr('stroke', '#ccc');
+    d3.select('.node-' + key)
+      .transition()
+      .duration(100)
+      .delay(() => prevDelay + 1000)
+      .attr('r', () => 10);
+
+    d3.select('.g-node-' + key)
+      .append('text')
+      .transition()
+      .duration(100)
+      .delay(() => prevDelay + 1000)
+      .attr('dy', '.35em')
+      .attr('x', (d) =>
+        d.children ? (d.data.value + 5) * -1 : d.data.value + 5
+      )
+      .attr('y', (d) =>
+        d.children && d.depth !== 0 ? -(d.data.value + 5) : d.data.value
+      )
+      .style('text-anchor', (d) => (d.children ? 'end' : 'start'))
+      .text((d) => d.data.name);
+  });
+
   // adds the text to the node
-  node
-    .append('text')
-    .attr('dy', '.35em')
-    .attr('x', (d) => (d.children ? (d.data.value + 5) * -1 : d.data.value + 5))
-    .attr('y', (d) =>
-      d.children && d.depth !== 0 ? -(d.data.value + 5) : d.data.value
-    )
-    .style('text-anchor', (d) => (d.children ? 'end' : 'start'))
-    .text((d) => d.data.name);
+  // node
+  //   .append('text')
+  //   .attr('dy', '.35em')
+  //   .attr('x', (d) => (d.children ? (d.data.value + 5) * -1 : d.data.value + 5))
+  //   .attr('y', (d) =>
+  //     d.children && d.depth !== 0 ? -(d.data.value + 5) : d.data.value
+  //   )
+  //   .style('text-anchor', (d) => (d.children ? 'end' : 'start'))
+  //   .text((d) => d.data.name);
 }
 
 export default createDynamicTree;
