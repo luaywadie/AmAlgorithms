@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import insertIntoDynamicTree from '../../graph-builders/dynamic-tree-builder';
-
 class Heap extends Component {
   constructor(props) {
     super(props);
@@ -35,6 +34,18 @@ class Heap extends Component {
     let pos = this.size;
     while (pos > 1) {
       let parent = Math.floor(pos / 2);
+      await new Promise((r) => setTimeout(r, 2000));
+
+      let childElement = document.getElementsByClassName(
+        'node-' + this.h[pos]
+      )[0];
+      childElement.classList.add('child-node');
+      let parentElement = document.getElementsByClassName(
+        'node-' + this.h[parent]
+      )[0];
+      parentElement.classList.add('parent-node');
+      await new Promise((r) => setTimeout(r, 2000));
+
       if (this.h[parent] > this.h[pos]) {
         insertIntoDynamicTree.swap(this.h[parent], this.h[pos]);
         let temp = this.h[parent];

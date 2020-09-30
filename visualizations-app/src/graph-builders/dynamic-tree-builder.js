@@ -40,33 +40,30 @@ function buildTreeDataFromAdjList(adjList) {
 
   return treeData;
 }
-
-let nextInsertLocation;
-function createDynamicTree(adjList) {
+function getMin(adjList) {
   let min = Infinity;
   Object.keys(adjList).forEach((key) => {
     if (Number(key) < min) {
       min = Number(key);
     }
   });
+  return min;
+}
+let nextInsertLocation;
+function createDynamicTree(adjList) {
+  let min = getMin(adjList);
   let treeData = buildTreeDataFromAdjList(adjList)[min];
   let myScale = 1.5;
-  // set the dimensions and margins of the diagram
   const margin = { top: 20, right: 90, bottom: 30, left: -50 },
     width = 900 - margin.left - margin.right,
     height = 900 - margin.top - margin.bottom;
 
-  // declares a tree layout and assigns the size
   let treemap = d3.tree().size([height, width]);
 
-  //  assigns the data to a hierarchy using parent-child relationships
   let nodes = d3.hierarchy(treeData, (d) => d.children);
 
-  // maps the node data to the tree layout
   nodes = treemap(nodes);
-  // append the svg object to the body of the page
-  // appends a 'group' element to 'svg'
-  // moves the 'group' element to the top left margin
+
   const svg = d3
       .select('#graph-container')
       .append('svg')
@@ -79,40 +76,6 @@ function createDynamicTree(adjList) {
       .attr('class', 'circle-target-g')
       .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-  // adds the links between the nodes
-  // g.selectAll('.link')
-  //   .data(nodes.descendants().slice(1))
-  //   .enter()
-  //   .append('path')
-  //   .attr(
-  //     'class',
-  //     (d) => 'heap-link ' + d.data.name + 'link ' + ' heap-link-' + d.data.name
-  //   )
-  //   .attr('id', (d) => d.data.name + 'link') // d.parent.data.name + '-' + d.data.name
-  //   .style('stroke', '#ccc')
-  //   .style('stroke-width', 2)
-  //   .attr('d', (d) => {
-  //     return (
-  //       'M' +
-  //       d.x / myScale +
-  //       ',' +
-  //       d.y / myScale +
-  //       'C' +
-  //       (d.x + d.parent.x) / myScale / 2 +
-  //       ',' +
-  //       d.y / myScale +
-  //       ' ' +
-  //       (d.x + d.parent.x) / myScale / 2 +
-  //       ',' +
-  //       d.parent.y / myScale +
-  //       ' ' +
-  //       d.parent.x / myScale +
-  //       ',' +
-  //       d.parent.y / myScale
-  //     );
-  //   });
-
-  // adds each node as a group
   const node = g
     .selectAll('.node')
     .data(nodes.descendants())
@@ -136,48 +99,6 @@ function createDynamicTree(adjList) {
     .attr('class', (d) => 'node-' + d.data.name)
     .attr('id', (d) => d.data.name);
 
-  let l_min = Infinity;
-  Object.keys(adjList).forEach((key) => {
-    if (Number(key) < l_min) {
-      l_min = Number(key);
-    }
-  });
-  let size = Object.keys(adjList).length;
-  nextInsertLocation = size + 1;
-  // let bfsA = bfs(adjList, min);
-  // let totalDelay = 0;
-  // bfsA.forEach((key, i) => {
-  //   let prevDelay = totalDelay;
-  //   d3.select('.heap-link-' + key)
-  //     .transition()
-  //     .duration(100)
-  //     .delay(() => {
-  //       totalDelay += 1000;
-  //       return totalDelay;
-  //     })
-  //     .attr('stroke', '#ccc');
-  //   d3.select('.node-' + key)
-  //     .transition()
-  //     .duration(100)
-  //     .delay(() => prevDelay + 1000)
-  //     .attr('r', () => 10);
-
-  //   d3.select('.g-node-' + key)
-  //     .append('text')
-  //     .transition()
-  //     .duration(100)
-  //     .delay(() => prevDelay + 1000)
-  //     .attr('dy', '.35em')
-  //     .attr('x', (d) =>
-  //       d.children ? (d.data.value + 5) * -1 : d.data.value + 5
-  //     )
-  //     .attr('y', (d) =>
-  //       d.children && d.depth !== 0 ? -(d.data.value + 5) : d.data.value
-  //     )
-  //     .style('text-anchor', (d) => (d.children ? 'end' : 'start'))
-  //     .text((d) => d.data.name);
-  // });
-
   // adds the text to the node
   node
     .append('text')
@@ -192,7 +113,6 @@ function createDynamicTree(adjList) {
 }
 
 function insertIntoDynamicTree(parent, adjList) {
-  let size = Object.keys(adjList).length;
   this.dataStructure = document.getElementById('graph-container');
   let svg_l = document.getElementById('heap-tree-svg');
   if (this.dataStructure.hasChildNodes()) this.dataStructure.removeChild(svg_l);
@@ -207,7 +127,7 @@ function insertIntoDynamicTree(parent, adjList) {
   let treemap = d3.tree().size([height, width]);
   let nodes = d3.hierarchy(treeData, (d) => d.children);
   nodes = treemap(nodes);
-  // let g = d3.select('.circle-target-g');
+
   const svg = d3
       .select('#graph-container')
       .append('svg')
@@ -311,3 +231,39 @@ function swap(p, c) {
 }
 
 export default { createDynamicTree, insertIntoDynamicTree, swap };
+
+// Animations
+
+// let bfsA = bfs(adjList, min);
+// let totalDelay = 0;
+// bfsA.forEach((key, i) => {
+//   let prevDelay = totalDelay;
+//   d3.select('.heap-link-' + key)
+//     .transition()
+//     .duration(100)
+//     .delay(() => {
+//       totalDelay += 1000;
+//       return totalDelay;
+//     })
+//     .attr('stroke', '#ccc');
+//   d3.select('.node-' + key)
+//     .transition()
+//     .duration(100)
+//     .delay(() => prevDelay + 1000)
+//     .attr('r', () => 10);
+
+//   d3.select('.g-node-' + key)
+//     .append('text')
+//     .transition()
+//     .duration(100)
+//     .delay(() => prevDelay + 1000)
+//     .attr('dy', '.35em')
+//     .attr('x', (d) =>
+//       d.children ? (d.data.value + 5) * -1 : d.data.value + 5
+//     )
+//     .attr('y', (d) =>
+//       d.children && d.depth !== 0 ? -(d.data.value + 5) : d.data.value
+//     )
+//     .style('text-anchor', (d) => (d.children ? 'end' : 'start'))
+//     .text((d) => d.data.name);
+// });

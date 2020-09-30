@@ -90,4 +90,32 @@
       fill: green;
     }
   }
+
+  // Heap
+  .child-node {
+    fill: tan;
+    animation: child-node 0.1s;
+  }
+  @keyframes child-node {
+    from {
+      fill: #fff;
+    }
+    to {
+      fill: tan;
+    }
+  }
+
+  .parent-node {
+    fill: red;
+
+    animation: parent-node 0.1s;
+  }
+  @keyframes parent-node {
+    from {
+      fill: #fff;
+    }
+    to {
+      fill: red;
+    }
+  }
 }
