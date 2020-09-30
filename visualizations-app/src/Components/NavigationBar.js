@@ -12,7 +12,7 @@ import {
 import TreeTraversals from '../Components/TreeTraversals';
 import UndirectedGraphAlgorithms from '../Components/UndirectedGraphAlgorithms';
 import DirectedGraphAlgorithms from '../Components/DirectedGraphAlgorithms';
-import HeapComponent from '../Components/data-structures/HeapComponent';
+import Heap from '../Components/data-structures/Heap';
 
 import '../styles/Navigation-bar.scss';
 import MainPage from './MainPage';
@@ -59,7 +59,7 @@ const NavigationBar = () => {
         path="/directed_graph_algorithms"
         component={DirectedGraphAlgorithms}
       />
-      <Route path="/heap" component={HeapComponent} />
+      <Route path="/heap" component={Heap} />
 
       <Route exact path="/" component={MainPage} />
     </Router>

@@ -3,22 +3,30 @@ import * as d3 from 'd3';
 function buildTreeDataFromAdjList(adjList) {
   let treeData = {};
   let root = true;
-
-  for (let node of Object.keys(adjList)) {
-    treeData[node] = {
-      name: node,
-      value: 10,
-      type: 'black',
-      level: '',
-      children: [],
-    };
-  }
-
   for (let [node, children] of Object.entries(adjList)) {
+    if (root === true) {
+      treeData[node] = {
+        name: node,
+        value: 10,
+        type: 'black',
+        level: '',
+        children: [],
+      };
+      root = false;
+    }
     for (let child of children) {
       if (!treeData[child]) {
         treeData[child] = {
           name: child,
+          value: 10,
+          type: 'black',
+          level: '',
+          children: [],
+        };
+      }
+      if (!treeData[node]) {
+        treeData[node] = {
+          name: node,
           value: 10,
           type: 'black',
           level: '',
@@ -60,7 +68,7 @@ function createDynamicTree(adjList) {
   const svg = d3
       .select('#graph-container')
       .append('svg')
-      .attr('id', 'tree-svg')
+      .attr('id', 'heap-tree-svg')
       .attr('width', width + margin.left + margin.right)
       .attr('height', height + margin.top + margin.bottom)
       .attr('class', 'graph'),
