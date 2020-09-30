@@ -14,6 +14,8 @@ class UndirectedGraphAlgorithms extends Component {
       dijkstraDistances: {},
       parents: {},
       cumulativeCostMap: {},
+      algRunning: '',
+      priorityQueue: [],
     };
     this.adjList = {
       a: [
@@ -163,8 +165,11 @@ class UndirectedGraphAlgorithms extends Component {
     this.reset();
   }
 
-  updateDistancesAndParents = async (distances, parents) => {
-    await this.setState({ dijkstraDistances: distances, parents });
+  updateDijkstraData = async (distances, parents) => {
+    await this.setState({
+      dijkstraDistances: distances,
+      parents,
+    });
   };
 
   updatePrimData = async (distances, parents, cumulativeCostMap) => {
@@ -173,6 +178,15 @@ class UndirectedGraphAlgorithms extends Component {
       parents,
       cumulativeCostMap,
     });
+  };
+
+  setRunningAlg = (alg) => {
+    this.reset();
+    this.setState({ runningAlg: alg });
+  };
+
+  updatePq = (a) => {
+    this.setState({ priorityQueue: a });
   };
 
   getPauseStatus = () => this.state.pause;
@@ -184,6 +198,7 @@ class UndirectedGraphAlgorithms extends Component {
       let el = document.getElementById(e);
       if (el) {
         el.classList.remove('node-complete-tree');
+        el.classList.remove('current-node-of-interest');
       }
     });
     let lines = document.getElementsByTagName('line');
@@ -203,6 +218,9 @@ class UndirectedGraphAlgorithms extends Component {
           <td>{key}</td>
           <td>{this.state.parents[key]}</td>
           <td>{this.state.dijkstraDistances[key]}</td>
+          <td style={{ backgroundColor: index === 0 ? 'yellow' : '' }}>
+            {this.state.priorityQueue[index]}
+          </td>
         </tr>
       );
     });
@@ -214,6 +232,7 @@ class UndirectedGraphAlgorithms extends Component {
         <th>Node</th>
         <th>Parent</th>
         <th>Distance</th>
+        <th>Priority Queue</th>
       </tr>
     );
   }
@@ -253,8 +272,10 @@ class UndirectedGraphAlgorithms extends Component {
             pause={this.state.pause}
             stop={this.state.stop}
             speed={this.state.speed}
-            updateDistancesAndParents={this.updateDistancesAndParents}
-            reset={this.reset}
+            runningAlg={this.state.runningAlg}
+            setRunningAlg={this.setRunningAlg}
+            updateDijkstraData={this.updateDijkstraData}
+            updatePq={this.updatePq}
           />
 
           <Prim
@@ -263,8 +284,9 @@ class UndirectedGraphAlgorithms extends Component {
             pause={this.state.pause}
             stop={this.state.stop}
             speed={this.state.speed}
+            runningAlg={this.state.runningAlg}
+            setRunningAlg={this.setRunningAlg}
             updatePrimData={this.updatePrimData}
-            reset={this.reset}
           />
           <button
             className="graph-button"

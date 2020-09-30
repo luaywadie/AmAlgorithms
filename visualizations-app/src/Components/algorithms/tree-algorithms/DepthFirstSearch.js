@@ -10,8 +10,13 @@ class DepthFirstSearch extends Component {
     this.unMounting = true;
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.runningAlg === 'dfs' && this.props.runningAlg !== 'dfs') {
+      this.unMounting = true;
+    }
+  }
+
   dfs = async () => {
-    this.props.reset();
     let linkList = [];
     let root = 'a';
     let visited = {};
@@ -73,7 +78,10 @@ class DepthFirstSearch extends Component {
     return (
       <button
         onClick={() => {
-          this.props.reset();
+          if (this.unMounting) {
+            this.unMounting = false;
+          }
+          this.props.setRunningAlg('dfs');
           this.dfs();
         }}
       >

@@ -10,9 +10,13 @@ class BreadthFirstSearch extends Component {
     this.unMounting = true;
   }
 
-  bfs = async () => {
-    this.props.reset();
+  componentDidUpdate(prevProps) {
+    if (prevProps.runningAlg === 'bfs' && this.props.runningAlg !== 'bfs') {
+      this.unMounting = true;
+    }
+  }
 
+  bfs = async () => {
     let linkList = [];
     let root = 'a';
     let visited = {};
@@ -74,8 +78,11 @@ class BreadthFirstSearch extends Component {
   render() {
     return (
       <button
-        onClick={() => {
-          this.props.reset();
+        onClick={async () => {
+          if (this.unMounting) {
+            this.unMounting = false;
+          }
+          this.props.setRunningAlg('bfs');
           this.bfs();
         }}
       >

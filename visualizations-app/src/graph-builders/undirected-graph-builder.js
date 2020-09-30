@@ -32,7 +32,7 @@ function createGraph() {
     { target: 'a', source: 'd', strength: 20 * strength, cost: 8 },
     { target: 'b', source: 'd', strength: 20 * strength, cost: 9 },
     { target: 'b', source: 'e', strength: strength, cost: 11 },
-    { target: 'e', source: 'c', strength: strength, cost: 9 },
+    { target: 'e', source: 'c', strength: 20*strength, cost: 9 },
     { target: 'f', source: 'c', strength: 0.05, cost: 7 },
     { target: 'f', source: 'b', strength: 0.05, cost: 8 },
     { target: 'f', source: 'a', strength: 0.05, cost: 6 },
@@ -46,7 +46,7 @@ function createGraph() {
     { target: 'j', source: 'b', strength: strength, cost: 8 },
     { target: 'j', source: 'e', strength: strength, cost: 10 },
     { target: 'i', source: 'k', strength: 15 * strength, cost: 14 },
-    { target: 'c', source: 'k', strength: 15 * strength, cost: 5 },
+    { target: 'c', source: 'k', strength: 20 * strength, cost: 5 },
     { target: 'e', source: 'k', strength: 15 * strength, cost: 10 },
     { target: 'g', source: 'k', strength: 15 * strength, cost: 10 },
     { target: 'l', source: 'j', strength: 20 * strength, cost: 10 },
@@ -97,7 +97,7 @@ function createGraph() {
       return link.id;
     })
     .strength(function (link) {
-      return link.strength / 0.9;
+      return link.strength / 0.5;
     });
 
   var simulation = d3
@@ -158,8 +158,8 @@ function createGraph() {
       return node.id;
     })
     .attr('font-size', 15)
-    .attr('dx', 15)
-    .attr('dy', 4);
+    .attr('dx', 13)
+    .attr('dy', 0);
 
   simulation.nodes(nodes).on('tick', () => {
     nodeElements

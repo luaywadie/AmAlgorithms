@@ -10,6 +10,14 @@ class Dijkstra extends Component {
   componentWillUnmount() {
     this.unMounting = true;
   }
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.runningAlg === 'dijkstra' &&
+      this.props.runningAlg !== 'dijkstra'
+    ) {
+      this.unMounting = true;
+    }
+  }
 
   djikstra = async () => {
     let pq = new PriorityQueue();
@@ -27,9 +35,18 @@ class Dijkstra extends Component {
     let activeLinks = [];
 
     while (pq.size > 0) {
+      this.props.updatePq(pq.getArray());
+      await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+      await this.checkPauseStatus();
+      if (this.props.stop) {
+        this.cleanUpActiveLinksAndCurrentNode(activeLinks, null);
+        return;
+      }
       if (this.unMounting) return;
-      this.props.updateDistancesAndParents(distances, parents);
       let currentNode = pq.removeRoot()[1];
+      this.props.updateDijkstraData(distances, parents);
+      this.props.updatePq(pq.getArray());
+
       let currentNodeElement = this.activateCurrentNode(currentNode);
 
       await new Promise((r) => setTimeout(r, 2000 / this.props.speed));
@@ -59,7 +76,7 @@ class Dijkstra extends Component {
         );
         activeLinks.push(linkOfInterestElement);
 
-        await new Promise((r) => setTimeout(r, 2000 / this.props.speed));
+        await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
         await this.checkPauseStatus();
         if (this.props.stop) {
           this.cleanUpActiveLinksAndCurrentNode(activeLinks, currentNode);
@@ -73,6 +90,8 @@ class Dijkstra extends Component {
           distances[neighborNode] = potentialScore;
           parents[neighborNode] = currentNode;
           pq.insert([neighborNodeWeight, neighborNode]);
+          this.props.updatePq(pq.getArray());
+          await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
         }
       }
       this.fadeOutLinks(activeLinks);
@@ -110,7 +129,6 @@ class Dijkstra extends Component {
       currentNode < neighborNode
         ? currentNode + '-' + neighborNode
         : neighborNode + '-' + currentNode;
-
     let linkOfInterestElement = document.getElementById(linkString);
     if (linkOfInterestElement)
       linkOfInterestElement.classList.add('link-traversed');
@@ -159,7 +177,10 @@ class Dijkstra extends Component {
       <button
         className="graph-button"
         onClick={() => {
-          this.props.reset();
+          if (this.unMounting) {
+            this.unMounting = false;
+          }
+          this.props.setRunningAlg('dijkstra');
           this.djikstra();
         }}
       >

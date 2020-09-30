@@ -8,6 +8,13 @@ class Prim extends Component {
   componentWillUnmount() {
     this.unMounting = true;
   }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.runningAlg === 'prim' && this.props.runningAlg !== 'prim') {
+      this.unMounting = true;
+    }
+  }
+
   prim = async () => {
     let root = this.props.root;
     let costMap = {};
@@ -182,11 +189,14 @@ class Prim extends Component {
       <button
         className="graph-button"
         onClick={() => {
-          this.props.reset();
+          if (this.unMounting) {
+            this.unMounting = false;
+          }
+          this.props.setRunningAlg('prim');
           this.prim();
         }}
       >
-        Prim MST
+        Prim
       </button>
     );
   }

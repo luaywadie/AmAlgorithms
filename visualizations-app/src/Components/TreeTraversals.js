@@ -11,6 +11,7 @@ class TreeTraversals extends Component {
       stop: false,
       speed: 1,
       nodePath: [],
+      runningAlg: '',
     };
     this.adjList = {
       a: ['b', 'c', 'd'],
@@ -52,8 +53,8 @@ class TreeTraversals extends Component {
     if (this.tree.hasChildNodes()) this.tree.removeChild(svg);
     this.reset();
   }
-  buildNodePath = async (nodePath) => {
-    await this.setState({ nodePath });
+  buildNodePath = (nodePath) => {
+    this.setState({ nodePath });
   };
 
   getPauseStatus = () => this.state.pause;
@@ -76,8 +77,14 @@ class TreeTraversals extends Component {
       this.setState({ stop: false, pause: false });
     }
   };
-  updateStopState = (val) => {
-    this.setState({ stop: val });
+
+  setRunningAlg = (alg) => {
+    this.reset();
+    this.setState({ runningAlg: alg });
+  };
+
+  updateStopState = async (val) => {
+    await this.setState({ stop: val });
   };
 
   renderTreeTraversalHeading() {
@@ -107,8 +114,9 @@ class TreeTraversals extends Component {
             pause={this.state.pause}
             stop={this.state.stop}
             speed={this.state.speed}
+            runningAlg={this.state.runningAlg}
+            setRunningAlg={this.setRunningAlg}
             buildNodePath={this.buildNodePath}
-            reset={this.reset}
           />
 
           <BreathFirstSearch
@@ -116,11 +124,13 @@ class TreeTraversals extends Component {
             pause={this.state.pause}
             stop={this.state.stop}
             speed={this.state.speed}
+            runningAlg={this.state.runningAlg}
+            setRunningAlg={this.setRunningAlg}
             buildNodePath={this.buildNodePath}
-            reset={this.reset}
           />
 
           <button
+            id={'reset-button'}
             onClick={() => {
               this.setState({ pause: false, stop: true });
               this.reset();

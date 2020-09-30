@@ -9,6 +9,15 @@ class Topsort extends Component {
     this.unMounting = true;
   }
 
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.runningAlg === 'topsort' &&
+      this.props.runningAlg !== 'topsort'
+    ) {
+      this.unMounting = true;
+    }
+  }
+
   topSort = async () => {
     let stack = [];
     let visited = {};
@@ -40,7 +49,6 @@ class Topsort extends Component {
           .classList.remove('current-node-of-interest');
       }
     }
-    console.log(stack.reverse());
     return stack.reverse();
   };
   // 2 = permenant mark, 1 = temp mark (if we encounter 1 again, we have cycle)
@@ -196,7 +204,10 @@ class Topsort extends Component {
       <button
         className="graph-button"
         onClick={() => {
-          this.props.reset();
+          if (this.unMounting) {
+            this.unMounting = false;
+          }
+          this.props.setRunningAlg('topsort');
           this.topSort();
         }}
       >

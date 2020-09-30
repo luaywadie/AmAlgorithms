@@ -10,6 +10,7 @@ class DirectedGraphAlgorithms extends Component {
       stop: false,
       speed: 1,
       ordering: [],
+      runningAlg: '',
     };
     this.adjList = {
       a: ['g', 'c', 'b'],
@@ -34,10 +35,13 @@ class DirectedGraphAlgorithms extends Component {
     if (this.graph.hasChildNodes()) this.graph.removeChild(svg);
     this.reset();
   }
-  getOrdering = async (stack) => {
-    await this.setState({ ordering: stack });
+  getOrdering = (stack) => {
+    this.setState({ ordering: stack });
   };
-
+  setRunningAlg = (alg) => {
+    this.reset();
+    this.setState({ runningAlg: alg });
+  };
   getPauseStatus = () => this.state.pause;
   getStopStatus = () => this.state.stop;
   getSpeedRequest = () => Number(this.state.speed) + 0.1;
@@ -80,8 +84,9 @@ class DirectedGraphAlgorithms extends Component {
             pause={this.state.pause}
             stop={this.state.stop}
             speed={this.state.speed}
+            runningAlg={this.state.runningAlg}
+            setRunningAlg={this.setRunningAlg}
             getOrdering={this.getOrdering}
-            reset={this.reset}
           />
 
           <button
