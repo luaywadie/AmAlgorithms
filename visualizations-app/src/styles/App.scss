@@ -8,7 +8,7 @@ body {
 
 button {
   color: black;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   border-radius: 3px;
   border-width: 2px;
   padding-top: 6px;
@@ -16,18 +16,24 @@ button {
   padding-right: 12px;
   padding-left: 12px;
 }
+button:disabled,
+button[disabled] {
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}
 .row {
   padding-left: 200px;
   padding-right: 500px;
 }
 
-.container-fluid{
-  margin:0 ! important;
-  padding:0 ! important;
-  }
+.container-fluid {
+  margin: 0 !important;
+  padding: 0 !important;
+}
 
-  .divider{
-    width:10px;
-    height:auto;
-    display:inline-block;
+.divider {
+  width: 10px;
+  height: auto;
+  display: inline-block;
 }

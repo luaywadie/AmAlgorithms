@@ -19,6 +19,7 @@ class Heap extends Component {
       inputNum: '',
       executing: false,
     };
+    this.unMounting = false;
     this.adjList = {};
     this.dataStructure = document.getElementById('graph-container');
   }
@@ -30,6 +31,7 @@ class Heap extends Component {
   };
 
   componentWillUnmount() {
+    this.unMounting = true;
     let svg = document.getElementById('heap-tree-svg');
     if (this.dataStructure.hasChildNodes()) this.dataStructure.removeChild(svg);
   }
@@ -87,13 +89,16 @@ class Heap extends Component {
     while (pos > 1) {
       let parent = Math.floor(pos / 2);
       await new Promise((r) => setTimeout(r, 2000));
+      if (this.unMounting) return;
       this.activateChildAndParent(this.h[pos], this.h[parent]);
       await new Promise((r) => setTimeout(r, 2000));
+      if (this.unMounting) return;
       this.removeActiveChildParent(this.h[pos], this.h[parent]);
 
       if (this.h[parent] > this.h[pos]) {
         this.activateLink(this.h[pos]);
         await new Promise((r) => setTimeout(r, 1000));
+        if (this.unMounting) return;
         this.deActivateLink(this.h[pos]);
 
         swap(this.h[parent], this.h[pos]);
@@ -143,6 +148,7 @@ class Heap extends Component {
       this.activateParent(this.h[pos]);
       this.activateLeftAndRightChildren(this.h[child], this.h[child + 1]);
       await new Promise((r) => setTimeout(r, 2000));
+      if (this.unMounting) return;
       this.deActivateParent(this.h[pos]);
       this.deActivateLeftAndRightChildren(this.h[child], this.h[child + 1]);
 
@@ -150,13 +156,16 @@ class Heap extends Component {
         child += 1;
       }
       await new Promise((r) => setTimeout(r, 500));
+      if (this.unMounting) return;
       this.activateChildAndParent(this.h[child], this.h[pos]);
       await new Promise((r) => setTimeout(r, 2000));
+      if (this.unMounting) return;
       this.removeActiveChildParent(this.h[child], this.h[pos]);
 
       if (this.h[pos] > this.h[child]) {
         this.activateLink(this.h[child]);
         await new Promise((r) => setTimeout(r, 1000));
+        if (this.unMounting) return;
         this.deActivateLink(this.h[child]);
 
         swap(this.h[pos], this.h[child]);
@@ -307,53 +316,52 @@ class Heap extends Component {
               event.preventDefault();
             }}
           >
-            <label>
-              Add a node:
-              <input
-                style={{ width: '50px' }}
-                type="text"
-                value={this.state.inputNum}
-                onChange={async (event) => {
-                  await this.setState({
-                    inputNum: Number(event.target.value),
-                  });
-                }}
-              />
-              <button
-                type="submit"
-                disabled={
-                  this.state.inputList.includes(Number(this.state.inputNum)) ||
-                  this.state.executing
-                }
-                onClick={() => this.handleInsertButton()}
-              >
-                {this.formatInsertButtonText()}
-              </button>
-              <button
-                disabled={this.state.heapA.length <= 1 || this.state.executing}
-                onClick={() => {
-                  this.removeRoot();
-                }}
-              >
-                {this.state.executing ? 'Executing...' : 'Remove Root'}
-              </button>
-              <button
-                disabled={this.state.executing}
-                onClick={() => {
-                  this.buildSampleHeap();
-                }}
-              >
-                {this.state.executing ? 'Executing...' : 'Sample Heap'}
-              </button>
-              <button
-                disabled={this.state.executing}
-                onClick={() => {
-                  this.clearHeap();
-                }}
-              >
-                {this.state.executing ? 'Executing...' : 'Clear'}
-              </button>
-            </label>
+            <label>Add a node:</label>
+
+            <input
+              style={{ width: '50px' }}
+              type="text"
+              value={this.state.inputNum}
+              onChange={async (event) => {
+                await this.setState({
+                  inputNum: Number(event.target.value),
+                });
+              }}
+            />
+            <button
+              type="submit"
+              disabled={
+                this.state.inputList.includes(Number(this.state.inputNum)) ||
+                this.state.executing
+              }
+              onClick={() => this.handleInsertButton()}
+            >
+              {this.formatInsertButtonText()}
+            </button>
+            <button
+              disabled={this.state.heapA.length <= 1 || this.state.executing}
+              onClick={() => {
+                this.removeRoot();
+              }}
+            >
+              {this.state.executing ? 'Executing...' : 'Remove Root'}
+            </button>
+            <button
+              disabled={this.state.executing}
+              onClick={() => {
+                this.buildSampleHeap();
+              }}
+            >
+              {this.state.executing ? 'Executing...' : 'Sample Heap'}
+            </button>
+            <button
+              disabled={this.state.executing}
+              onClick={() => {
+                this.clearHeap();
+              }}
+            >
+              {this.state.executing ? 'Executing...' : 'Clear'}
+            </button>
           </form>
         </div>
         <div className={'col-6'}>
@@ -369,7 +377,7 @@ class Heap extends Component {
             </table>
           </div>
           <div className={'row'}>
-            <h4 id={'root-extracted'}></h4>
+            <h5 id={'root-extracted'}></h5>
           </div>
           <div className={'row'}>
             <h4>Input List</h4>
