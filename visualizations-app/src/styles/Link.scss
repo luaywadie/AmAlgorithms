@@ -58,3 +58,21 @@
 .heap-link {
   fill: none;
 }
+
+// Heap
+.fade-in-out-link {
+  stroke-width: 4px;
+  stroke: rgba(50, 50, 50, 0.2);
+  animation: fade-in-out-link 2s;
+}
+@keyframes fade-in-out-link {
+  0%,
+  100% {
+    stroke-width: 2px;
+    stroke: rgba(50, 50, 50, 0.2);
+  }
+  30% {
+    stroke: #5b9cfc;
+    stroke-width: 4px;
+  }
+}

@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-const { bfs } = require('../helpers/data-structures/bfs_helper.js');
+// const { bfs } = require('../helpers/data-structures/bfs_helper.js');
 
 function buildTreeDataFromAdjList(adjList) {
   let treeData = {};
@@ -49,7 +49,6 @@ function getMin(adjList) {
   });
   return min;
 }
-let nextInsertLocation;
 function createDynamicTree(adjList) {
   let min = getMin(adjList);
   let treeData = buildTreeDataFromAdjList(adjList)[min];
@@ -146,7 +145,7 @@ function insertIntoDynamicTree(parent, adjList) {
     .append('path')
     .attr(
       'class',
-      (d) => 'heap-link ' + d.data.name + 'link ' + ' heap-link-' + d.data.name
+      (d) => `heap-link ${d.data.name}link heap-link-${d.data.name}`
     )
     .attr('id', (d) => d.data.name + 'link') // d.parent.data.name + '-' + d.data.name
     .style('stroke', '#ccc')
@@ -226,8 +225,12 @@ function swap(p, c) {
   childG.attr('class', 'node  node--internal  g-node-' + p);
 
   let childLink = d3.select('.heap-link-' + c);
-  childLink.attr('class', 'heap-link ' + p + 'link ' + 'heap-link-' + p);
+  childLink.attr('class', `heap-link ${p}link heap-link- + ${p}`);
   childLink.attr('id', p + 'link');
+
+  let parentLink = d3.select('.heap-link-' + p);
+  parentLink.attr('class', `heap-link ${c}link heap-link-${c}`);
+  parentLink.attr('id', c + 'link');
 }
 
 export default { createDynamicTree, insertIntoDynamicTree, swap };

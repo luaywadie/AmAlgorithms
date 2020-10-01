@@ -11,7 +11,7 @@ function bfs(g, root) {
     q.shift();
     // console.log(s);
     for (let child of g[s]) {
-      if (visited[child] == false) {
+      if (visited[child] === false) {
         q.push(child);
         visited[child] = true;
       }

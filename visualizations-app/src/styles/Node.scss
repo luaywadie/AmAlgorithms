@@ -93,28 +93,29 @@
 
   // Heap
   .child-node {
-    fill: tan;
-    animation: child-node 0.1s;
+    fill: #fff;
+    animation: child-node 2s;
   }
   @keyframes child-node {
-    from {
+    0%,
+    100% {
       fill: #fff;
     }
-    to {
-      fill: tan;
+    30% {
+      fill: #5b9cfc;
     }
   }
 
   .parent-node {
-    fill: red;
-
-    animation: parent-node 0.1s;
+    fill: #fff;
+    animation: parent-node 2s;
   }
   @keyframes parent-node {
-    from {
+    0%,
+    100% {
       fill: #fff;
     }
-    to {
+    30% {
       fill: red;
     }
   }

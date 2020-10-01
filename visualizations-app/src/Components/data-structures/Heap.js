@@ -22,10 +22,7 @@ class Heap extends Component {
 
     this.convertHeapArrayToAdjList(this.h);
     if (this.size !== 1) {
-      let z = insertIntoDynamicTree.insertIntoDynamicTree(
-        this.h[1],
-        this.adjList
-      );
+      insertIntoDynamicTree.insertIntoDynamicTree(this.h[1], this.adjList);
     }
 
     this.fixUp();
@@ -34,17 +31,10 @@ class Heap extends Component {
     let pos = this.size;
     while (pos > 1) {
       let parent = Math.floor(pos / 2);
+      await new Promise((r) => setTimeout(r, 1000));
+      this.activateChildParentAndLink(this.h[pos], this.h[parent]);
       await new Promise((r) => setTimeout(r, 2000));
-
-      let childElement = document.getElementsByClassName(
-        'node-' + this.h[pos]
-      )[0];
-      childElement.classList.add('child-node');
-      let parentElement = document.getElementsByClassName(
-        'node-' + this.h[parent]
-      )[0];
-      parentElement.classList.add('parent-node');
-      await new Promise((r) => setTimeout(r, 2000));
+      this.removeActiveChildParentAndLink(this.h[pos], this.h[parent]);
 
       if (this.h[parent] > this.h[pos]) {
         insertIntoDynamicTree.swap(this.h[parent], this.h[pos]);
@@ -57,6 +47,25 @@ class Heap extends Component {
         break;
       }
     }
+  }
+
+  activateChildParentAndLink(child, parent) {
+    let childElement = document.getElementsByClassName('node-' + child)[0];
+    childElement.classList.add('child-node');
+    let parentElement = document.getElementsByClassName('node-' + parent)[0];
+    parentElement.classList.add('parent-node');
+    let childLinkElement = document.getElementById(child + 'link');
+    childLinkElement.classList.add('fade-in-out-link');
+  }
+
+  removeActiveChildParentAndLink(child, parent) {
+    let childElement = document.getElementsByClassName('node-' + child)[0];
+    let parentElement = document.getElementsByClassName('node-' + parent)[0];
+    let childLinkElement = document.getElementById(child + 'link');
+
+    childElement.classList.remove('child-node');
+    parentElement.classList.remove('parent-node');
+    childLinkElement.classList.remove('fade-in-out-link');
   }
 
   getArray() {
@@ -193,7 +202,7 @@ class Heap extends Component {
             <table id={'heap-table'} className={'float-left'}>
               <tbody>
                 {this.renderHeapHeading()}
-                {this.renderHeapTableData()}
+                <tr>{this.renderHeapTableData()}</tr>
               </tbody>
             </table>
           </div>
@@ -202,7 +211,9 @@ class Heap extends Component {
           </div>
           <div className={'row'}>
             <table id={'input-list-table'} className={'float-left'}>
-              <tbody>{this.renderInputListTableData()}</tbody>
+              <tbody>
+                <tr>{this.renderInputListTableData()}</tr>
+              </tbody>
             </table>
           </div>
         </div>
