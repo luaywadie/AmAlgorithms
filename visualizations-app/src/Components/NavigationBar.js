@@ -20,8 +20,8 @@ import MainPage from './MainPage';
 const NavigationBar = () => {
   return (
     <Router>
-      <Container>
-        <Navbar bg="dark" variant="dark" style={{ borderRadius: '20px' }}>
+      <Container fluid={true}>
+        <Navbar bg="dark" variant="dark">
           <Navbar.Brand as={Link} to="/">
             <img
               alt={'logo'}
