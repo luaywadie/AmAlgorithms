@@ -88,7 +88,7 @@ class DirectedGraphAlgorithms extends Component {
             setRunningAlg={this.setRunningAlg}
             getOrdering={this.getOrdering}
           />
-
+          <div class="divider"></div>
           <button
             className="graph-button"
             onClick={() => {
@@ -98,6 +98,7 @@ class DirectedGraphAlgorithms extends Component {
           >
             Reset
           </button>
+          <div class="divider"></div>
           <button
             className="graph-button"
             onClick={() => {

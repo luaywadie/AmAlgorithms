@@ -118,7 +118,7 @@ class TreeTraversals extends Component {
             setRunningAlg={this.setRunningAlg}
             buildNodePath={this.buildNodePath}
           />
-
+          <div class="divider"></div>
           <BreathFirstSearch
             g={this.adjList}
             pause={this.state.pause}
@@ -128,7 +128,7 @@ class TreeTraversals extends Component {
             setRunningAlg={this.setRunningAlg}
             buildNodePath={this.buildNodePath}
           />
-
+          <div class="divider"></div>
           <button
             id={'reset-button'}
             onClick={() => {
@@ -138,6 +138,7 @@ class TreeTraversals extends Component {
           >
             Reset
           </button>
+          <div class="divider"></div>
           <button
             onClick={() => {
               this.setState({ pause: !this.state.pause });
