@@ -119,4 +119,18 @@
       fill: red;
     }
   }
+
+  .left-right-child-node {
+    fill: #03fca5;
+    animation: left-right-child-node 1s;
+  }
+  @keyframes left-right-child-node {
+    from {
+      fill: #fff;
+    }
+    to {
+      fill: #03fca5;
+    }
+  }
+
 }
