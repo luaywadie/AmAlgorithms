@@ -122,13 +122,17 @@ class Heap extends Component {
     }
     await this.setState({ heapA: this.h, inputList: updatedList });
 
-    if (this.h[0] === 0) {
+    document.getElementById('root-extracted').innerHTML =
+      'Root Extracted: ' + smallest;
+
+    if (this.size === 0) {
       clearTree();
     } else {
       this.convertHeapArrayToAdjList(this.h);
       removeRootOfDynamicTree(this.h[1], this.adjList);
       await this.fixDown();
     }
+
     await this.setState({ executing: false });
     return smallest;
   }
@@ -363,6 +367,9 @@ class Heap extends Component {
                 <tr>{this.renderHeapTableData()}</tr>
               </tbody>
             </table>
+          </div>
+          <div className={'row'}>
+            <h4 id={'root-extracted'}></h4>
           </div>
           <div className={'row'}>
             <h4>Input List</h4>
