@@ -277,7 +277,7 @@ class UndirectedGraphAlgorithms extends Component {
             updateDijkstraData={this.updateDijkstraData}
             updatePq={this.updatePq}
           />
-
+          <div class="divider"></div>
           <Prim
             g={this.adjList}
             root={'source'}
@@ -288,6 +288,7 @@ class UndirectedGraphAlgorithms extends Component {
             setRunningAlg={this.setRunningAlg}
             updatePrimData={this.updatePrimData}
           />
+          <div class="divider"></div>
           <button
             className="graph-button"
             onClick={() => {
@@ -297,6 +298,7 @@ class UndirectedGraphAlgorithms extends Component {
           >
             Reset
           </button>
+          <div class="divider"></div>
           <button
             className="graph-button"
             onClick={() => {

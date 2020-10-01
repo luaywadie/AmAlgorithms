@@ -5,3 +5,29 @@
 body {
   background-color: #eee;
 }
+
+button {
+  color: black;
+  background-color: #FFFFFF;
+  border-radius: 3px;
+  border-width: 2px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  padding-right: 12px;
+  padding-left: 12px;
+}
+.row {
+  padding-left: 200px;
+  padding-right: 500px;
+}
+
+.container-fluid{
+  margin:0 ! important;
+  padding:0 ! important;
+  }
+
+  .divider{
+    width:10px;
+    height:auto;
+    display:inline-block;
+}
