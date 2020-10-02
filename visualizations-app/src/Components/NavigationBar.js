@@ -31,6 +31,18 @@ const NavigationBar = () => {
             />
           </Navbar.Brand>
           <Nav className="mr-auto">
+            <NavDropdown title="Data Structures">
+              <NavDropdown.Item eventKey="1" as={Link} to="/heap">
+                Heap
+              </NavDropdown.Item>
+            </NavDropdown>
+
+            <NavDropdown title="Sorting">
+              <NavDropdown.Item eventKey="1" as={Link} to="#">
+                Sorts
+              </NavDropdown.Item>
+            </NavDropdown>
+
             <NavDropdown title="Tree">
               <NavDropdown.Item as={Link} to="/tree_traversals">
                 Tree Traversals
@@ -51,18 +63,6 @@ const NavigationBar = () => {
                 to="/undirected_graph_algorithms"
               >
                 Undirected Graph Algorithms
-              </NavDropdown.Item>
-            </NavDropdown>
-
-            <NavDropdown title="Data Structures">
-              <NavDropdown.Item eventKey="1" as={Link} to="/heap">
-                Heap
-              </NavDropdown.Item>
-            </NavDropdown>
-
-            <NavDropdown title="Sorting">
-              <NavDropdown.Item eventKey="1" as={Link} to="#">
-                Sorts
               </NavDropdown.Item>
             </NavDropdown>
 
