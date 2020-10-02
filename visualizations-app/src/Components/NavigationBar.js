@@ -59,6 +59,18 @@ const NavigationBar = () => {
                 Heap
               </NavDropdown.Item>
             </NavDropdown>
+
+            <NavDropdown title="Sorting">
+              <NavDropdown.Item eventKey="1" as={Link} to="#">
+                Sorts
+              </NavDropdown.Item>
+            </NavDropdown>
+
+            <NavDropdown title="Machine Learning">
+              <NavDropdown.Item eventKey="1" as={Link} to="#">
+                K-Means
+              </NavDropdown.Item>
+            </NavDropdown>
           </Nav>
           <Form inline>
             <FormControl type="text" placeholder="Search" className="mr-sm-2" />
