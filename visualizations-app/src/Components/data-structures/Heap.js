@@ -377,7 +377,7 @@ class Heap extends Component {
             </table>
           </div>
           <div className={'row'}>
-            <h5 id={'root-extracted'}></h5>
+            <h5 id={'root-extracted'}> </h5>
           </div>
           <div className={'row'}>
             <h4>Input List</h4>

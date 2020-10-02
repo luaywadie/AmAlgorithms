@@ -7,6 +7,7 @@ import {
   Form,
   Button,
   FormControl,
+  NavDropdown,
 } from 'react-bootstrap';
 
 import TreeTraversals from '../Components/TreeTraversals';
@@ -30,18 +31,34 @@ const NavigationBar = () => {
             />
           </Navbar.Brand>
           <Nav className="mr-auto">
-            <Nav.Link as={Link} to="/tree_traversals" className="nav-link">
-              Tree Traversals
-            </Nav.Link>
-            <Nav.Link as={Link} to="/undirected_graph_algorithms">
-              Undirected Graph Algorithms
-            </Nav.Link>
-            <Nav.Link as={Link} to="/directed_graph_algorithms">
-              Directed Graph Algorithms
-            </Nav.Link>
-            <Nav.Link as={Link} to="/heap">
-              Heap
-            </Nav.Link>
+            <NavDropdown title="Tree">
+              <NavDropdown.Item as={Link} to="/tree_traversals">
+                Tree Traversals
+              </NavDropdown.Item>
+            </NavDropdown>
+
+            <NavDropdown title="Graph">
+              <NavDropdown.Item
+                eventKey="1"
+                as={Link}
+                to="/directed_graph_algorithms"
+              >
+                Directed Graph Algorithms
+              </NavDropdown.Item>
+              <NavDropdown.Item
+                eventKey="2"
+                as={Link}
+                to="/undirected_graph_algorithms"
+              >
+                Undirected Graph Algorithms
+              </NavDropdown.Item>
+            </NavDropdown>
+
+            <NavDropdown title="Data Structures">
+              <NavDropdown.Item eventKey="1" as={Link} to="/heap">
+                Heap
+              </NavDropdown.Item>
+            </NavDropdown>
           </Nav>
           <Form inline>
             <FormControl type="text" placeholder="Search" className="mr-sm-2" />
