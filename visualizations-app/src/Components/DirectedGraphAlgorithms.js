@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import topSort from '../algorithms/graph-algorithms/topsort';
+import Topsort from './algorithms/graph-algorithms/Topsort';
 import createDirectedGraph from '../graph-builders/directed-graph-builder';
 
 class DirectedGraphAlgorithms extends Component {
@@ -10,6 +10,7 @@ class DirectedGraphAlgorithms extends Component {
       stop: false,
       speed: 1,
       ordering: [],
+      runningAlg: '',
     };
     this.adjList = {
       a: ['g', 'c', 'b'],
@@ -34,10 +35,13 @@ class DirectedGraphAlgorithms extends Component {
     if (this.graph.hasChildNodes()) this.graph.removeChild(svg);
     this.reset();
   }
-  getOrdering = async (stack) => {
-    await this.setState({ ordering: stack });
+  getOrdering = (stack) => {
+    this.setState({ ordering: stack });
   };
-
+  setRunningAlg = (alg) => {
+    this.reset();
+    this.setState({ runningAlg: alg });
+  };
   getPauseStatus = () => this.state.pause;
   getStopStatus = () => this.state.stop;
   getSpeedRequest = () => Number(this.state.speed) + 0.1;
@@ -48,6 +52,9 @@ class DirectedGraphAlgorithms extends Component {
       if (el) el.classList = '';
     });
     this.setState({ ordering: [] });
+    if (this.state.stop) {
+      this.setState({ stop: false, pause: false });
+    }
   };
 
   renderTopsortTableData() {
@@ -72,23 +79,16 @@ class DirectedGraphAlgorithms extends Component {
     return (
       <div className={'row'}>
         <div className={'col-6'}>
-          <button
-            className="graph-button"
-            onClick={() => {
-              this.setState({ pause: false, stop: false });
-              this.reset();
-              topSort(
-                this.adjList,
-                this.getPauseStatus,
-                this.getStopStatus,
-                this.getSpeedRequest,
-                this.getOrdering
-              );
-            }}
-          >
-            Topological Sort
-          </button>
-
+          <Topsort
+            g={this.adjList}
+            pause={this.state.pause}
+            stop={this.state.stop}
+            speed={this.state.speed}
+            runningAlg={this.state.runningAlg}
+            setRunningAlg={this.setRunningAlg}
+            getOrdering={this.getOrdering}
+          />
+          <div class="divider"></div>
           <button
             className="graph-button"
             onClick={() => {
@@ -98,6 +98,7 @@ class DirectedGraphAlgorithms extends Component {
           >
             Reset
           </button>
+          <div class="divider"></div>
           <button
             className="graph-button"
             onClick={() => {

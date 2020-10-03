@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import bfs from '../algorithms/tree-algorithms/breadth-first-search';
-import dfs from '../algorithms/tree-algorithms/depth-first-search';
+import DepthFirstSearch from './algorithms/tree-algorithms/DepthFirstSearch';
+import BreathFirstSearch from './algorithms/tree-algorithms/BreadthFirstSearch';
 import createTree from '../graph-builders/tree-builder';
 
 class TreeTraversals extends Component {
@@ -11,6 +11,7 @@ class TreeTraversals extends Component {
       stop: false,
       speed: 1,
       nodePath: [],
+      runningAlg: '',
     };
     this.adjList = {
       a: ['b', 'c', 'd'],
@@ -46,13 +47,14 @@ class TreeTraversals extends Component {
   componentDidMount() {
     createTree(this.adjList);
   }
-  
+
   componentWillUnmount() {
     let svg = document.getElementById('tree-svg');
     if (this.tree.hasChildNodes()) this.tree.removeChild(svg);
+    this.reset();
   }
-  buildNodePath = async (nodePath) => {
-    await this.setState({ nodePath });
+  buildNodePath = (nodePath) => {
+    this.setState({ nodePath });
   };
 
   getPauseStatus = () => this.state.pause;
@@ -62,13 +64,27 @@ class TreeTraversals extends Component {
   reset = () => {
     Object.keys(this.adjList).forEach((e) => {
       let nodeElement = document.getElementById(e);
-      nodeElement.classList.remove('visited-node-bfs', 'visited-node-dfs');
+      if (nodeElement) {
+        nodeElement.classList.remove('node-complete-tree');
+      }
       let linkElement = document.getElementById(e + 'link');
       if (linkElement) {
         linkElement.classList.remove('link-traversed');
       }
     });
     this.setState({ nodePath: [] });
+    if (this.state.stop) {
+      this.setState({ stop: false, pause: false, runningAlg: '' });
+    }
+  };
+
+  setRunningAlg = (alg) => {
+    this.reset();
+    this.setState({ runningAlg: alg });
+  };
+
+  updateStopState = async (val) => {
+    await this.setState({ stop: val });
   };
 
   renderTreeTraversalHeading() {
@@ -89,46 +105,82 @@ class TreeTraversals extends Component {
     });
   }
 
+  renderBfsPseudocode() {
+    return (
+      <pre style={{ overflow: 'visible' }}>
+        {`
+    1  procedure BFS(G, root) is
+    2      let Q be a queue
+    3      label root as discovered
+    4      Q.enqueue(root)
+    5      while Q is not empty do
+    6          v := Q.dequeue()
+    7          if v is the goal then
+    8              return v
+    9          for all edges from v to w in G.adjacentEdges(v) do
+    10             if w is not labeled as discovered then
+    11                 label w as discovered
+    13                 Q.enqueue(w)
+    `}
+      </pre>
+    );
+  }
+
+  renderDfsPseudocode() {
+    return (
+      <div>
+        <h4>Pseudo-code</h4>
+        <pre style={{ overflow: 'visible' }}>
+          {`
+        1  procedure DFS_iterative(G, v) is
+        2    let S be a stack
+        3    S.push(v)
+        4    while S is not empty do
+        5      v = S.pop()
+        6      if v is not labeled as discovered then
+        7        label v as discovered
+        8        for all edges from v to w in G.adjacentEdges(v) do 
+        9          S.push(w)
+    `}
+        </pre>
+      </div>
+    );
+  }
+
   render() {
     return (
       <div className={'row'}>
         <div className={'col-6'}>
+          <DepthFirstSearch
+            g={this.adjList}
+            pause={this.state.pause}
+            stop={this.state.stop}
+            speed={this.state.speed}
+            runningAlg={this.state.runningAlg}
+            setRunningAlg={this.setRunningAlg}
+            buildNodePath={this.buildNodePath}
+          />
+          <div class="divider"></div>
+          <BreathFirstSearch
+            g={this.adjList}
+            pause={this.state.pause}
+            stop={this.state.stop}
+            speed={this.state.speed}
+            runningAlg={this.state.runningAlg}
+            setRunningAlg={this.setRunningAlg}
+            buildNodePath={this.buildNodePath}
+          />
+          <div class="divider"></div>
           <button
-            onClick={() => {
-              this.setState({ pause: false, stop: false });
-              dfs(
-                this.adjList,
-                this.getPauseStatus,
-                this.getStopStatus,
-                this.getSpeedRequest,
-                this.buildNodePath
-              );
-            }}
-          >
-            DFS traverse
-          </button>
-          <button
-            onClick={() => {
-              this.setState({ pause: false, stop: false });
-              bfs(
-                this.adjList,
-                this.getPauseStatus,
-                this.getStopStatus,
-                this.getSpeedRequest,
-                this.buildNodePath
-              );
-            }}
-          >
-            BFS traverse
-          </button>
-          <button
-            onClick={() => {
-              this.setState({ pause: false, stop: true });
+            id={'reset-button'}
+            onClick={async () => {
+              await this.setState({ pause: false, stop: true });
               this.reset();
             }}
           >
             Reset
           </button>
+          <div class="divider"></div>
           <button
             onClick={() => {
               this.setState({ pause: !this.state.pause });
@@ -152,7 +204,14 @@ class TreeTraversals extends Component {
             </label>
           </form>
         </div>
-        <div className={'col-6'}>
+        <div className={'col-3'} id={'pesudo-code'}>
+          {this.state.runningAlg === ''
+            ? ''
+            : this.state.runningAlg === 'bfs'
+            ? this.renderBfsPseudocode()
+            : this.renderDfsPseudocode()}
+        </div>
+        <div className={'col-3'}>
           <table id={'tree-traversal-table'} className={'float-right'}>
             <tbody>
               {this.renderTreeTraversalHeading()}

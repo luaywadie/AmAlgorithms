@@ -1,0 +1,14 @@
+.graph {
+  position: fixed;
+  top: 200px;
+}
+svg {
+  overflow: visible;
+}
+#graph-svg {
+  z-index: -1;
+}
+
+.graph-button {
+  z-index: 10;
+}

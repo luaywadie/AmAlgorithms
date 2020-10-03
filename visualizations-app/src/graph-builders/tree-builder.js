@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import '../styles/tree-builder.css';
+
 function buildTreeDataFromAdjList(adjList) {
   let treeData = {};
   let root = true;
@@ -56,13 +56,13 @@ function createTree(adjList) {
       .attr('id', 'tree-svg')
       .attr('width', width + margin.left + margin.right)
       .attr('height', height + margin.top + margin.bottom)
-      .attr('class', 'tree-graph'),
+      .attr('class', 'graph'),
     g = svg
       .append('g')
       .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
   // adds the links between the nodes
-  const link = g
-    .selectAll('.link')
+  g.selectAll('.link')
     .data(nodes.descendants().slice(1))
     .enter()
     .append('path')
@@ -110,20 +110,17 @@ function createTree(adjList) {
   node
     .append('circle')
     .attr('r', (d) => d.data.value)
-    .attr('id', (d) => d.data.name)
-    .style('stroke', (d) => d.data.type)
-    .style('stroke-width', '1px')
-    .style('fill', (d) => d.data.level);
-
+    .attr('id', (d) => d.data.name);
   // adds the text to the node
   node
     .append('text')
     .attr('dy', '.35em')
     .attr('x', (d) => (d.children ? (d.data.value + 5) * -1 : d.data.value + 5))
-    .attr('y', (d) => (d.children && d.depth !== 0 ? -(d.data.value + 5) : d))
+    .attr('y', (d) =>
+      d.children && d.depth !== 0 ? -(d.data.value + 5) : d.data.value
+    )
     .style('text-anchor', (d) => (d.children ? 'end' : 'start'))
     .text((d) => d.data.name);
 }
 
 export default createTree;
-// export default buildTreeDataFromAdjList;

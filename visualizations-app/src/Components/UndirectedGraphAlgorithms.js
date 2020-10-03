@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import createGraph from '../graph-builders/undirected-graph-builder';
-import dijkstra from '../algorithms/graph-algorithms/dijkstra';
-import prim from '../algorithms/graph-algorithms/prims_mst';
-import '../styles/UndirectedGraphAlgorithms.css';
+import Dijkstra from './algorithms/graph-algorithms/Dijkstra';
+import Prim from './algorithms/graph-algorithms/Prim';
 
 class UndirectedGraphAlgorithms extends Component {
   constructor(props) {
@@ -11,10 +10,12 @@ class UndirectedGraphAlgorithms extends Component {
       pause: false,
       stop: false,
       speed: 1,
-      distances: {},
+      primDistances: {},
+      dijkstraDistances: {},
       parents: {},
-      algorithmSelected: '',
       cumulativeCostMap: {},
+      algRunning: '',
+      priorityQueue: [],
     };
     this.adjList = {
       a: [
@@ -164,20 +165,28 @@ class UndirectedGraphAlgorithms extends Component {
     this.reset();
   }
 
-  updateDistancesAndParents = async (distances, parents) => {
-    await this.setState({ distances, parents });
+  updateDijkstraData = async (distances, parents) => {
+    await this.setState({
+      dijkstraDistances: distances,
+      parents,
+    });
   };
 
-  updatePrimDistancesAndParents = async (
-    distances,
-    parents,
-    cumulativeCostMap
-  ) => {
+  updatePrimData = async (distances, parents, cumulativeCostMap) => {
     await this.setState({
-      distances,
+      primDistances: distances,
       parents,
       cumulativeCostMap,
     });
+  };
+
+  setRunningAlg = (alg) => {
+    this.reset();
+    this.setState({ runningAlg: alg });
+  };
+
+  updatePq = (a) => {
+    this.setState({ priorityQueue: a });
   };
 
   getPauseStatus = () => this.state.pause;
@@ -188,23 +197,30 @@ class UndirectedGraphAlgorithms extends Component {
     Object.keys(this.adjList).forEach((e) => {
       let el = document.getElementById(e);
       if (el) {
-        el.classList.remove('node-visited');
+        el.classList.remove('node-complete-tree');
+        el.classList.remove('current-node-of-interest');
       }
     });
     let lines = document.getElementsByTagName('line');
     for (let line of lines) {
       line.classList = '';
     }
-    this.setState({ distances: {}, parents: {} });
+    this.setState({ primDistances: {}, dijkstraDistances: {}, parents: {} });
+    if (this.state.stop) {
+      this.setState({ stop: false, pause: false });
+    }
   };
 
   renderDijkstraTableData() {
-    return Object.keys(this.state.distances).map((key, index) => {
+    return Object.keys(this.state.dijkstraDistances).map((key, index) => {
       return (
         <tr key={index}>
           <td>{key}</td>
           <td>{this.state.parents[key]}</td>
-          <td>{this.state.distances[key]}</td>
+          <td>{this.state.dijkstraDistances[key]}</td>
+          <td style={{ backgroundColor: index === 0 ? 'yellow' : '' }}>
+            {this.state.priorityQueue[index]}
+          </td>
         </tr>
       );
     });
@@ -216,17 +232,18 @@ class UndirectedGraphAlgorithms extends Component {
         <th>Node</th>
         <th>Parent</th>
         <th>Distance</th>
+        <th>Priority Queue</th>
       </tr>
     );
   }
 
   renderPrimTableData() {
-    return Object.keys(this.state.distances).map((key, index) => {
+    return Object.keys(this.state.primDistances).map((key, index) => {
       return (
         <tr key={index}>
           <td>{key}</td>
           <td>{this.state.parents[key]}</td>
-          <td>{this.state.distances[key]}</td>
+          <td>{this.state.primDistances[key]}</td>
           <td>{this.state.cumulativeCostMap[key]}</td>
         </tr>
       );
@@ -248,50 +265,30 @@ class UndirectedGraphAlgorithms extends Component {
     return (
       <div className={'row'}>
         <div className={'col-6'}>
-          <button
-            className="graph-button"
-            onClick={() => {
-              this.setState({
-                pause: false,
-                stop: false,
-                algorithmSelected: 'dijkstra',
-              });
-              this.reset();
-              dijkstra(
-                this.adjList,
-                'source',
-                'target',
-                this.getPauseStatus,
-                this.getStopStatus,
-                this.getSpeedRequest,
-                this.updateDistancesAndParents
-              );
-            }}
-          >
-            Dijkstra
-          </button>
-
-          <button
-            className="graph-button"
-            onClick={() => {
-              this.setState({
-                pause: false,
-                stop: false,
-                algorithmSelected: 'prim',
-              });
-              this.reset();
-              prim(
-                this.adjList,
-                'source',
-                this.getPauseStatus,
-                this.getStopStatus,
-                this.getSpeedRequest,
-                this.updatePrimDistancesAndParents
-              );
-            }}
-          >
-            Prim MST
-          </button>
+          <Dijkstra
+            g={this.adjList}
+            root={'source'}
+            target={'target'}
+            pause={this.state.pause}
+            stop={this.state.stop}
+            speed={this.state.speed}
+            runningAlg={this.state.runningAlg}
+            setRunningAlg={this.setRunningAlg}
+            updateDijkstraData={this.updateDijkstraData}
+            updatePq={this.updatePq}
+          />
+          <div class="divider"></div>
+          <Prim
+            g={this.adjList}
+            root={'source'}
+            pause={this.state.pause}
+            stop={this.state.stop}
+            speed={this.state.speed}
+            runningAlg={this.state.runningAlg}
+            setRunningAlg={this.setRunningAlg}
+            updatePrimData={this.updatePrimData}
+          />
+          <div class="divider"></div>
           <button
             className="graph-button"
             onClick={() => {
@@ -301,6 +298,7 @@ class UndirectedGraphAlgorithms extends Component {
           >
             Reset
           </button>
+          <div class="divider"></div>
           <button
             className="graph-button"
             onClick={() => {
@@ -327,24 +325,18 @@ class UndirectedGraphAlgorithms extends Component {
           </form>
         </div>
         <div className={'col-6'} id={'output-tables'}>
-          {this.state.algorithmSelected === 'dijkstra' ? (
-            <table
-              id={'dijkstra-table'}
-              className={('dijkstra-table', 'float-right')}
-            >
-              <tbody>
-                {this.renderDijkstraHeading()}
-                {this.renderDijkstraTableData()}
-              </tbody>
-            </table>
-          ) : (
-            <table id={'prim-table'} className={('prim-table', 'float-right')}>
-              <tbody>
-                {this.renderPrimHeading()}
-                {this.renderPrimTableData()}
-              </tbody>
-            </table>
-          )}
+          <table
+            id={'undirected-graph-table'}
+            className={('undirected-graph-table', 'float-right')}
+          >
+            <tbody>
+              {!this.state.dijkstraDistances['target']
+                ? this.renderPrimHeading()
+                : this.renderDijkstraHeading()}
+              {this.renderDijkstraTableData()}
+              {this.renderPrimTableData()}
+            </tbody>
+          </table>
         </div>
       </div>
     );

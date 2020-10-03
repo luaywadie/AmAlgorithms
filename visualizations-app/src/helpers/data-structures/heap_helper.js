@@ -47,6 +47,15 @@ class Heap {
       }
     }
   }
+
+  getArray() {
+    let a = [];
+    for (let i = 1; i <= this.size; i++) {
+      a.push(this.h[i][1] + ': ' + this.h[i][0]);
+    }
+    return a;
+  }
+
   heapSort() {
     let a = [];
     let its = this.h[0];
