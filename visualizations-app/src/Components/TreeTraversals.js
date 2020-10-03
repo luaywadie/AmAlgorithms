@@ -74,7 +74,7 @@ class TreeTraversals extends Component {
     });
     this.setState({ nodePath: [] });
     if (this.state.stop) {
-      this.setState({ stop: false, pause: false });
+      this.setState({ stop: false, pause: false, runningAlg: '' });
     }
   };
 
@@ -105,6 +105,48 @@ class TreeTraversals extends Component {
     });
   }
 
+  renderBfsPseudocode() {
+    return (
+      <pre style={{ overflow: 'visible' }}>
+        {`
+    1  procedure BFS(G, root) is
+    2      let Q be a queue
+    3      label root as discovered
+    4      Q.enqueue(root)
+    5      while Q is not empty do
+    6          v := Q.dequeue()
+    7          if v is the goal then
+    8              return v
+    9          for all edges from v to w in G.adjacentEdges(v) do
+    10             if w is not labeled as discovered then
+    11                 label w as discovered
+    13                 Q.enqueue(w)
+    `}
+      </pre>
+    );
+  }
+
+  renderDfsPseudocode() {
+    return (
+      <div>
+        <h4>Pseudo-code</h4>
+        <pre style={{ overflow: 'visible' }}>
+          {`
+        1  procedure DFS_iterative(G, v) is
+        2    let S be a stack
+        3    S.push(v)
+        4    while S is not empty do
+        5      v = S.pop()
+        6      if v is not labeled as discovered then
+        7        label v as discovered
+        8        for all edges from v to w in G.adjacentEdges(v) do 
+        9          S.push(w)
+    `}
+        </pre>
+      </div>
+    );
+  }
+
   render() {
     return (
       <div className={'row'}>
@@ -131,8 +173,8 @@ class TreeTraversals extends Component {
           <div class="divider"></div>
           <button
             id={'reset-button'}
-            onClick={() => {
-              this.setState({ pause: false, stop: true });
+            onClick={async () => {
+              await this.setState({ pause: false, stop: true });
               this.reset();
             }}
           >
@@ -162,7 +204,14 @@ class TreeTraversals extends Component {
             </label>
           </form>
         </div>
-        <div className={'col-6'}>
+        <div className={'col-3'} id={'pesudo-code'}>
+          {this.state.runningAlg === ''
+            ? ''
+            : this.state.runningAlg === 'bfs'
+            ? this.renderBfsPseudocode()
+            : this.renderDfsPseudocode()}
+        </div>
+        <div className={'col-3'}>
           <table id={'tree-traversal-table'} className={'float-right'}>
             <tbody>
               {this.renderTreeTraversalHeading()}
