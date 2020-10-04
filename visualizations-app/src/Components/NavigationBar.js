@@ -14,6 +14,7 @@ import TreeTraversals from '../Components/TreeTraversals';
 import UndirectedGraphAlgorithms from '../Components/UndirectedGraphAlgorithms';
 import DirectedGraphAlgorithms from '../Components/DirectedGraphAlgorithms';
 import Heap from '../Components/data-structures/Heap';
+import InsertionSort from '../Components/sorts/InsertionSort'
 
 import '../styles/Navigation-bar.scss';
 import MainPage from './MainPage';
@@ -38,8 +39,8 @@ const NavigationBar = () => {
             </NavDropdown>
 
             <NavDropdown title="Sorting">
-              <NavDropdown.Item eventKey="1" as={Link} to="#">
-                Sorts
+              <NavDropdown.Item eventKey="1" as={Link} to="/insertion_sort">
+                Insertion Sort
               </NavDropdown.Item>
             </NavDropdown>
 
@@ -89,6 +90,7 @@ const NavigationBar = () => {
         component={DirectedGraphAlgorithms}
       />
       <Route path="/heap" component={Heap} />
+      <Route path="/insertion_sort" component={InsertionSort} />
 
       <Route exact path="/" component={MainPage} />
     </Router>
