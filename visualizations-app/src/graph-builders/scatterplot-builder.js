@@ -5,8 +5,8 @@ async function createScatterplot(data) {
   
 // set the dimensions and margins of the graph
 let margin = {top: 10, right: 30, bottom: 30, left: 60},
-width = 460 - margin.left - margin.right,
-height = 400 - margin.top - margin.bottom;
+width = 600 - margin.left - margin.right,
+height = 500 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
 let svg = d3.select("#graph-container")
@@ -43,10 +43,10 @@ svg.append('g')
 .append("circle")
   .attr("cx", d => x(d.x))
   .attr("cy", d => y(d.y))
-  .attr("r", 5)
+  .attr("r", 3)
   .attr("id", d => `x:${parseFloat(d.x).toFixed(1)}-y:${parseFloat(d.y).toFixed(1)}`) //id: x:0.0-y:0.0
-  //set initial color of points to black
-  .style("fill", "black"); 
+  //initialize all clusters to black
+  .classed("cluster-unassigned",true); 
 }
 
 

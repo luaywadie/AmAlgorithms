@@ -1,37 +1,79 @@
 import { cloneElement } from "react";
 
-//Helper functions
+
+// ------------------
+// Helper functions 
+// -------------------
 function getRandom(arr, n) {
-    var result = new Array(n),
+    let result = new Array(n),
         len = arr.length,
         taken = new Array(len);
     if (n > len)
         throw new RangeError("getRandom: more elements taken than available");
     while (n--) {
-        var x = Math.floor(Math.random() * len);
+        let x = Math.floor(Math.random() * len);
         result[n] = arr[x in taken ? taken[x] : x];
         taken[x] = --len in taken ? taken[len] : len;
     }
     return result;
 }
 
-
-//Perform K-Means clustering on points, plot, and animate
-function kMeans(points, k) {
-    let centroids = getRandom(points, k);
-    //create a deep copy of centroids
-    for (let i = 0; i < k; i++) {
-        centroids[i] = Object.assign({}, centroids[i]);
+function colorPoint(point){
+    // let centroid = document.getElementById(currentNode + 'link');
+    let pointElement = document.getElementById("x:" + point.x + "-y:" + point.y);
+    if (pointElement){
+        pointElement.classList.add(`cluster${point.closestCentroid}`);
     }
     
+}
+
+function moveCentroid(centroid) {
+    
+}
+
+
+//Perform K-Means clustering on points, plot, and animate
+async function kMeans(points, k) {
+    //Randomly initialize cluster centroids
+    const randomPoints = getRandom(points, k);
+    console.log("randomPoints: ", JSON.stringify(randomPoints, null, 2));
+    //create a shallow copy of centroids (to make sure the assigned points don't change)
+    let centroids = [...randomPoints];
+    
+    
     console.log("Initializing Centroids...");
-    console.log(centroids);
+    console.log(JSON.stringify(centroids, null, 2));
 
-    assignToClusters(points, k, centroids);
-    updateCentroids(points, k, centroids);
+    
 
-    console.log("Centroids have been updated.");
-    console.log("centroids: ", centroids);
+
+    let hasConverged = false;
+    let i = 0;
+    do {
+        console.log("Iteration ", i);
+        assignToClusters(points, k, centroids);
+
+        console.log("Clusters have been assigned.");
+        console.log(JSON.stringify(points[20]));
+
+        let centroidDifferences = [...centroids];
+        updateCentroids(points, k, centroids);
+        
+        console.log("Centroids have been updated.");
+        console.log(JSON.stringify(centroids, null, 2));
+        await new Promise((r) => setTimeout(r, 1000));
+    
+        //calculate the sum of differences between the current and last step's centroids:  sum(|x - c_i| + |y - c_i|)
+        let totalDifference = centroidDifferences.reduce((sum, currentCentroid, i) => 
+            (Math.abs(currentCentroid.x - centroids[i].x) + Math.abs(currentCentroid.y - centroids[i].y)), 0);
+        
+        console.log("centroid totalDifference: ", totalDifference);    
+        hasConverged = totalDifference < 0.1;
+
+        i++;
+
+    } while(!hasConverged && i < 200);
+
 }
 
 
@@ -48,6 +90,9 @@ function assignToClusters(points, k, centroids) {
         });
         //Assign the point to its closest centroid using the minimum of all distances
         point.closestCentroid = distances.indexOf(Math.min(...distances));
+
+        //Color the point on the D3.js scatterplot
+        colorPoint(point);
     });
 }
 
@@ -66,15 +111,16 @@ function updateCentroids(points, k, centroids){
                     // console.log('current sum:', sum)
                     return sum;
                 }, {x: Number(0), y: Number(0)});   
-        mean.x =  mean.x / clusterArray.length;
-        mean.y =  mean.y / clusterArray.length;
+        mean.x = mean.x / clusterArray.length;
+        mean.y = mean.y / clusterArray.length;
         
-        console.log("mean: ", mean);
+        console.log("mean of centroid", i, ": ", mean);
 
         //update the centroid at index i
         centroids[i] = {x: mean.x, y: mean.y};
     }
 }
+
 
 
 export default kMeans;
