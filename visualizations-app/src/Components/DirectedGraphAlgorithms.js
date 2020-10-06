@@ -24,10 +24,10 @@ class DirectedGraphAlgorithms extends Component {
       i: ['h'],
       j: ['e'],
     };
-    this.graph = document.getElementById('graph-container');
   }
   componentDidMount() {
     createDirectedGraph();
+    this.graph = document.getElementById('graph-container');
   }
 
   componentWillUnmount() {
@@ -78,7 +78,7 @@ class DirectedGraphAlgorithms extends Component {
   render() {
     return (
       <div className={'row'}>
-        <div className={'col-6'}>
+        <div className={'col-6'} id={'graph-container'}>
           <Topsort
             g={this.adjList}
             pause={this.state.pause}
@@ -88,7 +88,7 @@ class DirectedGraphAlgorithms extends Component {
             setRunningAlg={this.setRunningAlg}
             getOrdering={this.getOrdering}
           />
-          <div class="divider"></div>
+          <div className={'divider'}></div>
           <button
             className="graph-button"
             onClick={() => {
@@ -98,7 +98,7 @@ class DirectedGraphAlgorithms extends Component {
           >
             Reset
           </button>
-          <div class="divider"></div>
+          <div className={'divider'}></div>
           <button
             className="graph-button"
             onClick={() => {

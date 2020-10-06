@@ -153,10 +153,10 @@ class UndirectedGraphAlgorithms extends Component {
         [15, 'j'],
       ],
     };
-    this.graph = document.getElementById('graph-container');
   }
   componentDidMount() {
     createGraph();
+    this.graph = document.getElementById('graph-container');
   }
 
   componentWillUnmount() {
@@ -264,7 +264,7 @@ class UndirectedGraphAlgorithms extends Component {
   render() {
     return (
       <div className={'row'}>
-        <div className={'col-6'}>
+        <div className={'col-6'} id={'graph-container'}>
           <Dijkstra
             g={this.adjList}
             root={'source'}
@@ -277,7 +277,7 @@ class UndirectedGraphAlgorithms extends Component {
             updateDijkstraData={this.updateDijkstraData}
             updatePq={this.updatePq}
           />
-          <div class="divider"></div>
+          <div className={'divider'}></div>
           <Prim
             g={this.adjList}
             root={'source'}
@@ -288,7 +288,7 @@ class UndirectedGraphAlgorithms extends Component {
             setRunningAlg={this.setRunningAlg}
             updatePrimData={this.updatePrimData}
           />
-          <div class="divider"></div>
+          <div className={'divider'}></div>
           <button
             className="graph-button"
             onClick={() => {
@@ -298,7 +298,7 @@ class UndirectedGraphAlgorithms extends Component {
           >
             Reset
           </button>
-          <div class="divider"></div>
+          <div className={'divider'}></div>
           <button
             className="graph-button"
             onClick={() => {

@@ -21,13 +21,13 @@ class Heap extends Component {
     };
     this.unMounting = false;
     this.adjList = {};
-    this.dataStructure = document.getElementById('graph-container');
   }
 
   componentDidMount = () => {
     if (this.state.inputList.length === 0) {
       this.buildSampleHeap();
     }
+    this.dataStructure = document.getElementById('graph-container');
   };
 
   componentWillUnmount() {
@@ -137,6 +137,7 @@ class Heap extends Component {
       removeRootOfDynamicTree(this.h[1], this.adjList);
       await this.fixDown();
     }
+    if (this.unMounting) return;
 
     await this.setState({ executing: false });
     return smallest;
@@ -310,7 +311,7 @@ class Heap extends Component {
   render() {
     return (
       <div className={'row'}>
-        <div className={'col-6'}>
+        <div className={'col-6'} id={'graph-container'}>
           <form
             onSubmit={(event) => {
               event.preventDefault();
