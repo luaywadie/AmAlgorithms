@@ -67,7 +67,7 @@ const NavigationBar = () => {
             </NavDropdown>
 
             <NavDropdown title="Machine Learning">
-              <NavDropdown.Item eventKey="1" as={Link} to="#">
+              <NavDropdown.Item eventKey="3" as={Link} to="#">
                 K-Means
               </NavDropdown.Item>
             </NavDropdown>
