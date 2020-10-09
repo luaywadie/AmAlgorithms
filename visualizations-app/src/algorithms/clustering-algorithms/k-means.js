@@ -20,9 +20,9 @@ function getRandom(arr, n) {
 
 function colorPoint(point){
     // let centroid = document.getElementById(currentNode + 'link');
-    let pointElement = document.getElementById("x:" + point.x + "-y:" + point.y);
+    let pointElement = document.getElementById(`x:${parseFloat(point.x).toFixed(1)}-y:${parseFloat(point.y).toFixed(1)}`);
     if (pointElement){
-        pointElement.classList.add(`cluster${point.closestCentroid}`);
+        pointElement.classList.replace("cluster-unassigned", `cluster${point.closestCentroid}`);
     }
     
 }
@@ -61,7 +61,9 @@ async function kMeans(points, k) {
         
         console.log("Centroids have been updated.");
         console.log(JSON.stringify(centroids, null, 2));
-        await new Promise((r) => setTimeout(r, 1000));
+        
+        //pause for a moment
+        await new Promise((r) => setTimeout(r, 3000));
     
         //calculate the sum of differences between the current and last step's centroids:  sum(|x - c_i| + |y - c_i|)
         let totalDifference = centroidDifferences.reduce((sum, currentCentroid, i) => 
@@ -100,7 +102,7 @@ function assignToClusters(points, k, centroids) {
 function updateCentroids(points, k, centroids){
     for (let i = 0; i < k; i++) {
         //clusterArray = [{x: "1.2", y: "", closestCentroid: "i"}, ...]
-        const clusterArray = points.filter(point => point.closestCentroid == i);
+        const clusterArray = points.filter(point => point.closestCentroid === i);
 
         //calculate the mean in x and y directions
         let mean = clusterArray.reduce(

@@ -1,17 +1,15 @@
 // Styles applying to all clusters using K-Means
 
-// circle.centroid {
-//     r: 10;
-// }
+
 
 $color0: #ff6699;
 $color1: #00cc66;
 $color2: #0066cc;
-$color3: #9900cc;
+$color3: #ffcc00;
 $color4: #2be3f0;
 $color5: #fa3b3b;
 $color6: #ffa339;
-$color7: #ffcc00;
+$color7: #9900cc;
 
 // Set stroke width of points
 @mixin circle-stroke-width {
