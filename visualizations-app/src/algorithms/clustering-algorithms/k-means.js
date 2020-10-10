@@ -19,12 +19,15 @@ function getRandom(arr, n) {
 }
 
 function colorPoint(point){
-    // let centroid = document.getElementById(currentNode + 'link');
+    
+    if(point.x == "5.8" && point.y == "5.1") {
+        console.log(document.getElementById('x:5.8-y:5.1'));
+    }
+    
     let pointElement = document.getElementById(`x:${parseFloat(point.x).toFixed(1)}-y:${parseFloat(point.y).toFixed(1)}`);
     if (pointElement){
         pointElement.classList.replace("cluster-unassigned", `cluster${point.closestCentroid}`);
     }
-    
 }
 
 function moveCentroid(centroid) {
@@ -36,16 +39,11 @@ function moveCentroid(centroid) {
 async function kMeans(points, k) {
     //Randomly initialize cluster centroids
     const randomPoints = getRandom(points, k);
-    console.log("randomPoints: ", JSON.stringify(randomPoints, null, 2));
     //create a shallow copy of centroids (to make sure the assigned points don't change)
     let centroids = [...randomPoints];
     
-    
     console.log("Initializing Centroids...");
     console.log(JSON.stringify(centroids, null, 2));
-
-    
-
 
     let hasConverged = false;
     let i = 0;
@@ -54,12 +52,11 @@ async function kMeans(points, k) {
         assignToClusters(points, k, centroids);
 
         console.log("Clusters have been assigned.");
-        console.log(JSON.stringify(points[20]));
 
         let centroidDifferences = [...centroids];
         updateCentroids(points, k, centroids);
         
-        console.log("Centroids have been updated.");
+        console.log("Centroids have been updated:");
         console.log(JSON.stringify(centroids, null, 2));
         
         //pause for a moment
@@ -73,8 +70,7 @@ async function kMeans(points, k) {
         hasConverged = totalDifference < 0.1;
 
         i++;
-
-    } while(!hasConverged && i < 200);
+    } while(!hasConverged && i < 100);
 
 }
 
