@@ -14,6 +14,8 @@ class TreeTraversals extends Component {
       runningAlg: '',
       queue: [],
       currentNode: null,
+      visitedMap: {},
+      child : null
     };
     this.adjList = {
       a: ['b', 'c', 'd'],
@@ -78,7 +80,7 @@ class TreeTraversals extends Component {
         linkElement.classList.remove('link-traversed');
       }
     });
-    this.setState({ nodePath: [] });
+    this.setState({ nodePath: [], visitedMap:{}, queue: [] });
     if (this.state.stop) {
       this.setState({ stop: false, pause: false, runningAlg: '' });
     }
@@ -96,6 +98,13 @@ class TreeTraversals extends Component {
   updateCurrentNode = async (node) => {
     await this.setState({ currentNode: node });
   };
+
+  updateVisitedMap = async (map) => {
+    await this.setState({ visitedMap : map });
+  }
+  updateChild = async (child) => {
+    await this.setState({ child });
+  }
 
   renderTreeTraversalHeading() {
     return (
@@ -136,78 +145,72 @@ class TreeTraversals extends Component {
       return <td key={node}>{node}</td>;
     });
   }
+  renderVisitedMap() {
+    return Object.entries(this.state.visitedMap).map(([key, val], i) => {
+    return (<tr key={i}><td key={key+i}>{key}</td>
+    <td key={key}>{String(val)}</td></tr>);
+    });
+  }
+
 
   renderBfsPseudocode() {
     const indentation = (num) => {
       return num * 20;
     };
     return (
-      <div style={{ overflow: 'hidden' }}>
+      <div>
         <div id={'bfs-1'}>
           1
           <span style={{ marginLeft: indentation(1) }}>
-            procedure BFS(G, root) is
+            BFS(G, root)
           </span>
         </div>
         <div id={'bfs-2'}>
           2<span style={{ marginLeft: indentation(2) }}>let Q be a queue</span>
         </div>
         <div id={'bfs-3'}>
-          3
-          <span style={{ marginLeft: indentation(2) }}>
-            label root as discovered
-          </span>
+          3<span style={{ marginLeft: indentation(2) }}>let V be a map with all nodes as keys and values of false</span>
         </div>
         <div id={'bfs-4'}>
-          4<span style={{ marginLeft: indentation(2) }}>Q.enqueue(root)</span>
+          4
+          <span style={{ marginLeft: indentation(2) }}>
+            set V[root] = true
+          </span>
         </div>
         <div id={'bfs-5'}>
-          5
-          <span style={{ marginLeft: indentation(2) }}>
-            while Q is not empty do
-          </span>
+          5<span style={{ marginLeft: indentation(2) }}>Q.enqueue(root)</span>
         </div>
         <div id={'bfs-6'}>
-          6<span style={{ marginLeft: indentation(3) }}>v := Q.dequeue()</span>
+          6
+          <span style={{ marginLeft: indentation(2) }}>
+            while Q is not empty
+          </span>
         </div>
         <div id={'bfs-7'}>
-          7
-          <span style={{ marginLeft: indentation(3) }}>
-            for child in G.children(v) do
-          </span>
+          7<span style={{ marginLeft: indentation(3) }}>current := Q.dequeue()</span>
         </div>
         <div id={'bfs-8'}>
           8
-          <span style={{ marginLeft: indentation(4) }}>
-            if child is not labeled as discovered then
+          <span style={{ marginLeft: indentation(3) }}>
+            for child of current
           </span>
         </div>
         <div id={'bfs-9'}>
           9
-          <span style={{ marginLeft: indentation(5) }}>
-            label child as discovered
+          <span style={{ marginLeft: indentation(4) }}>
+            if child is not labeled as discovered then
           </span>
         </div>
         <div id={'bfs-10'}>
-          10<span style={{ marginLeft: indentation(5) }}>Q.enqueue(child)</span>
+          10
+          <span style={{ marginLeft: indentation(5) }}>
+            set V[child] = true
+          </span>
+        </div>
+        <div id={'bfs-11'}>
+          11<span style={{ marginLeft: indentation(5) }}>Q.enqueue(child)</span>
         </div>
       </div>
-      //   <pre style={{ overflow: 'visible' }}>
-      //     {`
-      // 1  procedure BFS(G, root) is
-      // 2      let Q be a queue
-      // 3      label root as discovered
-      // 4      Q.enqueue(root)
-      // 5      while Q is not empty do
-      // 6          v := Q.dequeue()
-      // 7          if v is the goal then
-      // 8              return v
-      // 9          for all edges from v to w in G.adjacentEdges(v) do
-      // 10             if w is not labeled as discovered then
-      // 11                 label w as discovered
-      // 13                 Q.enqueue(w)
-      // `}
-      //   </pre>
     );
   }
 
@@ -235,7 +238,7 @@ class TreeTraversals extends Component {
   render() {
     return (
       <div className={'row'}>
-        <div className={'col-6'} id={'graph-container'}>
+        <div className={'col-4'} id={'graph-container'}>
           <DepthFirstSearch
             g={this.adjList}
             pause={this.state.pause}
@@ -256,6 +259,8 @@ class TreeTraversals extends Component {
             buildNodePath={this.buildNodePath}
             updateQueue={this.updateQueue}
             updateCurrentNode={this.updateCurrentNode}
+            updateVisitedMap={this.updateVisitedMap}
+            updateChild={this.updateChild}
           />
           <div className={'divider'}></div>
           <button
@@ -292,9 +297,20 @@ class TreeTraversals extends Component {
           </form>
         </div>
 
-        <div className={'col-3'}>
+        <div className={'col-5'}>
           <div className={'row'} style={{ marginBottom: '20px' }}>
-            Current Node: {this.state.currentNode}
+              <h4> Current Node: {this.state.currentNode}</h4> 
+          </div>
+          <div className={'row'} style={{ marginBottom: '20px' }}>
+           <h4> Current Child: {this.state.child}</h4> 
+          </div>
+
+          <div className={'row'}>
+            <table id={'tree-traversal-table'}>
+              <tbody>
+                <tr><td style={{border: 'none', paddingRight:'5px'}}>Queue: </td>{this.renderQueue()}</tr>
+              </tbody>
+            </table>
           </div>
           <div className={'row'}>
             {this.state.runningAlg === ''
@@ -303,25 +319,24 @@ class TreeTraversals extends Component {
               ? this.renderBfsPseudocode()
               : this.renderDfsPseudocode()}
           </div>
-          <div className={'row'} style={{ marginTop: '20px' }}>
-            Queue
-          </div>
-          <div className={'row'}>
-            <table id={'tree-traversal-table'}>
-              <tbody>
-                <tr>{this.renderQueue()}</tr>
-              </tbody>
-            </table>
-          </div>
+
         </div>
 
         <div className={'col-3'}>
-          <table id={'tree-traversal-table'} className={'float-right'}>
+          <table id={'tree-traversal-table'} className={'float-right'} style={{marginRight:'60px'}}>
             <tbody>
               {this.renderTreeTraversalHeading()}
               {this.renderTreeTraversalData()}
             </tbody>
           </table>
+          <div className={'row'}>
+            <table id={'tree-traversal-table'}>
+              <tbody>
+                <tr><th>Visited Map</th></tr>
+                {this.renderVisitedMap()}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     );

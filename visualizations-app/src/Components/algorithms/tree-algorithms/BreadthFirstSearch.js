@@ -30,78 +30,133 @@ class BreadthFirstSearch extends Component {
 
     this.highlightLine(1);
     await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+    await this.checkPauseStatus();
+    if (this.props.stop) return;
+    if (this.unMounting) return;
     this.removeHighlightedLine(1);
 
     this.highlightLine(2);
     await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+    await this.checkPauseStatus();
+    if (this.props.stop) return;
+    if (this.unMounting) return;
     this.removeHighlightedLine(2);
+
+    let visited = {};
+    Object.keys(this.props.g).map((node) => (visited[node] = false));
 
     this.highlightLine(3);
     await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+    await this.checkPauseStatus();
+    if (this.props.stop) return;
+    if (this.unMounting) return;
+    this.props.updateVisitedMap(visited);
     this.removeHighlightedLine(3);
 
     this.highlightLine(4);
     await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+    await this.checkPauseStatus();
+    if (this.props.stop) return;
+    if (this.unMounting) return;
     this.removeHighlightedLine(4);
 
+    this.highlightLine(5);
+    await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+    await this.checkPauseStatus();
+    if (this.props.stop) return;
+    if (this.unMounting) return;
+    this.removeHighlightedLine(5);
+
     let root = 'a';
-    let visited = {};
-    Object.keys(this.props.g).map((node) => (visited[node] = false));
     visited[root] = true;
+    this.props.updateVisitedMap(visited);
     let queue = [root];
     this.props.updateQueue(queue);
     let nodePath = [];
     while (queue.length > 0) {
-      this.highlightLine(5);
-      await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
-      this.removeHighlightedLine(5);
-
-      if (this.unMounting) return;
-      let currentNode = queue[0];
-      this.props.updateCurrentNode(currentNode);
-      queue.shift();
-      this.props.updateQueue(queue);
 
       this.highlightLine(6);
-      await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
-
       await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
       await this.checkPauseStatus();
       if (this.props.stop) return;
       if (this.unMounting) return;
       this.removeHighlightedLine(6);
+
+      let currentNode = queue[0];
+      queue.shift();
+      this.props.updateQueue(queue);
+
       this.highlightLine(7);
       await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
-
+      await this.checkPauseStatus();
+      if (this.props.stop) return;
+      if (this.unMounting) return;
+      
       this.activateLink(currentNode, linkList);
+      await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+      await this.checkPauseStatus();
+      if (this.props.stop) return;
+      if (this.unMounting) return;
+      
+      this.activateVisitedNode(currentNode);
+      this.props.updateCurrentNode(currentNode);
 
-      await new Promise((r) => setTimeout(r, 700 / this.props.speed));
+      await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+      await this.checkPauseStatus();
+      if (this.props.stop) return;
+      if (this.unMounting) return;
+      this.removeHighlightedLine(7);
+
+      
+      this.highlightLine(8);
+      await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
       await this.checkPauseStatus();
       if (this.props.stop) return;
       if (this.unMounting) return;
 
-      this.activateVisitedNode(currentNode);
-      this.removeHighlightedLine(7);
       nodePath.push(currentNode);
       this.props.buildNodePath(nodePath);
-
+      
+      this.removeHighlightedLine(8);
       for (let child of this.props.g[currentNode]) {
-        this.highlightLine(8);
+        this.props.updateChild(child)
+        this.highlightLine(9);
+
+
         await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
-        this.removeHighlightedLine(8);
+        await this.checkPauseStatus();
+        if (this.props.stop) return;
+        if (this.unMounting) return;
+
+
+
+        this.removeHighlightedLine(9);
         if (visited[child] === false) {
-          this.highlightLine(9);
-          await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
-          this.removeHighlightedLine(9);
-          visited[child] = true;
           this.highlightLine(10);
           await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+          await this.checkPauseStatus();
+          if (this.props.stop) return;
+          if (this.unMounting) return;
           this.removeHighlightedLine(10);
+          visited[child] = true;
+          this.props.updateVisitedMap(visited);
+          this.highlightLine(11);
+          await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+          await this.checkPauseStatus();
+          if (this.props.stop) return;
+          if (this.unMounting) return;
+          this.removeHighlightedLine(11);
           queue.push(child);
           this.props.updateQueue(queue);
         }
+
       }
+      this.props.updateChild(null)
+      this.props.updateCurrentNode(null);
+
     }
+    this.props.updateChild(null);
+    this.props.updateCurrentNode(null);
     linkList.forEach((el) => el.classList.remove('link-traversed'));
   };
 
