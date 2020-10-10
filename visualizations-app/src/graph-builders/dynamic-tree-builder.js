@@ -1,6 +1,9 @@
 import * as d3 from 'd3';
 // const { bfs } = require('../helpers/data-structures/bfs_helper.js');
 
+const margin = { top: 40, right: 90, bottom: 30, left: 0 };
+let width = 900 - margin.left - margin.right;
+let height = 900 - margin.top - margin.bottom;
 export function buildTreeDataFromAdjList(adjList) {
   let treeData = {};
   let root = true;
@@ -53,9 +56,6 @@ export function createDynamicTree(adjList) {
   let min = getMin(adjList);
   let treeData = buildTreeDataFromAdjList(adjList)[min];
   let myScale = 1.5;
-  const margin = { top: 20, right: 90, bottom: 30, left: -50 },
-    width = 900 - margin.left - margin.right,
-    height = 900 - margin.top - margin.bottom;
 
   let treemap = d3.tree().size([height, width]);
 
@@ -113,16 +113,14 @@ export function createDynamicTree(adjList) {
 export function clearTree() {
   let dataStructure = document.getElementById('graph-container');
   let svg = document.getElementById('heap-tree-svg');
-  if (dataStructure.hasChildNodes()) dataStructure.removeChild(svg);
+  if (dataStructure && svg && dataStructure.hasChildNodes())
+    dataStructure.removeChild(svg);
 }
 export function removeRootOfDynamicTree(parent, adjList) {
   clearTree();
 
   let treeData = buildTreeDataFromAdjList(adjList)[parent];
   let myScale = 1.5;
-  const margin = { top: 20, right: 90, bottom: 30, left: -50 },
-    width = 900 - margin.left - margin.right,
-    height = 900 - margin.top - margin.bottom;
 
   // declares a tree layout and assigns the size
   let treemap = d3.tree().size([height, width]);
@@ -212,9 +210,6 @@ export function insertIntoDynamicTree(parent, adjList) {
 
   let treeData = buildTreeDataFromAdjList(adjList)[parent];
   let myScale = 1.5;
-  const margin = { top: 20, right: 90, bottom: 30, left: -50 },
-    width = 900 - margin.left - margin.right,
-    height = 900 - margin.top - margin.bottom;
 
   // declares a tree layout and assigns the size
   let treemap = d3.tree().size([height, width]);

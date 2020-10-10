@@ -31,7 +31,7 @@ function createDirectedGraph() {
     { source: 'e', target: 'b', strength: 20 * strength },
     { source: 'b', target: 'f', strength: 20 * strength },
   ];
-  const margin = { top: 20, right: 50, bottom: 50, left: -10 },
+  const margin = { top: 20, right: 50, bottom: 200, left: -10 },
     width = 800 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
 
@@ -127,7 +127,7 @@ function createDirectedGraph() {
       return node.id;
     })
     .attr('font-size', 15)
-    .attr('dx', 15)
+    .attr('dx', -25)
     .attr('dy', 4);
 
   simulation.nodes(nodes).on('tick', () => {

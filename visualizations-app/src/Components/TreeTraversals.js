@@ -41,11 +41,11 @@ class TreeTraversals extends Component {
       y: [],
       z: [],
     };
-    this.tree = document.getElementById('graph-container');
   }
 
   componentDidMount() {
     createTree(this.adjList);
+    this.tree = document.getElementById('graph-container');
   }
 
   componentWillUnmount() {
@@ -150,7 +150,7 @@ class TreeTraversals extends Component {
   render() {
     return (
       <div className={'row'}>
-        <div className={'col-6'}>
+        <div className={'col-6'} id={'graph-container'}>
           <DepthFirstSearch
             g={this.adjList}
             pause={this.state.pause}
@@ -160,7 +160,7 @@ class TreeTraversals extends Component {
             setRunningAlg={this.setRunningAlg}
             buildNodePath={this.buildNodePath}
           />
-          <div class="divider"></div>
+          <div className={'divider'}></div>
           <BreathFirstSearch
             g={this.adjList}
             pause={this.state.pause}
@@ -170,7 +170,7 @@ class TreeTraversals extends Component {
             setRunningAlg={this.setRunningAlg}
             buildNodePath={this.buildNodePath}
           />
-          <div class="divider"></div>
+          <div className={'divider'}></div>
           <button
             id={'reset-button'}
             onClick={async () => {
@@ -180,7 +180,7 @@ class TreeTraversals extends Component {
           >
             Reset
           </button>
-          <div class="divider"></div>
+          <div className={'divider'}></div>
           <button
             onClick={() => {
               this.setState({ pause: !this.state.pause });

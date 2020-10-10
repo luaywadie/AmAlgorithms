@@ -21,13 +21,13 @@ class Heap extends Component {
     };
     this.unMounting = false;
     this.adjList = {};
-    this.dataStructure = document.getElementById('graph-container');
   }
 
   componentDidMount = () => {
     if (this.state.inputList.length === 0) {
       this.buildSampleHeap();
     }
+    this.dataStructure = document.getElementById('graph-container');
   };
 
   componentWillUnmount() {
@@ -63,13 +63,11 @@ class Heap extends Component {
       inputNum: '',
       executing: true,
     });
+    await this.insert(newNode);
     if (this.state.inputList.length === 1) {
-      this.state.inputList.forEach((e) => this.insert(e));
       this.convertHeapArrayToAdjList(this.h);
       createDynamicTree(this.adjList);
-    } else {
-      await this.insert(newNode);
-    }
+    } 
     this.setState({ executing: false });
   };
 
@@ -88,17 +86,23 @@ class Heap extends Component {
     let pos = this.size;
     while (pos > 1) {
       let parent = Math.floor(pos / 2);
+
       await new Promise((r) => setTimeout(r, 2000));
       if (this.unMounting) return;
+
       this.activateChildAndParent(this.h[pos], this.h[parent]);
+
       await new Promise((r) => setTimeout(r, 2000));
       if (this.unMounting) return;
+
       this.removeActiveChildParent(this.h[pos], this.h[parent]);
 
       if (this.h[parent] > this.h[pos]) {
         this.activateLink(this.h[pos]);
+
         await new Promise((r) => setTimeout(r, 1000));
         if (this.unMounting) return;
+
         this.deActivateLink(this.h[pos]);
 
         swap(this.h[parent], this.h[pos]);
@@ -137,6 +141,7 @@ class Heap extends Component {
       removeRootOfDynamicTree(this.h[1], this.adjList);
       await this.fixDown();
     }
+    if (this.unMounting) return;
 
     await this.setState({ executing: false });
     return smallest;
@@ -145,27 +150,39 @@ class Heap extends Component {
     let pos = 1;
     while (pos * 2 <= this.size) {
       let child = pos * 2;
+
+      await new Promise((r) => setTimeout(r, 1000));
+      if (this.unMounting) return;
+
       this.activateParent(this.h[pos]);
       this.activateLeftAndRightChildren(this.h[child], this.h[child + 1]);
+
       await new Promise((r) => setTimeout(r, 2000));
       if (this.unMounting) return;
+
       this.deActivateParent(this.h[pos]);
       this.deActivateLeftAndRightChildren(this.h[child], this.h[child + 1]);
 
       if (this.h[child] > this.h[child + 1]) {
         child += 1;
       }
+
       await new Promise((r) => setTimeout(r, 500));
       if (this.unMounting) return;
+
       this.activateChildAndParent(this.h[child], this.h[pos]);
+
       await new Promise((r) => setTimeout(r, 2000));
       if (this.unMounting) return;
+
       this.removeActiveChildParent(this.h[child], this.h[pos]);
 
       if (this.h[pos] > this.h[child]) {
         this.activateLink(this.h[child]);
+
         await new Promise((r) => setTimeout(r, 1000));
         if (this.unMounting) return;
+
         this.deActivateLink(this.h[child]);
 
         swap(this.h[pos], this.h[child]);
@@ -310,7 +327,7 @@ class Heap extends Component {
   render() {
     return (
       <div className={'row'}>
-        <div className={'col-6'}>
+        <div className={'col-6'} id={'graph-container'}>
           <form
             onSubmit={(event) => {
               event.preventDefault();
