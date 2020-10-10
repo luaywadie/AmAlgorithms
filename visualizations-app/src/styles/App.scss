@@ -1,9 +1,20 @@
+@font-face {
+  font-family: quickSand_light;
+  src: url("/assets/fonts/Quicksand-Light.ttf");
+}
+
+@font-face {
+  font-family: quickSand_medium;
+  src: url("/assets/fonts/Quicksand-Medium.ttf");
+}
+
 .App {
   text-align: center;
 }
 
 body {
   background-color: #eee;
+  font-family: quickSand_light;
 }
 
 button {

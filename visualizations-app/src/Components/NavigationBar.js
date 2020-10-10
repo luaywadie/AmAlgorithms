@@ -22,16 +22,17 @@ import MainPage from './MainPage';
 const NavigationBar = () => {
   return (
     <Router>
-      <Container fluid={true}>
-        <Navbar bg="dark" variant="dark">
+      <Container fluid={true} style={{padding: 0}}>
+        <Navbar>
           <Navbar.Brand as={Link} to="/">
             <img
               alt={'logo'}
               className={'header-logo'}
-              src={process.env.PUBLIC_URL + '/logo.png'}
+              src={process.env.PUBLIC_URL + '/assets/imgs/logo.png'}
             />
           </Navbar.Brand>
-          <Nav className="mr-auto">
+
+          <Nav className="ml-auto">
             <NavDropdown title="Data Structures">
               <NavDropdown.Item eventKey="1" as={Link} to="/heap">
                 Heap
@@ -72,11 +73,13 @@ const NavigationBar = () => {
                 K-Means
               </NavDropdown.Item>
             </NavDropdown>
+
+            <div className="burgerContainer">
+              <div className="burgerIcon"></div>
+              <div className="burgerIcon"></div>
+              <div className="burgerIcon"></div>
+            </div>
           </Nav>
-          <Form inline>
-            <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-            <Button variant="outline-info">Search</Button>
-          </Form>
         </Navbar>
         <br />
       </Container>
