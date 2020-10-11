@@ -41,6 +41,12 @@ async function kMeans(points, k) {
     const randomPoints = getRandom(points, k);
     //create a shallow copy of centroids (to make sure the assigned points don't change)
     let centroids = [...randomPoints];
+
+    //DELETE: Test centroid CSS effects on initial centroids
+    centroids.forEach(point => {
+        let cent = document.getElementById(`x:${parseFloat(point.x).toFixed(1)}-y:${parseFloat(point.y).toFixed(1)}`);
+        cent.classList.add("centroid");
+    });
     
     console.log("Initializing Centroids...");
     console.log(JSON.stringify(centroids, null, 2));

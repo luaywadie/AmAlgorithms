@@ -16,7 +16,21 @@ $color7: #9900cc;
 
 .centroid {
   fill-opacity: 0;
-  // r: 10; //I don't think we can set the radius attribute with CSS, might need D3 for this
+  r: 10; //Can't change this using CSS in Firefox, MUST use Chrome!
+  animation: centroid-animation;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes centroid-animation {
+  from {
+    r: 3;
+  }
+  to {
+    r: 10;
+  }
 }
 
 .cluster-unassigned {
