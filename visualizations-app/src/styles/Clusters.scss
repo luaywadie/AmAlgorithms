@@ -1,7 +1,5 @@
 // Styles applying to all clusters using K-Means
 
-
-
 $color0: #ff6699;
 $color1: #00cc66;
 $color2: #0066cc;
@@ -13,65 +11,64 @@ $color7: #9900cc;
 
 // Set stroke width of points
 @mixin circle-stroke-width {
-    stroke-width: 3;
-
-  }
+  stroke-width: 3;
+}
 
 .centroid {
-    fill-opacity: 0.0;
-    r: 10;
+  fill-opacity: 0;
+  // r: 10; //I don't think we can set the radius attribute with CSS, might need D3 for this
 }
 
 .cluster-unassigned {
-    fill: "black";
-    @include circle-stroke-width;
-    stroke: "black";
+  fill: 'black';
+  @include circle-stroke-width;
+  stroke: 'black';
 }
 
 .cluster0 {
-    fill: $color0;
-    @include circle-stroke-width;
-    stroke: $color0;
+  fill: $color0;
+  @include circle-stroke-width;
+  stroke: $color0;
 }
 
 .cluster1 {
-    fill: $color1;
-    @include circle-stroke-width;
-    stroke: $color1;
+  fill: $color1;
+  @include circle-stroke-width;
+  stroke: $color1;
 }
 
 .cluster2 {
-    fill: $color2;
-    @include circle-stroke-width;
-    stroke: $color2;
+  fill: $color2;
+  @include circle-stroke-width;
+  stroke: $color2;
 }
 
 .cluster3 {
-    fill: $color3;
-    @include circle-stroke-width;
-    stroke: $color3;
+  fill: $color3;
+  @include circle-stroke-width;
+  stroke: $color3;
 }
 
 .cluster4 {
-    fill: $color4;
-    @include circle-stroke-width;
-    stroke: $color4;
+  fill: $color4;
+  @include circle-stroke-width;
+  stroke: $color4;
 }
 
 .cluster5 {
-    fill: $color5;
-    @include circle-stroke-width;
-    stroke: $color5;
+  fill: $color5;
+  @include circle-stroke-width;
+  stroke: $color5;
 }
 
 .cluster6 {
-    fill: $color6;
-    @include circle-stroke-width;
-    stroke: $color6;
+  fill: $color6;
+  @include circle-stroke-width;
+  stroke: $color6;
 }
 
 .cluster7 {
-    fill: $color7;
-    @include circle-stroke-width;
-    stroke: $color7;
+  fill: $color7;
+  @include circle-stroke-width;
+  stroke: $color7;
 }
