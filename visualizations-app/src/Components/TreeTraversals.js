@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import DepthFirstSearch from './algorithms/tree-algorithms/DepthFirstSearch';
 import BreathFirstSearch from './algorithms/tree-algorithms/BreadthFirstSearch';
 import createTree from '../graph-builders/tree-builder';
+import Sidebar from './Sidebar';
+import RenderListComponent from './RenderListComponent';
+import RenderObjectComponent from './RenderObjectComponent'
 
 class TreeTraversals extends Component {
   constructor(props) {
@@ -13,9 +16,11 @@ class TreeTraversals extends Component {
       nodePath: [],
       runningAlg: '',
       queue: [],
+      stack: [],
       currentNode: null,
       visitedMap: {},
-      child : null
+      child : null,
+      clicked : [false,false, false]
     };
     this.adjList = {
       a: ['b', 'c', 'd'],
@@ -65,6 +70,10 @@ class TreeTraversals extends Component {
     this.setState({ queue: q });
   };
 
+  updateStack = (s) => {
+    this.setState({stack: s})
+  }
+
   getPauseStatus = () => this.state.pause;
   getStopStatus = () => this.state.stop;
   getSpeedRequest = () => Number(this.state.speed) + 0.1;
@@ -84,6 +93,7 @@ class TreeTraversals extends Component {
     if (this.state.stop) {
       this.setState({ stop: false, pause: false, runningAlg: '' });
     }
+
   };
 
   setRunningAlg = (alg) => {
@@ -106,51 +116,14 @@ class TreeTraversals extends Component {
     await this.setState({ child });
   }
 
-  renderTreeTraversalHeading() {
-    return (
-      <tr>
-        <th>Traversal Ordering</th>
-      </tr>
-    );
+  toggleClicked = (i) => {
+    let a = this.state.clicked.slice() 
+    a[i] = !a[i]
+    this.setState({
+      clicked : a
+    })
   }
 
-  renderTreeTraversalData() {
-    return this.state.nodePath.map((node) => {
-      return (
-        <tr key={node}>
-          <td>{node}</td>
-        </tr>
-      );
-    });
-  }
-  renderQueueHeading() {
-    return (
-      <tr>
-        <th>Queue</th>
-      </tr>
-    );
-  }
-  // renderQueue() {
-  //   return this.state.queue.map((node) => {
-  //     return (
-  //       <tr key={node}>
-  //         <td>{node}</td>
-  //       </tr>
-  //     );
-  //   });
-  // }
-
-  renderQueue() {
-    return this.state.queue.map((node) => {
-      return <td key={node}>{node}</td>;
-    });
-  }
-  renderVisitedMap() {
-    return Object.entries(this.state.visitedMap).map(([key, val], i) => {
-    return (<tr key={i}><td key={key+i}>{key}</td>
-    <td key={key}>{String(val)}</td></tr>);
-    });
-  }
 
 
   renderBfsPseudocode() {
@@ -215,22 +188,64 @@ class TreeTraversals extends Component {
   }
 
   renderDfsPseudocode() {
-    return (
-      <div>
-        <h4>Pseudo-code</h4>
-        <pre style={{ overflow: 'visible' }}>
-          {`
-        1  procedure DFS_iterative(G, v) is
-        2    let S be a stack
-        3    S.push(v)
-        4    while S is not empty do
-        5      v = S.pop()
-        6      if v is not labeled as discovered then
-        7        label v as discovered
-        8        for all edges from v to w in G.adjacentEdges(v) do 
-        9          S.push(w)
-    `}
-        </pre>
+      const indentation = (num) => {
+        return num * 20;
+      };
+      return (
+        <div>
+          <div id={'dfs-1'}>
+            1
+            <span style={{ marginLeft: indentation(1) }}>
+              DFS(G, root)
+            </span>
+          </div>
+          <div id={'dfs-2'}>
+            2<span style={{ marginLeft: indentation(2) }}>let S be a stack</span>
+          </div>
+          <div id={'dfs-3'}>
+            3<span style={{ marginLeft: indentation(2) }}>let V be a map with all nodes as keys and values of false</span>
+          </div>
+          <div id={'dfs-4'}>
+            4
+            <span style={{ marginLeft: indentation(2) }}>
+            set V[root] = true
+            </span>
+          </div>
+          <div id={'dfs-5'}>
+            5<span style={{ marginLeft: indentation(2) }}>S.push(root)</span>
+          </div>
+          <div id={'dfs-6'}>
+            6
+            <span style={{ marginLeft: indentation(2) }}>
+              while S is not empty
+            </span>
+          </div>
+          <div id={'dfs-7'}>
+            7<span style={{ marginLeft: indentation(3) }}>current := S.pop()</span>
+          </div>
+          <div id={'dfs-8'}>
+            8
+            <span style={{ marginLeft: indentation(3) }}>
+              for child of current
+            </span>
+          </div>
+          <div id={'dfs-9'}>
+            9
+            <span style={{ marginLeft: indentation(4) }}>
+              if child is not labeled as discovered then
+            </span>
+          </div>
+          <div id={'dfs-10'}>
+            10
+            <span style={{ marginLeft: indentation(5) }}>
+              set V[child] = true
+            </span>
+          </div>
+          <div id={'dfs-11'}>
+            11<span style={{ marginLeft: indentation(5) }}>S.push(child)</span>
+          </div>
+        <div>
+      </div>
       </div>
     );
   }
@@ -247,6 +262,10 @@ class TreeTraversals extends Component {
             runningAlg={this.state.runningAlg}
             setRunningAlg={this.setRunningAlg}
             buildNodePath={this.buildNodePath}
+            updateStack={this.updateStack}
+            updateCurrentNode={this.updateCurrentNode}
+            updateVisitedMap={this.updateVisitedMap}
+            updateChild={this.updateChild}
           />
           <div className={'divider'}></div>
           <BreathFirstSearch
@@ -297,21 +316,7 @@ class TreeTraversals extends Component {
           </form>
         </div>
 
-        <div className={'col-5'}>
-          <div className={'row'} style={{ marginBottom: '20px' }}>
-              <h4> Current Node: {this.state.currentNode}</h4> 
-          </div>
-          <div className={'row'} style={{ marginBottom: '20px' }}>
-           <h4> Current Child: {this.state.child}</h4> 
-          </div>
-
-          <div className={'row'}>
-            <table id={'tree-traversal-table'}>
-              <tbody>
-                <tr><td style={{border: 'none', paddingRight:'5px'}}>Queue: </td>{this.renderQueue()}</tr>
-              </tbody>
-            </table>
-          </div>
+        <div className={'col-4'}>
           <div className={'row'}>
             {this.state.runningAlg === ''
               ? ''
@@ -319,24 +324,33 @@ class TreeTraversals extends Component {
               ? this.renderBfsPseudocode()
               : this.renderDfsPseudocode()}
           </div>
-
         </div>
 
-        <div className={'col-3'}>
-          <table id={'tree-traversal-table'} className={'float-right'} style={{marginRight:'60px'}}>
-            <tbody>
-              {this.renderTreeTraversalHeading()}
-              {this.renderTreeTraversalData()}
-            </tbody>
-          </table>
-          <div className={'row'}>
-            <table id={'tree-traversal-table'}>
-              <tbody>
-                <tr><th>Visited Map</th></tr>
-                {this.renderVisitedMap()}
-              </tbody>
-            </table>
-          </div>
+        <div className={'col-4'}>
+        <Sidebar >
+              {this.state.currentNode ? <li> current = {this.state.currentNode} </li> : ''} 
+              {this.state.child ? <li> child = {this.state.child} </li> : ''} 
+
+            <li onClick={() => this.toggleClicked(0)}>
+            <RenderListComponent list={this.state.nodePath} listName={'Node Path'} clicked={this.state.clicked[0]}  />
+            </li>
+            <li onClick={() => this.toggleClicked(1)}>
+              {this.state.runningAlg === 'bfs' 
+                ?
+                <RenderListComponent list={this.state.queue} listName={'Q'} clicked={this.state.clicked[1]}  />
+                : 
+                this.state.runningAlg === 'dfs' 
+                  ? 
+                  <RenderListComponent list={this.state.stack} listName={'S'} clicked={this.state.clicked[1]}  />
+                  :
+                  <></>
+              }
+            </li>
+            <li onClick={() => this.toggleClicked(2)}>
+              {Object.keys(this.state.visitedMap).length > 0 ?<RenderObjectComponent obj={this.state.visitedMap} objName={'V'} clicked={this.state.clicked[2]}  /> : '' }
+            </li>
+            </Sidebar>
+
         </div>
       </div>
     );

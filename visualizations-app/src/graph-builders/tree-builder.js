@@ -34,7 +34,7 @@ function createTree(adjList) {
   let treeData = buildTreeDataFromAdjList(adjList)['a'];
   let myScale = 1.5;
   // set the dimensions and margins of the diagram
-  const margin = { top: 20, right: 50, bottom: 50, left: 50 },
+  const margin = { top: 20, right: 50, bottom: 50, left: 20 },
     width = 900 - margin.left - margin.right,
     height = 900 - margin.top - margin.bottom;
 

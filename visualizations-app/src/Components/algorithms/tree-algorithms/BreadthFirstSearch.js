@@ -27,6 +27,7 @@ class BreadthFirstSearch extends Component {
 
   bfs = async () => {
     let linkList = [];
+    let root = 'a';
 
     this.highlightLine(1);
     await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
@@ -54,6 +55,7 @@ class BreadthFirstSearch extends Component {
     this.removeHighlightedLine(3);
 
     this.highlightLine(4);
+    visited[root] = true;
     await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
     await this.checkPauseStatus();
     if (this.props.stop) return;
@@ -67,7 +69,6 @@ class BreadthFirstSearch extends Component {
     if (this.unMounting) return;
     this.removeHighlightedLine(5);
 
-    let root = 'a';
     visited[root] = true;
     this.props.updateVisitedMap(visited);
     let queue = [root];
@@ -87,19 +88,17 @@ class BreadthFirstSearch extends Component {
       this.props.updateQueue(queue);
 
       this.highlightLine(7);
-      await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
-      await this.checkPauseStatus();
-      if (this.props.stop) return;
-      if (this.unMounting) return;
-      
       this.activateLink(currentNode, linkList);
       await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
       await this.checkPauseStatus();
       if (this.props.stop) return;
       if (this.unMounting) return;
-      
+
       this.activateVisitedNode(currentNode);
       this.props.updateCurrentNode(currentNode);
+
+      nodePath.push(currentNode);
+      this.props.buildNodePath(nodePath);
 
       await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
       await this.checkPauseStatus();
@@ -107,16 +106,14 @@ class BreadthFirstSearch extends Component {
       if (this.unMounting) return;
       this.removeHighlightedLine(7);
 
-      
       this.highlightLine(8);
       await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
       await this.checkPauseStatus();
       if (this.props.stop) return;
       if (this.unMounting) return;
 
-      nodePath.push(currentNode);
-      this.props.buildNodePath(nodePath);
-      
+
+
       this.removeHighlightedLine(8);
       for (let child of this.props.g[currentNode]) {
         this.props.updateChild(child)
