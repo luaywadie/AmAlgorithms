@@ -34,9 +34,9 @@ $color7: #9900cc;
 }
 
 .cluster-unassigned {
-  fill: 'black';
+  fill: "black";
   @include circle-stroke-width;
-  stroke: 'black';
+  stroke: "black";
 }
 
 .cluster0 {

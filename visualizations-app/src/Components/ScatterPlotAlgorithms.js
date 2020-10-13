@@ -29,6 +29,8 @@ class ScatterPlotAlgorithms extends Component {
     if (this.scatter.hasChildNodes()) this.scatter.removeChild(svg);
   }
 
+  setPoints = (ps) => this.setState({points: ps});
+
   getPauseStatus = () => this.state.pause;
   getStopStatus = () => this.state.stop;
   getSpeedRequest = () => Number(this.state.speed) + 0.1;
@@ -43,7 +45,7 @@ class ScatterPlotAlgorithms extends Component {
               pause={this.state.pause}
               stop={this.state.stop}
               speed={this.state.speed}
-
+              setPoints={this.setPoints}
             />
           </div>
         </div>
