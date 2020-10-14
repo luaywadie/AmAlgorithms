@@ -5,8 +5,10 @@ import { Container, Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import TreeTraversals from '../Components/TreeTraversals';
 import UndirectedGraphAlgorithms from '../Components/UndirectedGraphAlgorithms';
 import DirectedGraphAlgorithms from '../Components/DirectedGraphAlgorithms';
+import ScatterPlotAlgorithms from '../Components/ScatterPlotAlgorithms';
 import Heap from '../Components/data-structures/Heap';
 import InsertionSort from '../Components/sorts/InsertionSort';
+
 
 import '../styles/Navigation-bar.scss';
 import MainPage from './MainPage';
@@ -23,7 +25,6 @@ const NavigationBar = () => {
               src={process.env.PUBLIC_URL + '/assets/imgs/logo.png'}
             />
           </Navbar.Brand>
-
           <Nav className="ml-auto">
             <NavDropdown title="Data Structures">
               <NavDropdown.Item eventKey="1" as={Link} to="/heap">
@@ -84,6 +85,9 @@ const NavigationBar = () => {
         path="/directed_graph_algorithms"
         component={DirectedGraphAlgorithms}
       />
+      <Route 
+        path="/scatterplot_algorithms" 
+        component={ScatterPlotAlgorithms} />
       <Route path="/heap" component={Heap} />
       <Route path="/insertion_sort" component={InsertionSort} />
 
