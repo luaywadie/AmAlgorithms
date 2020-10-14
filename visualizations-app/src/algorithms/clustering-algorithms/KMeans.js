@@ -6,7 +6,6 @@ class KMeans extends Component {
   constructor(props) {
     super(props);
     this.unMounting = false;
-    this.k = 3;
   }
 
   componentWillUnmount() {
@@ -17,7 +16,7 @@ class KMeans extends Component {
 
   //Perform K-Means clustering on points, plot, and animate
   kmeans = async () => {
-    const k = this.k;
+    const k = this.props.k;
     //Randomly initialize cluster centroids
     const randomPoints = this.getRandomElements(this.props.points, k);
     //create a shallow copy of centroids (to make sure the assigned points don't change)
@@ -33,14 +32,14 @@ class KMeans extends Component {
       let cent = document.getElementById(
         `x:${parseFloat(point.x).toFixed(1)}-y:${parseFloat(point.y).toFixed(1)}`
       );
-      cent.classList.add(`cluster${index}`, 'centroid');    
+      cent.classList.replace('cluster-unassigned', `cluster${index}`);
+      cent.classList.add('centroid');
     });
 
-    //pause for a moment
-    await new Promise((r) => setTimeout(r, 3000));
-
-    console.log('Initializing Centroids...');
-    console.log(JSON.stringify(centroids, null, 2));
+    await new Promise((r) => setTimeout(r, 2000 / this.props.speed));
+    await this.checkPauseStatus();
+    if (this.props.stop) return;
+    if (this.unMounting) return;
 
     let hasConverged = false;
     let i = 0;
@@ -48,13 +47,19 @@ class KMeans extends Component {
       console.log('Iteration ', i);
       this.assignToClusters(this.props.points, centroids);
 
-      console.log('Clusters have been assigned.');
-      //pause for a moment
-      await new Promise((r) => setTimeout(r, 1000));
+      await new Promise((r) => setTimeout(r, 2000 / this.props.speed));
+      await this.checkPauseStatus();
+      if (this.props.stop) return;
+      if (this.unMounting) return;
 
       let centroidDifferences = [...centroids];
       this.updateCentroids(this.props.points, k, centroids);
 
+      await new Promise((r) => setTimeout(r, 2000 / this.props.speed));
+      await this.checkPauseStatus();
+      if (this.props.stop) return;
+      if (this.unMounting) return;
+      
       console.log('Centroids have been updated:');
       console.log(JSON.stringify(centroids, null, 2));
 
@@ -68,9 +73,6 @@ class KMeans extends Component {
 
       console.log('centroid totalDifference: ', totalDifference);
       hasConverged = (totalDifference < 0.1);
-      
-      //pause for a moment
-      await new Promise((r) => setTimeout(r, 1000));
       
       i++;
     } while (!hasConverged && i < 100);
@@ -156,18 +158,19 @@ class KMeans extends Component {
   }
 
   moveIthCentroid(i, centroid) {
-    const scatterElement = document.getElementById('scatter-svg');
-    const centroidElement = scatterElement.getElementsByClassName(`cluster${i} centroid`)[0];
+    const scatterEl = document.getElementById('scatter-no-margin');
+    const centroidEl = scatterEl.getElementsByClassName(`cluster${i} centroid`)[0];
     //defining scale functions to translate the centroid's coordinates into (cx, cy)
     const scaleX = d3.scaleLinear()
       .domain([4, 8])
-      .range([0, scatterElement.getAttribute('width')]);
+      .range([0, scatterEl.parentElement.getAttribute('width') - 90]);
     const scaleY = d3.scaleLinear()
-      .domain([0, 9])
-      .range([scatterElement.getAttribute('height'), 0]);
-    if(centroidElement) {
-      centroidElement.setAttribute('cx', scaleX(centroid.x));
-      centroidElement.setAttribute('cy', scaleY(centroid.y));
+      .domain([0, 7])
+      .range([scatterEl.parentElement.getAttribute('height') - 40, 0]);
+    if(centroidEl) {
+      centroidEl.setAttribute('cx', scaleX(centroid.x));
+      centroidEl.setAttribute('cy', scaleY(centroid.y));
+      //centroidEl.setAttribute('transform', scatterEl.getAttribute('transform'));
     }
   }
 

@@ -10,6 +10,7 @@ class ScatterPlotAlgorithms extends Component {
       pause: false,
       stop: false,
       speed: 1,
+      k: 3,
       points: [],
     };
   }
@@ -45,8 +46,24 @@ class ScatterPlotAlgorithms extends Component {
               pause={this.state.pause}
               stop={this.state.stop}
               speed={this.state.speed}
+              k={this.state.k}
               setPoints={this.setPoints}
             />
+            <form onSubmit={(event) => event.preventDefault()}>
+            <label>
+              K:
+              <input
+                style={{ width: '50px' }}
+                type="number"
+                value={this.state.k}
+                onChange={(event) =>
+                  this.setState({
+                    k: event.target.value,
+                  })
+                }
+              />
+            </label>
+          </form>
           </div>
         </div>
       </div>
