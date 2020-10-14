@@ -9,7 +9,6 @@ import ScatterPlotAlgorithms from '../Components/ScatterPlotAlgorithms';
 import Heap from '../Components/data-structures/Heap';
 import InsertionSort from '../Components/sorts/InsertionSort';
 
-
 import '../styles/Navigation-bar.scss';
 import MainPage from './MainPage';
 
@@ -49,7 +48,7 @@ const NavigationBar = () => {
         </NavDropdown>
 
         <NavDropdown title="Machine Learning">
-          <NavDropdown.Item eventKey="3" as={Link} to="#">
+          <NavDropdown.Item eventKey="3" as={Link} to="/ScatterPlotAlgorithms">
             K-Means
           </NavDropdown.Item>
         </NavDropdown>
@@ -67,6 +66,7 @@ const NavigationBar = () => {
     <Route path="/directed_graph_algorithms" component={DirectedGraphAlgorithms}/>
     <Route path="/heap" component={Heap}/>
     <Route path="/insertion_sort" component={InsertionSort}/>
+    <Route path="/ScatterPlotAlgorithms" component={ScatterPlotAlgorithms}/>
 
     <Route exact="exact" path="/" component={MainPage}/>
   </Router>);

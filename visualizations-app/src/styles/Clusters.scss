@@ -27,9 +27,11 @@ $color7: #9900cc;
 @keyframes centroid-animation {
   from {
     r: 5;
+    opacity: 0;
   }
   to {
-    r: 10;
+    r: 50;
+    opacity: 1;
   }
 }
 
