@@ -158,15 +158,11 @@ function prim(g, root) {
 
     mstSet[minNode] = true;
 
-    for (let node of Object.keys(costMap)) {
-      for (let [cost, neighbor] of g[minNode]) {
-        if (neighbor == node) {
-          if (mstSet[node] == false) {
-            if (costMap[node] > cost) {
-              costMap[node] = cost;
-              parents[node] = minNode;
-            }
-          }
+    for (let [cost, neighbor] of g[minNode]) {
+      if (mstSet[neighbor] == false) {
+        if (costMap[neighbor] > cost) {
+          costMap[neighbor] = cost;
+          parents[neighbor] = minNode;
         }
       }
     }
