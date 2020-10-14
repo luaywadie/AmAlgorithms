@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import createScatterplot from '../graph-builders/scatterplot-builder';
 import * as d3 from 'd3';
-import KMeans from '../algorithms/clustering-algorithms/KMeans';
+import KMeans from './algorithms/clustering-algorithms/KMeans';
 import fs from 'fs';
 
 class ScatterPlotAlgorithms extends Component {
@@ -11,7 +11,7 @@ class ScatterPlotAlgorithms extends Component {
       pause: false,
       stop: false,
       speed: 1,
-      k: 3,
+      k: 5,
       points: [],
     };
   }

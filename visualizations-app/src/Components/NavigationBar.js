@@ -7,7 +7,7 @@ import UndirectedGraphAlgorithms from '../Components/UndirectedGraphAlgorithms';
 import DirectedGraphAlgorithms from '../Components/DirectedGraphAlgorithms';
 import ScatterPlotAlgorithms from '../Components/ScatterPlotAlgorithms';
 import Heap from '../Components/data-structures/Heap';
-import InsertionSort from '../Components/sorts/InsertionSort';
+import InsertionSort from '../Components/algorithms/sorts/InsertionSort';
 
 import '../styles/Navigation-bar.scss';
 import MainPage from './MainPage';
