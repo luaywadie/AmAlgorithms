@@ -185,7 +185,8 @@ class TreeTraversals extends Component {
           </span>
         </div>
         <div id={'bfs-11'}>
-          11<span style={{ marginLeft: indentation(5) }}>{" "}Q.enqueue(child)</span>
+          11
+          <span style={{ marginLeft: indentation(5) }}> Q.enqueue(child)</span>
         </div>
       </div>
     );
@@ -245,7 +246,7 @@ class TreeTraversals extends Component {
           </span>
         </div>
         <div id={'dfs-11'}>
-          11<span style={{ marginLeft: indentation(5) }}>{" "}S.push(child)</span>
+          11<span style={{ marginLeft: indentation(5) }}> S.push(child)</span>
         </div>
         <div></div>
       </div>

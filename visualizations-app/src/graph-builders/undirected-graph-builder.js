@@ -74,7 +74,7 @@ function createGraph() {
     { target: 't', source: 'd', strength: 100 * strength, cost: 6 },
     { target: 't', source: 'l', strength: 100 * strength, cost: 4 },
   ];
-  const margin = { top: 20, right: 50, bottom: 200, left: 200 },
+  const margin = { top: 20, right: 50, bottom: 200, left: 100 },
     width = 800 - margin.left - margin.right,
     height = 800 - margin.top - margin.bottom;
 
