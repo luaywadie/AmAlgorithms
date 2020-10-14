@@ -19,7 +19,7 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  position: absolute;
+  // position: absolute;
   right: 0;
   transition: 550ms;
   opacity: 0;
@@ -30,6 +30,8 @@
   opacity: 1;
   transition: 550ms;
   visibility: visible;
+  border: #ecb5cc 4px solid;
+  border-radius: 10px;
 }
 
 .side-menu-items {

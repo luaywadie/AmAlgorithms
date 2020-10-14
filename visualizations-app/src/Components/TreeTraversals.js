@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import DepthFirstSearch from './algorithms/tree-algorithms/DepthFirstSearch';
 import BreathFirstSearch from './algorithms/tree-algorithms/BreadthFirstSearch';
 import createTree from '../graph-builders/tree-builder';
-import Sidebar from './Sidebar';
-import RenderListComponent from './RenderListComponent';
-import RenderObjectComponent from './RenderObjectComponent'
+import Sidebar from './sidebar/Sidebar';
+import RenderListComponent from './sidebar/RenderListComponent';
+import RenderObjectComponent from './sidebar/RenderObjectComponent';
 
 class TreeTraversals extends Component {
   constructor(props) {
@@ -19,8 +19,8 @@ class TreeTraversals extends Component {
       stack: [],
       currentNode: null,
       visitedMap: {},
-      child : null,
-      clicked : [false,false, false]
+      child: null,
+      clicked: [false, false, false],
     };
     this.adjList = {
       a: ['b', 'c', 'd'],
@@ -71,8 +71,8 @@ class TreeTraversals extends Component {
   };
 
   updateStack = (s) => {
-    this.setState({stack: s})
-  }
+    this.setState({ stack: s });
+  };
 
   getPauseStatus = () => this.state.pause;
   getStopStatus = () => this.state.stop;
@@ -89,11 +89,16 @@ class TreeTraversals extends Component {
         linkElement.classList.remove('link-traversed');
       }
     });
-    this.setState({ nodePath: [], visitedMap:{}, queue: [] });
+    this.setState({ nodePath: [], visitedMap: {}, queue: [] });
     if (this.state.stop) {
-      this.setState({ stop: false, pause: false, runningAlg: '' });
+      this.setState({
+        stop: false,
+        pause: false,
+        runningAlg: '',
+        currentNode: null,
+        child: null,
+      });
     }
-
   };
 
   setRunningAlg = (alg) => {
@@ -110,21 +115,19 @@ class TreeTraversals extends Component {
   };
 
   updateVisitedMap = async (map) => {
-    await this.setState({ visitedMap : map });
-  }
+    await this.setState({ visitedMap: map });
+  };
   updateChild = async (child) => {
     await this.setState({ child });
-  }
+  };
 
   toggleClicked = (i) => {
-    let a = this.state.clicked.slice() 
-    a[i] = !a[i]
+    let a = this.state.clicked.slice();
+    a[i] = !a[i];
     this.setState({
-      clicked : a
-    })
-  }
-
-
+      clicked: a,
+    });
+  };
 
   renderBfsPseudocode() {
     const indentation = (num) => {
@@ -133,22 +136,20 @@ class TreeTraversals extends Component {
     return (
       <div>
         <div id={'bfs-1'}>
-          1
-          <span style={{ marginLeft: indentation(1) }}>
-            BFS(G, root)
-          </span>
+          1<span style={{ marginLeft: indentation(1) }}>BFS(G, root)</span>
         </div>
         <div id={'bfs-2'}>
           2<span style={{ marginLeft: indentation(2) }}>let Q be a queue</span>
         </div>
         <div id={'bfs-3'}>
-          3<span style={{ marginLeft: indentation(2) }}>let V be a map with all nodes as keys and values of false</span>
+          3
+          <span style={{ marginLeft: indentation(2) }}>
+            let V be a map with all nodes as keys and values of false
+          </span>
         </div>
         <div id={'bfs-4'}>
           4
-          <span style={{ marginLeft: indentation(2) }}>
-            set V[root] = true
-          </span>
+          <span style={{ marginLeft: indentation(2) }}>set V[root] = true</span>
         </div>
         <div id={'bfs-5'}>
           5<span style={{ marginLeft: indentation(2) }}>Q.enqueue(root)</span>
@@ -160,7 +161,10 @@ class TreeTraversals extends Component {
           </span>
         </div>
         <div id={'bfs-7'}>
-          7<span style={{ marginLeft: indentation(3) }}>current := Q.dequeue()</span>
+          7
+          <span style={{ marginLeft: indentation(3) }}>
+            current := Q.dequeue()
+          </span>
         </div>
         <div id={'bfs-8'}>
           8
@@ -188,64 +192,62 @@ class TreeTraversals extends Component {
   }
 
   renderDfsPseudocode() {
-      const indentation = (num) => {
-        return num * 20;
-      };
-      return (
-        <div>
-          <div id={'dfs-1'}>
-            1
-            <span style={{ marginLeft: indentation(1) }}>
-              DFS(G, root)
-            </span>
-          </div>
-          <div id={'dfs-2'}>
-            2<span style={{ marginLeft: indentation(2) }}>let S be a stack</span>
-          </div>
-          <div id={'dfs-3'}>
-            3<span style={{ marginLeft: indentation(2) }}>let V be a map with all nodes as keys and values of false</span>
-          </div>
-          <div id={'dfs-4'}>
-            4
-            <span style={{ marginLeft: indentation(2) }}>
-            set V[root] = true
-            </span>
-          </div>
-          <div id={'dfs-5'}>
-            5<span style={{ marginLeft: indentation(2) }}>S.push(root)</span>
-          </div>
-          <div id={'dfs-6'}>
-            6
-            <span style={{ marginLeft: indentation(2) }}>
-              while S is not empty
-            </span>
-          </div>
-          <div id={'dfs-7'}>
-            7<span style={{ marginLeft: indentation(3) }}>current := S.pop()</span>
-          </div>
-          <div id={'dfs-8'}>
-            8
-            <span style={{ marginLeft: indentation(3) }}>
-              for child of current
-            </span>
-          </div>
-          <div id={'dfs-9'}>
-            9
-            <span style={{ marginLeft: indentation(4) }}>
-              if child is not labeled as discovered then
-            </span>
-          </div>
-          <div id={'dfs-10'}>
-            10
-            <span style={{ marginLeft: indentation(5) }}>
-              set V[child] = true
-            </span>
-          </div>
-          <div id={'dfs-11'}>
-            11<span style={{ marginLeft: indentation(5) }}>S.push(child)</span>
-          </div>
-        <div>
-      </div>
+    const indentation = (num) => {
+      return num * 20;
+    };
+    return (
+      <div>
+        <div id={'dfs-1'}>
+          1<span style={{ marginLeft: indentation(1) }}>DFS(G, root)</span>
+        </div>
+        <div id={'dfs-2'}>
+          2<span style={{ marginLeft: indentation(2) }}>let S be a stack</span>
+        </div>
+        <div id={'dfs-3'}>
+          3
+          <span style={{ marginLeft: indentation(2) }}>
+            let V be a map with all nodes as keys and values of false
+          </span>
+        </div>
+        <div id={'dfs-4'}>
+          4
+          <span style={{ marginLeft: indentation(2) }}>set V[root] = true</span>
+        </div>
+        <div id={'dfs-5'}>
+          5<span style={{ marginLeft: indentation(2) }}>S.push(root)</span>
+        </div>
+        <div id={'dfs-6'}>
+          6
+          <span style={{ marginLeft: indentation(2) }}>
+            while S is not empty
+          </span>
+        </div>
+        <div id={'dfs-7'}>
+          7
+          <span style={{ marginLeft: indentation(3) }}>current := S.pop()</span>
+        </div>
+        <div id={'dfs-8'}>
+          8
+          <span style={{ marginLeft: indentation(3) }}>
+            for child of current
+          </span>
+        </div>
+        <div id={'dfs-9'}>
+          9
+          <span style={{ marginLeft: indentation(4) }}>
+            if child is not labeled as discovered then
+          </span>
+        </div>
+        <div id={'dfs-10'}>
+          10
+          <span style={{ marginLeft: indentation(5) }}>
+            set V[child] = true
+          </span>
+        </div>
+        <div id={'dfs-11'}>
+          11<span style={{ marginLeft: indentation(5) }}>S.push(child)</span>
+        </div>
+        <div></div>
       </div>
     );
   }
@@ -327,30 +329,50 @@ class TreeTraversals extends Component {
         </div>
 
         <div className={'col-4'}>
-        <Sidebar >
-              {this.state.currentNode ? <li> current = {this.state.currentNode} </li> : ''} 
-              {this.state.child ? <li> child = {this.state.child} </li> : ''} 
+          <Sidebar showButton={this.state.runningAlg !== ''}>
+            {this.state.currentNode ? (
+              <li> current = {this.state.currentNode} </li>
+            ) : (
+              ''
+            )}
+            {this.state.child ? <li> child = {this.state.child} </li> : ''}
 
             <li onClick={() => this.toggleClicked(0)}>
-            <RenderListComponent list={this.state.nodePath} listName={'Node Path'} clicked={this.state.clicked[0]}  />
+              <RenderListComponent
+                list={this.state.nodePath}
+                listName={'Node Path'}
+                clicked={this.state.clicked[0]}
+              />
             </li>
             <li onClick={() => this.toggleClicked(1)}>
-              {this.state.runningAlg === 'bfs' 
-                ?
-                <RenderListComponent list={this.state.queue} listName={'Q'} clicked={this.state.clicked[1]}  />
-                : 
-                this.state.runningAlg === 'dfs' 
-                  ? 
-                  <RenderListComponent list={this.state.stack} listName={'S'} clicked={this.state.clicked[1]}  />
-                  :
-                  <></>
-              }
+              {this.state.runningAlg === 'bfs' ? (
+                <RenderListComponent
+                  list={this.state.queue}
+                  listName={'Q'}
+                  clicked={this.state.clicked[1]}
+                />
+              ) : this.state.runningAlg === 'dfs' ? (
+                <RenderListComponent
+                  list={this.state.stack}
+                  listName={'S'}
+                  clicked={this.state.clicked[1]}
+                />
+              ) : (
+                <></>
+              )}
             </li>
             <li onClick={() => this.toggleClicked(2)}>
-              {Object.keys(this.state.visitedMap).length > 0 ?<RenderObjectComponent obj={this.state.visitedMap} objName={'V'} clicked={this.state.clicked[2]}  /> : '' }
+              {Object.keys(this.state.visitedMap).length > 0 ? (
+                <RenderObjectComponent
+                  obj={this.state.visitedMap}
+                  objName={'V'}
+                  clicked={this.state.clicked[2]}
+                />
+              ) : (
+                ''
+              )}
             </li>
-            </Sidebar>
-
+          </Sidebar>
         </div>
       </div>
     );

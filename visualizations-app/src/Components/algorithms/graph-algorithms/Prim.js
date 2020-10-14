@@ -14,7 +14,16 @@ class Prim extends Component {
       this.unMounting = true;
     }
   }
-
+  highlightLine(lineNum) {
+    document
+      .getElementById('prim-' + lineNum)
+      .classList.add('active-code-line');
+  }
+  removeHighlightedLine(lineNum) {
+    document
+      .getElementById('prim-' + lineNum)
+      .classList.remove('active-code-line');
+  }
   prim = async () => {
     let root = this.props.root;
     let costMap = {};
@@ -25,26 +34,89 @@ class Prim extends Component {
       parents[k] = null;
       mstSet[k] = false;
     });
+    this.highlightLine(1);
+    await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+    await this.checkPauseStatus();
+    if (this.props.stop) {
+      return;
+    }
+    if (this.unMounting) return;
+    this.removeHighlightedLine(1);
+
+    this.highlightLine(2);
+    await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+    await this.checkPauseStatus();
+    if (this.props.stop) {
+      return;
+    }
+    if (this.unMounting) return;
+    this.removeHighlightedLine(2);
+    this.props.updateDistances(costMap);
+
+    this.highlightLine(3);
+    await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+    await this.checkPauseStatus();
+    if (this.props.stop) {
+      return;
+    }
+    if (this.unMounting) return;
+    this.removeHighlightedLine(3);
+    this.props.updateParents(parents);
+
+    this.highlightLine(4);
+    await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+    await this.checkPauseStatus();
+    if (this.props.stop) {
+      return;
+    }
+    if (this.unMounting) return;
+    this.removeHighlightedLine(4);
+    this.props.updatePrimMstSet(mstSet);
+
+    this.highlightLine(5);
+    await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+    await this.checkPauseStatus();
+    if (this.props.stop) {
+      return;
+    }
+    if (this.unMounting) return;
+    this.removeHighlightedLine(5);
     parents[root] = -1;
+
+    this.highlightLine(6);
+    await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+    await this.checkPauseStatus();
+    if (this.props.stop) {
+      return;
+    }
+    if (this.unMounting) return;
+    this.removeHighlightedLine(6);
     costMap[root] = 0;
 
     let activeLinks = [];
-    let cumulativeCostMap = {};
     for (let i = 0; i < Object.keys(this.props.g).length; i++) {
-      if (this.unMounting) return;
-      cumulativeCostMap = this.calculateCumulativeDistance(costMap, parents);
-      this.props.updatePrimData(costMap, parents, cumulativeCostMap);
-      let minNode = this.findMin(costMap, mstSet);
-      mstSet[minNode] = true;
-
+      this.highlightLine(7);
       await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
       await this.checkPauseStatus();
       if (this.props.stop) {
-        this.cleanUpActiveLinksAndCurrentNode(activeLinks, minNode);
         return;
       }
       if (this.unMounting) return;
+      this.removeHighlightedLine(7);
 
+      this.highlightLine(8);
+      await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+      await this.checkPauseStatus();
+      if (this.props.stop) {
+        return;
+      }
+      if (this.unMounting) return;
+      this.removeHighlightedLine(8);
+      let minNode = this.findMin(costMap, mstSet);
+      this.props.updatePrimMinNode(minNode);
+
+      this.highlightLine(9);
+      mstSet[minNode] = true;
       let minNodeEl = this.activateCurrentNode(minNode);
 
       await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
@@ -54,41 +126,83 @@ class Prim extends Component {
         return;
       }
       if (this.unMounting) return;
+      this.removeHighlightedLine(9);
+      this.props.updatePrimMstSet(mstSet);
 
-      for (let node of Object.keys(costMap)) {
-        for (let [cost, neighbor] of this.props.g[minNode]) {
-          if (neighbor === node) {
-            if (mstSet[node] === false) {
-              if (costMap[node] > cost) {
-                let el = this.deActivateOldLink(
-                  node,
-                  parents[node],
-                  this.props.speed
-                );
-                if (el) activeLinks.filter((e) => e !== el);
+      for (let [cost, neighbor] of this.props.g[minNode]) {
+        this.highlightLine(10);
+        await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+        await this.checkPauseStatus();
+        if (this.props.stop) {
+          this.cleanUpActiveLinksAndCurrentNode(activeLinks, minNode);
+          return;
+        }
+        if (this.unMounting) return;
+        this.removeHighlightedLine(10);
 
-                this.activateLink(minNode, node, activeLinks);
+        this.props.updateNeighbor(neighbor, cost);
 
-                await new Promise((r) =>
-                  setTimeout(r, 1000 / this.props.speed)
-                );
-                await this.checkPauseStatus();
-                if (this.props.stop) {
-                  this.cleanUpActiveLinksAndCurrentNode(activeLinks, minNode);
-                  return;
-                }
-                if (this.unMounting) return;
+        this.highlightLine(11);
+        await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+        await this.checkPauseStatus();
+        if (this.props.stop) {
+          this.cleanUpActiveLinksAndCurrentNode(activeLinks, minNode);
+          return;
+        }
+        if (this.unMounting) return;
+        this.removeHighlightedLine(11);
 
-                costMap[node] = cost;
-                parents[node] = minNode;
-              }
+        if (mstSet[neighbor] === false) {
+          this.highlightLine(12);
+          await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+          await this.checkPauseStatus();
+          if (this.props.stop) {
+            this.cleanUpActiveLinksAndCurrentNode(activeLinks, minNode);
+            return;
+          }
+          if (this.unMounting) return;
+          this.removeHighlightedLine(12);
+
+          if (costMap[neighbor] > cost) {
+            this.highlightLine(13);
+            let el = this.deActivateOldLink(
+              neighbor,
+              parents[neighbor],
+              this.props.speed
+            );
+            if (el) activeLinks.filter((e) => e !== el);
+
+            this.activateLink(minNode, neighbor, activeLinks);
+            await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+            await this.checkPauseStatus();
+            if (this.props.stop) {
+              this.cleanUpActiveLinksAndCurrentNode(activeLinks, minNode);
+              return;
             }
+            if (this.unMounting) return;
+            this.removeHighlightedLine(13);
+            costMap[neighbor] = cost;
+            this.props.updateDistances(costMap);
+
+            this.highlightLine(14);
+            await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+            await this.checkPauseStatus();
+            if (this.props.stop) {
+              this.cleanUpActiveLinksAndCurrentNode(activeLinks, minNode);
+              return;
+            }
+            if (this.unMounting) return;
+            this.removeHighlightedLine(14);
+            parents[neighbor] = minNode;
+            this.props.updateParents(parents);
           }
         }
+        this.props.updateNeighbor(null, null);
       }
+      this.props.updatePrimMinNode(null);
       this.updateCurrentNodeToBeVisited(minNodeEl);
     }
-    this.calculateCumulativeDistance(costMap, parents);
+    // this.calculateCumulativeDistance(costMap, parents);
   };
 
   findMin(key, mstSet) {
@@ -166,33 +280,33 @@ class Prim extends Component {
     return [];
   }
 
-  calculateCumulativeDistance(costMap, parents) {
-    let cumCostMap = {};
-    for (let node of Object.keys(costMap)) {
-      if (parents[node] == null) {
-        cumCostMap[node] = '';
-        continue;
-      }
-      let currentNode = parents[node];
-      let cost = costMap[node];
-      while (currentNode !== -1) {
-        cost += costMap[currentNode];
-        currentNode = parents[currentNode];
-      }
-      cumCostMap[node] = cost;
-    }
-    return cumCostMap;
-  }
+  // calculateCumulativeDistance(costMap, parents) {
+  //   let cumCostMap = {};
+  //   for (let node of Object.keys(costMap)) {
+  //     if (parents[node] == null) {
+  //       cumCostMap[node] = '';
+  //       continue;
+  //     }
+  //     let currentNode = parents[node];
+  //     let cost = costMap[node];
+  //     while (currentNode !== -1) {
+  //       cost += costMap[currentNode];
+  //       currentNode = parents[currentNode];
+  //     }
+  //     cumCostMap[node] = cost;
+  //   }
+  //   return cumCostMap;
+  // }
 
   render() {
     return (
       <button
         className="graph-button"
-        onClick={() => {
+        onClick={async () => {
           if (this.unMounting) {
             this.unMounting = false;
           }
-          this.props.setRunningAlg('prim');
+          await this.props.setRunningAlg('prim');
           this.prim();
         }}
       >

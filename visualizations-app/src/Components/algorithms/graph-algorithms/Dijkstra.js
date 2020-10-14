@@ -22,22 +22,95 @@ class Dijkstra extends Component {
   }
 
   djikstra = async () => {
-    let pq = new PriorityQueue();
     let root = this.props.root;
     let target = this.props.target;
+
+    this.highlightLine(1);
+    await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+    await this.checkPauseStatus();
+    if (this.props.stop) {
+      return;
+    }
+    if (this.unMounting) return;
+    this.removeHighlightedLine(1);
+
+    let pq = new PriorityQueue();
+    this.highlightLine(2);
+    await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+    await this.checkPauseStatus();
+    if (this.props.stop) {
+      return;
+    }
+    if (this.unMounting) return;
+    this.removeHighlightedLine(2);
+    this.props.updatePq(pq.getArray());
+
+    this.highlightLine(3);
+    await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+    await this.checkPauseStatus();
+    if (this.props.stop) {
+      return;
+    }
+    if (this.unMounting) return;
+    this.removeHighlightedLine(3);
+
     let parents = {};
     let distances = {};
     Object.keys(this.props.g).forEach((node) => {
       distances[node] = Infinity;
       parents[node] = null;
     });
-    distances[root] = 0;
 
+    this.props.updateParents(parents);
+
+    this.highlightLine(4);
+    await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+    await this.checkPauseStatus();
+    if (this.props.stop) {
+      return;
+    }
+    if (this.unMounting) return;
+    this.removeHighlightedLine(4);
+
+    this.props.updateDistances(distances);
+
+    this.highlightLine(5);
+    await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+    await this.checkPauseStatus();
+    if (this.props.stop) {
+      return;
+    }
+    if (this.unMounting) return;
+    this.removeHighlightedLine(5);
+    distances[root] = 0;
+    this.props.updateDistances(distances);
+
+    this.highlightLine(6);
+    await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+    await this.checkPauseStatus();
+    if (this.props.stop) {
+      return;
+    }
+    if (this.unMounting) return;
+    this.removeHighlightedLine(6);
     pq.insert([0, root]);
+    this.props.updatePq(pq.getArray());
     let activeLinks = [];
 
     while (pq.size > 0) {
-      this.props.updatePq(pq.getArray());
+      this.highlightLine(7);
+      await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+      await this.checkPauseStatus();
+      if (this.props.stop) {
+        return;
+      }
+      if (this.unMounting) return;
+      this.removeHighlightedLine(7);
+
+      let currentNode = pq.removeRoot()[1];
+      let currentNodeElement = this.activateCurrentNode(currentNode);
+
+      this.highlightLine(8);
       await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
       await this.checkPauseStatus();
       if (this.props.stop) {
@@ -45,19 +118,10 @@ class Dijkstra extends Component {
         return;
       }
       if (this.unMounting) return;
-      let currentNode = pq.removeRoot()[1];
-      this.props.updateDijkstraData(distances, parents);
+      this.removeHighlightedLine(8);
+
+      this.props.updateNode(currentNode);
       this.props.updatePq(pq.getArray());
-
-      let currentNodeElement = this.activateCurrentNode(currentNode);
-
-      await new Promise((r) => setTimeout(r, 2000 / this.props.speed));
-      await this.checkPauseStatus();
-      if (this.props.stop) {
-        this.cleanUpActiveLinksAndCurrentNode(activeLinks, currentNode);
-        return;
-      }
-      if (this.unMounting) return;
 
       activeLinks = this.removeActiveLinks(activeLinks);
 
@@ -77,28 +141,89 @@ class Dijkstra extends Component {
           neighborNode
         );
         activeLinks.push(linkOfInterestElement);
-
+        this.highlightLine(9);
         await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
         await this.checkPauseStatus();
         if (this.props.stop) {
-          this.cleanUpActiveLinksAndCurrentNode(activeLinks, currentNode);
+          this.cleanUpActiveLinksAndCurrentNode(activeLinks, null);
           return;
         }
         if (this.unMounting) return;
+        this.removeHighlightedLine(9);
+
+        this.props.updateNeighbor(neighborNode, neighborNodeWeight);
 
         let potentialScore = distances[currentNode] + neighborNodeWeight;
+
+        this.highlightLine(10);
+        await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+        await this.checkPauseStatus();
+        if (this.props.stop) {
+          this.cleanUpActiveLinksAndCurrentNode(activeLinks, null);
+          return;
+        }
+        if (this.unMounting) return;
+        this.removeHighlightedLine(10);
+        this.props.updatePotentialScore(potentialScore);
+
+        this.highlightLine(11);
+        await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+        await this.checkPauseStatus();
+        if (this.props.stop) {
+          this.cleanUpActiveLinksAndCurrentNode(activeLinks, null);
+          return;
+        }
+        if (this.unMounting) return;
+        this.removeHighlightedLine(11);
+
         if (potentialScore < distances[neighborNode]) {
           //updates
+
           distances[neighborNode] = potentialScore;
-          parents[neighborNode] = currentNode;
-          pq.insert([neighborNodeWeight, neighborNode]);
-          this.props.updatePq(pq.getArray());
+          this.highlightLine(12);
           await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+          await this.checkPauseStatus();
+          if (this.props.stop) {
+            this.cleanUpActiveLinksAndCurrentNode(activeLinks, null);
+            return;
+          }
+          if (this.unMounting) return;
+          this.removeHighlightedLine(12);
+          this.props.updateDistances(distances);
+
+          parents[neighborNode] = currentNode;
+          this.highlightLine(13);
+          await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+          await this.checkPauseStatus();
+          if (this.props.stop) {
+            this.cleanUpActiveLinksAndCurrentNode(activeLinks, null);
+            return;
+          }
+          if (this.unMounting) return;
+          this.removeHighlightedLine(13);
+          this.props.updateParents(parents);
+
+          pq.insert([neighborNodeWeight, neighborNode]);
+          this.highlightLine(14);
+          await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+          await this.checkPauseStatus();
+          if (this.props.stop) {
+            this.cleanUpActiveLinksAndCurrentNode(activeLinks, null);
+            return;
+          }
+          if (this.unMounting) return;
+          this.removeHighlightedLine(14);
+
+          this.props.updatePq(pq.getArray());
         }
+        this.props.updatePotentialScore(null);
+        this.props.updateNeighbor(null, null);
       }
+      this.props.updateNode(null);
       this.fadeOutLinks(activeLinks);
       this.updateCurrentNodeToBeVisited(currentNodeElement);
     }
+    this.props.updateNode(null);
 
     let end = target;
     let stack = [end];
@@ -124,6 +249,17 @@ class Dijkstra extends Component {
       }
     });
     return [];
+  }
+
+  highlightLine(lineNum) {
+    document
+      .getElementById('dijkstra-' + lineNum)
+      .classList.add('active-code-line');
+  }
+  removeHighlightedLine(lineNum) {
+    document
+      .getElementById('dijkstra-' + lineNum)
+      .classList.remove('active-code-line');
   }
 
   activateLink(currentNode, neighborNode) {
@@ -178,11 +314,11 @@ class Dijkstra extends Component {
     return (
       <button
         className="graph-button"
-        onClick={() => {
+        onClick={async () => {
           if (this.unMounting) {
             this.unMounting = false;
           }
-          this.props.setRunningAlg('dijkstra');
+          await this.props.setRunningAlg('dijkstra');
           this.djikstra();
         }}
       >

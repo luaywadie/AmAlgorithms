@@ -1,20 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-import {
-  Container,
-  Navbar,
-  Nav,
-  Form,
-  Button,
-  FormControl,
-  NavDropdown,
-} from 'react-bootstrap';
+import { Container, Navbar, Nav, NavDropdown } from 'react-bootstrap';
 
 import TreeTraversals from '../Components/TreeTraversals';
 import UndirectedGraphAlgorithms from '../Components/UndirectedGraphAlgorithms';
 import DirectedGraphAlgorithms from '../Components/DirectedGraphAlgorithms';
 import Heap from '../Components/data-structures/Heap';
-import InsertionSort from '../Components/sorts/InsertionSort'
+import InsertionSort from '../Components/sorts/InsertionSort';
 
 import '../styles/Navigation-bar.scss';
 import MainPage from './MainPage';
@@ -22,7 +14,7 @@ import MainPage from './MainPage';
 const NavigationBar = () => {
   return (
     <Router>
-      <Container fluid={true} style={{padding: 0}}>
+      <Container fluid={true} style={{ padding: 0 }}>
         <Navbar>
           <Navbar.Brand as={Link} to="/">
             <img
