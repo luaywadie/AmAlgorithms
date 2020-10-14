@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import createGraph from '../graph-builders/undirected-graph-builder';
-import dijkstra from '../algorithms/graph-algorithms/dijkstra';
-import prim from '../algorithms/graph-algorithms/prims_mst';
-
+import Dijkstra from './algorithms/graph-algorithms/Dijkstra';
+import Prim from './algorithms/graph-algorithms/Prim';
+import Sidebar from './sidebar/Sidebar';
+import RenderListComponent from './sidebar/RenderListComponent';
+import RenderObjectComponent from './sidebar/RenderObjectComponent';
 class UndirectedGraphAlgorithms extends Component {
   constructor(props) {
     super(props);
@@ -12,8 +14,15 @@ class UndirectedGraphAlgorithms extends Component {
       speed: 1,
       distances: {},
       parents: {},
-      algorithmSelected: '',
-      cumulativeCostMap: {},
+      runningAlg: '',
+      priorityQueue: null,
+      mstSet: {},
+      clicked: [false, false, false, false, false],
+      node: null,
+      neighbor: null,
+      neighborCost: null,
+      minNode: null,
+      potentialScore: null,
     };
     this.adjList = {
       a: [
@@ -151,10 +160,10 @@ class UndirectedGraphAlgorithms extends Component {
         [15, 'j'],
       ],
     };
-    this.graph = document.getElementById('graph-container');
   }
   componentDidMount() {
     createGraph();
+    this.graph = document.getElementById('graph-container');
   }
 
   componentWillUnmount() {
@@ -163,38 +172,85 @@ class UndirectedGraphAlgorithms extends Component {
     this.reset();
   }
 
-  updateDistancesAndParents = async (distances, parents) => {
-    await this.setState({ distances, parents });
-  };
+  // updateDijkstraData = async (distances, parents) => {
+  //   await this.setState({
+  //     dijkstraDistances: distances,
+  //     parents,
+  //   });
+  // };
 
-  updatePrimDistancesAndParents = async (
-    distances,
-    parents,
-    cumulativeCostMap
-  ) => {
+  updateDistances = async (distances) => {
     await this.setState({
       distances,
-      parents,
-      cumulativeCostMap,
     });
+  };
+
+  updateParents = async (parents) => {
+    await this.setState({
+      parents,
+    });
+  };
+
+  updateNode = async (node) => {
+    await this.setState({ node });
+  };
+  updatePrimMinNode = async (minNode) => {
+    await this.setState({ minNode });
+  };
+  updateNeighbor = async (neighbor, cost) => {
+    await this.setState({ neighbor, neighborCost: cost });
+  };
+  updatePrimMstSet = async (mstSet) => {
+    await this.setState({ mstSet });
+  };
+
+  setRunningAlg = async (alg) => {
+    this.reset();
+    await this.setState({ runningAlg: alg });
+  };
+
+  updatePq = async (a) => {
+    await this.setState({ priorityQueue: a });
+  };
+
+  updatePotentialScore = (s) => {
+    this.setState({ potentialScore: s });
   };
 
   getPauseStatus = () => this.state.pause;
   getStopStatus = () => this.state.stop;
   getSpeedRequest = () => Number(this.state.speed) + 0.1;
-
+  toggleClicked = (i) => {
+    let a = this.state.clicked.slice();
+    a[i] = !a[i];
+    this.setState({
+      clicked: a,
+    });
+  };
   reset = () => {
     Object.keys(this.adjList).forEach((e) => {
       let el = document.getElementById(e);
       if (el) {
         el.classList.remove('node-complete-tree');
+        el.classList.remove('current-node-of-interest');
       }
     });
     let lines = document.getElementsByTagName('line');
     for (let line of lines) {
       line.classList = '';
     }
-    this.setState({ distances: {}, parents: {} });
+    this.setState({
+      distances: {},
+      parents: {},
+      runningAlg: '',
+      minNode: null,
+      neighbor: null,
+      neighborCost: null,
+      mstSet: {},
+    });
+    if (this.state.stop) {
+      this.setState({ stop: false, pause: false });
+    }
   };
 
   renderDijkstraTableData() {
@@ -204,6 +260,9 @@ class UndirectedGraphAlgorithms extends Component {
           <td>{key}</td>
           <td>{this.state.parents[key]}</td>
           <td>{this.state.distances[key]}</td>
+          <td style={{ backgroundColor: index === 0 ? 'yellow' : '' }}>
+            {this.state.priorityQueue[index]}
+          </td>
         </tr>
       );
     });
@@ -215,6 +274,7 @@ class UndirectedGraphAlgorithms extends Component {
         <th>Node</th>
         <th>Parent</th>
         <th>Distance</th>
+        <th>Priority Queue</th>
       </tr>
     );
   }
@@ -226,7 +286,6 @@ class UndirectedGraphAlgorithms extends Component {
           <td>{key}</td>
           <td>{this.state.parents[key]}</td>
           <td>{this.state.distances[key]}</td>
-          <td>{this.state.cumulativeCostMap[key]}</td>
         </tr>
       );
     });
@@ -237,60 +296,234 @@ class UndirectedGraphAlgorithms extends Component {
       <tr>
         <th>Node</th>
         <th>Parent</th>
-        <th>Distance</th>
-        <th>Total Distance</th>
+        <th>Cost</th>
       </tr>
+    );
+  }
+
+  renderPrimPseudocode() {
+    const indentation = (num) => {
+      return num * 20;
+    };
+    return (
+      <div>
+        <div id={'prim-1'}>
+          1<span style={{ marginLeft: indentation(1) }}>Prim(G, root)</span>
+        </div>
+        <div id={'prim-2'}>
+          2
+          <span style={{ marginLeft: indentation(2) }}>
+            let cost be a map with all nodes as keys and values of Infinity
+          </span>
+        </div>
+        <div id={'prim-3'}>
+          3
+          <span style={{ marginLeft: indentation(2) }}>
+            let parents be a map with all nodes as keys and values of null
+          </span>
+        </div>
+        <div id={'prim-4'}>
+          4
+          <span style={{ marginLeft: indentation(2) }}>
+            let mstSet be a map with all nodes as keys and values of false
+          </span>
+        </div>
+        <div id={'prim-5'}>
+          5
+          <span style={{ marginLeft: indentation(2) }}>
+            set parents[root] = -1
+          </span>
+        </div>
+        <div id={'prim-6'}>
+          6
+          <span style={{ marginLeft: indentation(2) }}>
+            set costMap[root] = 0
+          </span>
+        </div>
+        <div id={'prim-7'}>
+          7
+          <span style={{ marginLeft: indentation(2) }}>
+            do n times where n is number of nodes
+          </span>
+        </div>
+        <div id={'prim-8'}>
+          8
+          <span style={{ marginLeft: indentation(3) }}>
+            {' '}
+            minNode = findMin(cost, mstSet)
+          </span>
+        </div>
+        <div id={'prim-9'}>
+          9
+          <span style={{ marginLeft: indentation(3) }}>
+            {' '}
+            set mstSet[minNode] = true
+          </span>
+        </div>
+        <div id={'prim-10'}>
+          10
+          <span style={{ marginLeft: indentation(3) }}>
+            for every neighbor, neighborCost of minNode
+          </span>
+        </div>
+        <div id={'prim-11'}>
+          11
+          <span style={{ marginLeft: indentation(4) }}>
+            if mstSet[neighbor] is false
+          </span>
+        </div>
+        <div id={'prim-12'}>
+          12
+          <span style={{ marginLeft: indentation(5) }}>
+            if cost[neighbor] {'>'} cost
+          </span>
+        </div>
+        <div id={'prim-13'}>
+          13
+          <span style={{ marginLeft: indentation(6) }}>
+            set cost[neighbor] = cost{' '}
+          </span>
+        </div>
+        <div id={'prim-14'}>
+          14
+          <span style={{ marginLeft: indentation(6) }}>
+            set parents[neighbor] = minNode{' '}
+          </span>
+        </div>
+      </div>
+    );
+  }
+  renderDijkstraPseudocode() {
+    const indentation = (num) => {
+      return num * 20;
+    };
+    return (
+      <div>
+        <div id={'dijkstra-1'}>
+          1
+          <span style={{ marginLeft: indentation(1) }}>
+            Dijkstra(G, source, target)
+          </span>
+        </div>
+        <div id={'dijkstra-2'}>
+          2
+          <span style={{ marginLeft: indentation(2) }}>
+            let pq be a Priority Queue (min-heap)
+          </span>
+        </div>
+        <div id={'dijkstra-3'}>
+          3
+          <span style={{ marginLeft: indentation(2) }}>
+            let parents be a map with all nodes as keys and values of null
+          </span>
+        </div>
+        <div id={'dijkstra-4'}>
+          4
+          <span style={{ marginLeft: indentation(2) }}>
+            let distances be a map with all nodes as keys and values of Infinity
+          </span>
+        </div>
+        <div id={'dijkstra-5'}>
+          5
+          <span style={{ marginLeft: indentation(2) }}>
+            set distances[source] = 0
+          </span>
+        </div>
+        <div id={'dijkstra-6'}>
+          6
+          <span style={{ marginLeft: indentation(2) }}>
+            insert root at cost 0 into pq
+          </span>
+        </div>
+        <div id={'dijkstra-7'}>
+          7
+          <span style={{ marginLeft: indentation(2) }}>
+            while pq is not empty
+          </span>
+        </div>
+        <div id={'dijkstra-8'}>
+          8
+          <span style={{ marginLeft: indentation(3) }}>
+            current = pq.removeRoot()
+          </span>
+        </div>
+        <div id={'dijkstra-9'}>
+          9
+          <span style={{ marginLeft: indentation(3) }}>
+            for neighbor of G[current]
+          </span>
+        </div>
+        <div id={'dijkstra-10'}>
+          10
+          <span style={{ marginLeft: indentation(4) }}>
+            set potentialScore = distances[current] + neighborCost
+          </span>
+        </div>
+        <div id={'dijkstra-11'}>
+          11
+          <span style={{ marginLeft: indentation(4) }}>
+            {' '}
+            if potentialScore {'<'} distances[neighbor]
+          </span>
+        </div>
+        <div id={'dijkstra-12'}>
+          12
+          <span style={{ marginLeft: indentation(5) }}>
+            set distances[neighbor] = potentialScore
+          </span>
+        </div>
+        <div id={'dijkstra-13'}>
+          13
+          <span style={{ marginLeft: indentation(5) }}>
+            set parents[neighbor] = current
+          </span>
+        </div>
+        <div id={'dijkstra-14'}>
+          14
+          <span style={{ marginLeft: indentation(5) }}>
+            insert neighbor at cost neighborCost into pq
+          </span>
+        </div>
+      </div>
     );
   }
 
   render() {
     return (
       <div className={'row'}>
-        <div className={'col-6'}>
-          <button
-            className="graph-button"
-            onClick={() => {
-              this.setState({
-                pause: false,
-                stop: false,
-                algorithmSelected: 'dijkstra',
-              });
-              this.reset();
-              dijkstra(
-                this.adjList,
-                'source',
-                'target',
-                this.getPauseStatus,
-                this.getStopStatus,
-                this.getSpeedRequest,
-                this.updateDistancesAndParents
-              );
-            }}
-          >
-            Dijkstra
-          </button>
-
-          <button
-            className="graph-button"
-            onClick={() => {
-              this.setState({
-                pause: false,
-                stop: false,
-                algorithmSelected: 'prim',
-              });
-              this.reset();
-              prim(
-                this.adjList,
-                'source',
-                this.getPauseStatus,
-                this.getStopStatus,
-                this.getSpeedRequest,
-                this.updatePrimDistancesAndParents
-              );
-            }}
-          >
-            Prim MST
-          </button>
+        <div className={'col-4'} id={'graph-container'}>
+          <Dijkstra
+            g={this.adjList}
+            root={'source'}
+            target={'target'}
+            pause={this.state.pause}
+            stop={this.state.stop}
+            speed={this.state.speed}
+            runningAlg={this.state.runningAlg}
+            setRunningAlg={this.setRunningAlg}
+            updateDistances={this.updateDistances}
+            updateParents={this.updateParents}
+            updatePq={this.updatePq}
+            updatePotentialScore={this.updatePotentialScore}
+            updateNeighbor={this.updateNeighbor}
+            updateNode={this.updateNode}
+          />
+          <div className={'divider'}></div>
+          <Prim
+            g={this.adjList}
+            root={'source'}
+            pause={this.state.pause}
+            stop={this.state.stop}
+            speed={this.state.speed}
+            runningAlg={this.state.runningAlg}
+            setRunningAlg={this.setRunningAlg}
+            updateDistances={this.updateDistances}
+            updateParents={this.updateParents}
+            updateNeighbor={this.updateNeighbor}
+            updatePrimMinNode={this.updatePrimMinNode}
+            updatePrimMstSet={this.updatePrimMstSet}
+          />
+          <div className={'divider'}></div>
           <button
             className="graph-button"
             onClick={() => {
@@ -300,6 +533,7 @@ class UndirectedGraphAlgorithms extends Component {
           >
             Reset
           </button>
+          <div className={'divider'}></div>
           <button
             className="graph-button"
             onClick={() => {
@@ -325,25 +559,153 @@ class UndirectedGraphAlgorithms extends Component {
             </label>
           </form>
         </div>
-        <div className={'col-6'} id={'output-tables'}>
-          {this.state.algorithmSelected === 'dijkstra' ? (
-            <table
-              id={'dijkstra-table'}
-              className={('dijkstra-table', 'float-right')}
-            >
-              <tbody>
-                {this.renderDijkstraHeading()}
-                {this.renderDijkstraTableData()}
-              </tbody>
-            </table>
-          ) : (
-            <table id={'prim-table'} className={('prim-table', 'float-right')}>
-              <tbody>
-                {this.renderPrimHeading()}
-                {this.renderPrimTableData()}
-              </tbody>
-            </table>
-          )}
+
+        <div className={'col-4'} id={'output-tables'}>
+          <table
+            id={'undirected-graph-table'}
+            className={('undirected-graph-table', 'float-right')}
+            style={{ marginRight: '40px' }}
+          >
+            <tbody>
+              {this.state.runningAlg === 'prim'
+                ? this.renderPrimHeading()
+                : this.state.runningAlg === 'dijkstra'
+                ? this.renderDijkstraHeading()
+                : ''}
+              {this.state.runningAlg === 'prim'
+                ? this.renderPrimTableData()
+                : this.state.runningAlg === 'dijkstra'
+                ? this.renderDijkstraTableData()
+                : ''}
+            </tbody>
+          </table>
+        </div>
+        <div className={'col-4'}>
+          <div className={'row'}>
+            {this.state.runningAlg === ''
+              ? ''
+              : this.state.runningAlg === 'prim'
+              ? this.renderPrimPseudocode()
+              : this.renderDijkstraPseudocode()}
+          </div>
+
+          <div className={'row'}>
+            {this.state.runningAlg === 'prim' ? (
+              <Sidebar showButton={this.state.runningAlg !== ''}>
+                {this.state.minNode ? (
+                  <li> minNode = {this.state.minNode} </li>
+                ) : (
+                  ''
+                )}
+
+                {this.state.node ? <li> current = {this.state.node} </li> : ''}
+                {this.state.neighbor ? (
+                  <li> neighbor = {this.state.neighbor} </li>
+                ) : (
+                  ''
+                )}
+
+                {this.state.neighborCost ? (
+                  <li> neighborCost = {this.state.neighborCost} </li>
+                ) : (
+                  ''
+                )}
+
+                <li onClick={() => this.toggleClicked(0)}>
+                  {Object.keys(this.state.distances).length > 0 ? (
+                    <RenderObjectComponent
+                      obj={this.state.distances}
+                      objName={'cost'}
+                      clicked={this.state.clicked[0]}
+                    />
+                  ) : (
+                    ''
+                  )}
+                </li>
+                <li onClick={() => this.toggleClicked(1)}>
+                  {Object.keys(this.state.parents).length > 0 ? (
+                    <RenderObjectComponent
+                      obj={this.state.parents}
+                      objName={'parents'}
+                      clicked={this.state.clicked[1]}
+                    />
+                  ) : (
+                    ''
+                  )}
+                </li>
+                <li onClick={() => this.toggleClicked(2)}>
+                  {Object.keys(this.state.mstSet).length > 0 ? (
+                    <RenderObjectComponent
+                      obj={this.state.mstSet}
+                      objName={'mstSet'}
+                      clicked={this.state.clicked[2]}
+                    />
+                  ) : (
+                    ''
+                  )}
+                </li>
+              </Sidebar>
+            ) : (
+              ''
+            )}
+            {this.state.runningAlg === 'dijkstra' ? (
+              <Sidebar showButton={this.state.runningAlg !== ''}>
+                {this.state.node ? <li> current = {this.state.node} </li> : ''}
+                {this.state.neighbor ? (
+                  <li> neighbor = {this.state.neighbor} </li>
+                ) : (
+                  ''
+                )}
+
+                {this.state.neighborCost ? (
+                  <li> neighborCost = {this.state.neighborCost} </li>
+                ) : (
+                  ''
+                )}
+
+                {this.state.potentialScore ? (
+                  <li> potentialScore = {this.state.potentialScore} </li>
+                ) : (
+                  ''
+                )}
+                <li onClick={() => this.toggleClicked(2)}>
+                  {this.state.priorityQueue ? (
+                    <RenderListComponent
+                      list={this.state.priorityQueue}
+                      listName={'pq'}
+                      clicked={this.state.clicked[2]}
+                    />
+                  ) : (
+                    ''
+                  )}
+                </li>
+                <li onClick={() => this.toggleClicked(0)}>
+                  {Object.keys(this.state.distances).length > 0 ? (
+                    <RenderObjectComponent
+                      obj={this.state.distances}
+                      objName={'distances'}
+                      clicked={this.state.clicked[0]}
+                    />
+                  ) : (
+                    ''
+                  )}
+                </li>
+                <li onClick={() => this.toggleClicked(1)}>
+                  {Object.keys(this.state.parents).length > 0 ? (
+                    <RenderObjectComponent
+                      obj={this.state.parents}
+                      objName={'parents'}
+                      clicked={this.state.clicked[1]}
+                    />
+                  ) : (
+                    ''
+                  )}
+                </li>
+              </Sidebar>
+            ) : (
+              ''
+            )}
+          </div>
         </div>
       </div>
     );

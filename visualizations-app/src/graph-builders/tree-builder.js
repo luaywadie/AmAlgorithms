@@ -34,7 +34,7 @@ function createTree(adjList) {
   let treeData = buildTreeDataFromAdjList(adjList)['a'];
   let myScale = 1.5;
   // set the dimensions and margins of the diagram
-  const margin = { top: 20, right: 90, bottom: 30, left: -50 },
+  const margin = { top: 20, right: 50, bottom: 50, left: 20 },
     width = 900 - margin.left - margin.right,
     height = 900 - margin.top - margin.bottom;
 
@@ -60,9 +60,9 @@ function createTree(adjList) {
     g = svg
       .append('g')
       .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
   // adds the links between the nodes
-  const link = g
-    .selectAll('.link')
+  g.selectAll('.link')
     .data(nodes.descendants().slice(1))
     .enter()
     .append('path')
@@ -116,10 +116,11 @@ function createTree(adjList) {
     .append('text')
     .attr('dy', '.35em')
     .attr('x', (d) => (d.children ? (d.data.value + 5) * -1 : d.data.value + 5))
-    .attr('y', (d) => (d.children && d.depth !== 0 ? -(d.data.value + 5) : d))
+    .attr('y', (d) =>
+      d.children && d.depth !== 0 ? -(d.data.value + 5) : d.data.value
+    )
     .style('text-anchor', (d) => (d.children ? 'end' : 'start'))
     .text((d) => d.data.name);
 }
 
 export default createTree;
-// export default buildTreeDataFromAdjList;

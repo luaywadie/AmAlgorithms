@@ -90,4 +90,47 @@
       fill: green;
     }
   }
+
+  // Heap
+  .child-node {
+    fill: #fff;
+    animation: child-node 2s;
+  }
+  @keyframes child-node {
+    0%,
+    100% {
+      fill: #fff;
+    }
+    30% {
+      fill: #5b9cfc;
+    }
+  }
+
+  .parent-node {
+    fill: #fff;
+    animation: parent-node 2s;
+  }
+  @keyframes parent-node {
+    0%,
+    100% {
+      fill: #fff;
+    }
+    30% {
+      fill: red;
+    }
+  }
+
+  .left-right-child-node {
+    fill: #03fca5;
+    animation: left-right-child-node 1s;
+  }
+  @keyframes left-right-child-node {
+    from {
+      fill: #fff;
+    }
+    to {
+      fill: #03fca5;
+    }
+  }
+
 }

@@ -1,3 +1,37 @@
 .heading {
   text-align: center;
+  margin-top: 200px;
+  font-size: 52px;
+}
+
+.background {
+  position: fixed;
+  bottom: 0;
+  opacity: 10;
+}
+
+.background img {
+  position: fixed;
+  bottom: 0;
+}
+
+.background img:nth-child(1) {
+  position: fixed;
+  animation: hover 6s infinite ease-in-out;
+}
+
+.background img:nth-child(2) {
+  position: fixed;
+  animation: hover 5s infinite ease-in-out;
+}
+
+.background img:nth-child(3) {
+  position: fixed;
+  animation: hover 4s infinite ease-in-out;
+}
+
+@keyframes hover {
+  0% {transform: translateY(0px)}
+  50% {transform: translateY(20px)}
+  100% {transform: translateY(0px)}
 }
