@@ -1,0 +1,88 @@
+// Styles applying to all clusters using K-Means
+
+$color0: #ff6699;
+$color1: #00cc66;
+$color2: #0066cc;
+$color3: #ffcc00;
+$color4: #2be3f0;
+$color5: #fa3b3b;
+$color6: #ffa339;
+$color7: #9900cc;
+
+// Set stroke width of points
+@mixin circle-stroke-width {
+  stroke-width: 3;
+}
+
+.centroid {
+  fill-opacity: 0;
+  r: 10; //Can't change this using CSS in Firefox, MUST use Chrome!
+  animation: centroid-animation;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes centroid-animation {
+  from {
+    r: 5;
+  }
+  to {
+    r: 10;
+  }
+}
+
+.cluster-unassigned {
+  fill: "black";
+  @include circle-stroke-width;
+  stroke: "black";
+}
+
+.cluster0 {
+  fill: $color0;
+  @include circle-stroke-width;
+  stroke: $color0;
+}
+
+.cluster1 {
+  fill: $color1;
+  @include circle-stroke-width;
+  stroke: $color1;
+}
+
+.cluster2 {
+  fill: $color2;
+  @include circle-stroke-width;
+  stroke: $color2;
+}
+
+.cluster3 {
+  fill: $color3;
+  @include circle-stroke-width;
+  stroke: $color3;
+}
+
+.cluster4 {
+  fill: $color4;
+  @include circle-stroke-width;
+  stroke: $color4;
+}
+
+.cluster5 {
+  fill: $color5;
+  @include circle-stroke-width;
+  stroke: $color5;
+}
+
+.cluster6 {
+  fill: $color6;
+  @include circle-stroke-width;
+  stroke: $color6;
+}
+
+.cluster7 {
+  fill: $color7;
+  @include circle-stroke-width;
+  stroke: $color7;
+}

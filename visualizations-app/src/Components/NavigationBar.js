@@ -5,8 +5,10 @@ import {Container, Navbar, Nav, NavDropdown} from 'react-bootstrap';
 import TreeTraversals from '../Components/TreeTraversals';
 import UndirectedGraphAlgorithms from '../Components/UndirectedGraphAlgorithms';
 import DirectedGraphAlgorithms from '../Components/DirectedGraphAlgorithms';
+import ScatterPlotAlgorithms from '../Components/ScatterPlotAlgorithms';
 import Heap from '../Components/data-structures/Heap';
 import InsertionSort from '../Components/sorts/InsertionSort';
+
 
 import '../styles/Navigation-bar.scss';
 import MainPage from './MainPage';

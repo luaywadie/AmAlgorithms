@@ -5,6 +5,7 @@ import './styles/Node.scss';
 import './styles/Link.scss';
 import './styles/Graph.scss';
 import './styles/OutputTable.scss';
+import './styles/Clusters.scss';
 import './styles/Pseudocode.scss';
 import './styles/Sidebar.scss';
 
