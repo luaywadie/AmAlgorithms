@@ -47,7 +47,8 @@ class Heap extends Component {
   componentWillUnmount() {
     this.unMounting = true;
     let svg = document.getElementById('heap-tree-svg');
-    if (this.dataStructure.hasChildNodes()) this.dataStructure.removeChild(svg);
+    if (this.dataStructure.hasChildNodes() && svg)
+      this.dataStructure.removeChild(svg);
   }
 
   async buildSampleHeap() {
@@ -698,10 +699,12 @@ class Heap extends Component {
     );
   }
   highlightLine(classId) {
-    document.getElementById(classId).classList.add('active-code-line');
+    let el = document.getElementById(classId);
+    if (el) el.classList.add('active-code-line');
   }
   removeHighlightedLine(classId) {
-    document.getElementById(classId).classList.remove('active-code-line');
+    let el = document.getElementById(classId);
+    if (el) el.classList.remove('active-code-line');
   }
   render() {
     return (

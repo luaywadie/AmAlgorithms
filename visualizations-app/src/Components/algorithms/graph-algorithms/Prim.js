@@ -15,14 +15,12 @@ class Prim extends Component {
     }
   }
   highlightLine(lineNum) {
-    document
-      .getElementById('prim-' + lineNum)
-      .classList.add('active-code-line');
+    let el = document.getElementById('prim-' + lineNum);
+    if (el) el.classList.add('active-code-line');
   }
   removeHighlightedLine(lineNum) {
-    document
-      .getElementById('prim-' + lineNum)
-      .classList.remove('active-code-line');
+    let el = document.getElementById('prim-' + lineNum);
+    if (el) el.classList.remove('active-code-line');
   }
   prim = async () => {
     let root = this.props.root;

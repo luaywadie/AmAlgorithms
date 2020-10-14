@@ -17,12 +17,12 @@ class DepthFirstSearch extends Component {
   }
 
   highlightLine(lineNum) {
-    document.getElementById('dfs-' + lineNum).classList.add('active-code-line');
+    let el = document.getElementById('dfs-' + lineNum);
+    if (el) el.classList.add('active-code-line');
   }
   removeHighlightedLine(lineNum) {
-    document
-      .getElementById('dfs-' + lineNum)
-      .classList.remove('active-code-line');
+    let el = document.getElementById('dfs-' + lineNum);
+    if (el) el.classList.remove('active-code-line');
   }
 
   dfs = async () => {
@@ -72,7 +72,6 @@ class DepthFirstSearch extends Component {
     if (this.unMounting) return;
     this.removeHighlightedLine(5);
 
-    
     let nodePath = [];
     while (stack.length > 0) {
       this.highlightLine(6);
@@ -83,7 +82,7 @@ class DepthFirstSearch extends Component {
       this.removeHighlightedLine(6);
 
       let currentNode = stack.pop();
-      this.props.updateStack(stack)
+      this.props.updateStack(stack);
 
       this.highlightLine(7);
       await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
@@ -99,7 +98,7 @@ class DepthFirstSearch extends Component {
 
       this.activateVisitedNode(currentNode);
       this.props.updateCurrentNode(currentNode);
-    
+
       nodePath.push(currentNode);
       this.props.buildNodePath(nodePath);
 
@@ -117,7 +116,7 @@ class DepthFirstSearch extends Component {
       this.removeHighlightedLine(8);
 
       for (let child of this.props.g[currentNode]) {
-        this.props.updateChild(child)
+        this.props.updateChild(child);
 
         this.highlightLine(9);
         await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
@@ -143,10 +142,10 @@ class DepthFirstSearch extends Component {
           if (this.unMounting) return;
           this.removeHighlightedLine(11);
           stack.push(child);
-          this.props.updateStack(stack)
+          this.props.updateStack(stack);
         }
       }
-      this.props.updateChild(null)
+      this.props.updateChild(null);
       this.props.updateCurrentNode(null);
     }
     this.props.updateChild(null);
