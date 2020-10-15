@@ -20,7 +20,7 @@ class TreeTraversals extends Component {
       currentNode: null,
       visitedMap: {},
       child: null,
-      clicked: [false, false, false],
+      clicked: [false, false, false, false],
     };
     this.adjList = {
       a: ['b', 'c', 'd'],
@@ -89,14 +89,24 @@ class TreeTraversals extends Component {
         linkElement.classList.remove('link-traversed');
       }
     });
-    this.setState({ nodePath: [], visitedMap: {}, queue: [] });
+    for (let i = 1; i < 12; i++) {
+      let dfsPseduoElement = document.getElementById('dfs-' + i);
+      if (dfsPseduoElement) dfsPseduoElement.classList = '';
+      let bfsPseduoElement = document.getElementById('bfs-' + i);
+      if (bfsPseduoElement) bfsPseduoElement.classList = '';
+    }
+    this.setState({
+      nodePath: [],
+      visitedMap: {},
+      queue: [],
+      currentNode: null,
+      child: null,
+    });
     if (this.state.stop) {
       this.setState({
         stop: false,
         pause: false,
         runningAlg: '',
-        currentNode: null,
-        child: null,
       });
     }
   };
@@ -185,7 +195,8 @@ class TreeTraversals extends Component {
           </span>
         </div>
         <div id={'bfs-11'}>
-          11<span style={{ marginLeft: indentation(5) }}>{" "}Q.enqueue(child)</span>
+          11
+          <span style={{ marginLeft: indentation(5) }}> Q.enqueue(child)</span>
         </div>
       </div>
     );
@@ -245,7 +256,7 @@ class TreeTraversals extends Component {
           </span>
         </div>
         <div id={'dfs-11'}>
-          11<span style={{ marginLeft: indentation(5) }}>{" "}S.push(child)</span>
+          11<span style={{ marginLeft: indentation(5) }}> S.push(child)</span>
         </div>
         <div></div>
       </div>
@@ -367,6 +378,17 @@ class TreeTraversals extends Component {
                   obj={this.state.visitedMap}
                   objName={'V'}
                   clicked={this.state.clicked[2]}
+                />
+              ) : (
+                ''
+              )}
+            </li>
+            <li onClick={() => this.toggleClicked(3)}>
+              {this.adjList ? (
+                <RenderObjectComponent
+                  obj={this.adjList}
+                  objName={'tree'}
+                  clicked={this.state.clicked[3]}
                 />
               ) : (
                 ''

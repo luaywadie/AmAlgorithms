@@ -252,14 +252,12 @@ class Dijkstra extends Component {
   }
 
   highlightLine(lineNum) {
-    document
-      .getElementById('dijkstra-' + lineNum)
-      .classList.add('active-code-line');
+    let el = document.getElementById('dijkstra-' + lineNum);
+    if (el) el.classList.add('active-code-line');
   }
   removeHighlightedLine(lineNum) {
-    document
-      .getElementById('dijkstra-' + lineNum)
-      .classList.remove('active-code-line');
+    let el = document.getElementById('dijkstra-' + lineNum);
+    if (el) el.classList.remove('active-code-line');
   }
 
   activateLink(currentNode, neighborNode) {

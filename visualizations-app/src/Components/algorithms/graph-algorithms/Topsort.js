@@ -4,6 +4,8 @@ class Topsort extends Component {
   constructor(props) {
     super(props);
     this.unMounting = false;
+    this.previousNodes = [];
+    this.callStack = [];
   }
   componentWillUnmount() {
     this.unMounting = true;
@@ -18,14 +20,66 @@ class Topsort extends Component {
     }
   }
 
+  highlightLine(classId) {
+    let el = document.getElementById(classId);
+    if (el) el.classList.add('active-code-line');
+  }
+  removeHighlightedLine(classId) {
+    let el = document.getElementById(classId);
+    if (el) el.classList.remove('active-code-line');
+  }
+
   topSort = async () => {
+    this.highlightLine('topsort-1');
+    await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+    await this.checkPauseStatus();
+    if (this.props.stop) {
+      return;
+    }
+    if (this.unMounting) return;
+    this.removeHighlightedLine('topsort-1');
+
+    this.highlightLine('topsort-2');
+    await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+    await this.checkPauseStatus();
+    if (this.props.stop) {
+      return;
+    }
+    if (this.unMounting) return;
+    this.removeHighlightedLine('topsort-2');
+
     let stack = [];
+    this.props.updateStack(stack);
+
+    this.highlightLine('topsort-3');
+    await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+    await this.checkPauseStatus();
+    if (this.props.stop) {
+      return;
+    }
+    if (this.unMounting) return;
+    this.removeHighlightedLine('topsort-3');
+
     let visited = {};
-    Object.keys(this.props.g).map((key) => (visited[key] = 0));
+    Object.keys(this.props.g).map((key) => (visited[key] = null));
+    this.props.updateVisited(visited);
+
     let activeLinks = {};
 
     for (let node of Object.keys(this.props.g)) {
-      if (visited[node] === 0) {
+      this.highlightLine('topsort-4');
+      await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+      await this.checkPauseStatus();
+      if (this.props.stop) {
+        this.cleanUpActiveLinksAndCurrentNode(activeLinks);
+        return;
+      }
+      if (this.unMounting) return;
+      this.removeHighlightedLine('topsort-4');
+      this.props.updateNode(node);
+
+      if (visited[node]) {
+        this.highlightLine('topsort-5');
         await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
         await this.checkPauseStatus();
         if (this.props.stop) {
@@ -33,9 +87,36 @@ class Topsort extends Component {
           return;
         }
         if (this.unMounting) return;
+        this.removeHighlightedLine('topsort-5');
+      }
+
+      if (visited[node] === null) {
+        this.highlightLine('topsort-5');
+        await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+        await this.checkPauseStatus();
+        if (this.props.stop) {
+          this.cleanUpActiveLinksAndCurrentNode(activeLinks);
+          return;
+        }
+        if (this.unMounting) return;
+        this.removeHighlightedLine('topsort-5');
+
+        this.highlightLine('topsort-6');
+        await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+        await this.checkPauseStatus();
+        if (this.props.stop) {
+          this.cleanUpActiveLinksAndCurrentNode(activeLinks);
+          return;
+        }
+        if (this.unMounting) return;
+        this.callStack.unshift(`visit(${node}, G, S, V)`);
+        this.props.updateCallStack(this.callStack);
         if ((await this.visit(node, stack, visited, activeLinks)) === false) {
           return null;
         }
+        this.callStack.shift();
+        this.props.updateCallStack(this.callStack);
+
         await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
         await this.checkPauseStatus();
         if (this.props.stop) {
@@ -47,86 +128,184 @@ class Topsort extends Component {
         document
           .getElementById(node)
           .classList.remove('current-node-of-interest');
+
+        this.removeHighlightedLine('topsort-6');
       }
     }
+    this.highlightLine('topsort-8');
+    await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+    await this.checkPauseStatus();
+    if (this.props.stop) {
+      this.cleanUpActiveLinksAndCurrentNode(activeLinks);
+      return;
+    }
+    if (this.unMounting) return;
+    this.removeHighlightedLine('topsort-8');
+    this.props.getOrdering(stack.slice().reverse());
+
     return stack.reverse();
   };
   // 2 = permenant mark, 1 = temp mark (if we encounter 1 again, we have cycle)
   visit = async (node, stack, visited, activeLinks) => {
-    await new Promise((r) => setTimeout(r, 500 / this.props.speed));
+    console.log(this.previousNodes);
+    this.highlightLine('topsort-visit-1');
+    await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
     await this.checkPauseStatus();
     if (this.props.stop) {
-      this.cleanUpActiveLinksAndCurrentNode(activeLinks, this.props.g);
+      this.cleanUpActiveLinksAndCurrentNode(activeLinks);
       return;
     }
     if (this.unMounting) return;
+    this.removeHighlightedLine('topsort-visit-1');
 
-    if (visited[node] === 2) {
-      return true;
-    } else if (visited[node] === 1) {
-      return false;
+    this.highlightLine('topsort-visit-2');
+    await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+    await this.checkPauseStatus();
+    if (this.props.stop) {
+      this.cleanUpActiveLinksAndCurrentNode(activeLinks);
+      return;
     }
-    this.activateCurrentNode(node);
-    visited[node] = 1;
-    for (let neighbor of this.props.g[node]) {
-      await new Promise((r) => setTimeout(r, 500 / this.props.speed));
+    if (this.unMounting) return;
+    this.removeHighlightedLine('topsort-visit-2');
+
+    if (visited[node] === 'Complete') {
+      this.highlightLine('topsort-visit-3');
+      await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
       await this.checkPauseStatus();
       if (this.props.stop) {
-        this.cleanUpActiveLinksAndCurrentNode(activeLinks, this.props.g);
+        this.cleanUpActiveLinksAndCurrentNode(activeLinks);
         return;
       }
       if (this.unMounting) return;
+      this.removeHighlightedLine('topsort-visit-3');
+
+      this.props.updateNode(this.previousNodes.pop());
+      this.callStack.shift();
+      this.props.updateCallStack(this.callStack);
+      return true;
+    }
+    this.highlightLine('topsort-visit-4');
+    await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+    await this.checkPauseStatus();
+    if (this.props.stop) {
+      this.cleanUpActiveLinksAndCurrentNode(activeLinks);
+      return;
+    }
+    if (this.unMounting) return;
+    this.removeHighlightedLine('topsort-visit-4');
+    if (visited[node] === 'In Progress') {
+      this.highlightLine('topsort-visit-5');
+      await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+      await this.checkPauseStatus();
+      if (this.props.stop) {
+        this.cleanUpActiveLinksAndCurrentNode(activeLinks);
+        return;
+      }
+      if (this.unMounting) return;
+      this.removeHighlightedLine('topsort-visit-5');
+      return false;
+    }
+
+    this.activateCurrentNode(node);
+    visited[node] = 'In Progress';
+    this.highlightLine('topsort-visit-6');
+    await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+    await this.checkPauseStatus();
+    if (this.props.stop) {
+      this.cleanUpActiveLinksAndCurrentNode(activeLinks);
+      return;
+    }
+    if (this.unMounting) return;
+    this.removeHighlightedLine('topsort-visit-6');
+    this.props.updateVisited(visited);
+
+    if (this.props.g[node].length < 1) {
+      this.highlightLine('topsort-visit-7');
+      await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+      await this.checkPauseStatus();
+      if (this.props.stop) {
+        this.cleanUpActiveLinksAndCurrentNode(activeLinks);
+        return;
+      }
+      if (this.unMounting) return;
+      this.removeHighlightedLine('topsort-visit-7');
+    }
+
+    for (let neighbor of this.props.g[node]) {
+      this.highlightLine('topsort-visit-7');
 
       let activeLink = this.activateLink(node, neighbor);
       activeLinks = this.updateActiveLinks(activeLink, activeLinks, node);
-
-      await new Promise((r) => setTimeout(r, 500 / this.props.speed));
-      await this.checkPauseStatus();
-      if (this.props.stop) {
-        this.cleanUpActiveLinksAndCurrentNode(activeLinks, this.props.g);
-        return;
-      }
-      if (this.unMounting) return;
-
       this.activateNeighbor(neighbor);
 
       await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
       await this.checkPauseStatus();
       if (this.props.stop) {
-        this.cleanUpActiveLinksAndCurrentNode(activeLinks, this.props.g);
+        this.cleanUpActiveLinksAndCurrentNode(activeLinks);
         return;
       }
       if (this.unMounting) return;
+      this.removeHighlightedLine('topsort-visit-7');
+      this.props.updateNeighbor(neighbor);
 
+      this.highlightLine('topsort-visit-8');
+      await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+      await this.checkPauseStatus();
+      if (this.props.stop) {
+        this.cleanUpActiveLinksAndCurrentNode(activeLinks);
+        return;
+      }
+      if (this.unMounting) return;
+      this.removeHighlightedLine('topsort-visit-8');
+      this.props.updateNeighbor(null);
+      this.props.updateNode(neighbor);
+      this.previousNodes.push(node);
+      this.callStack.unshift(`visit(${neighbor}, G, S, V)`);
+      this.props.updateCallStack(this.callStack);
       if ((await this.visit(neighbor, stack, visited, activeLinks)) === false) {
         return false;
       }
     }
-
-    stack.push(node);
-    visited[node] = 2;
-
+    this.highlightLine('topsort-visit-10');
     await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
     await this.checkPauseStatus();
     if (this.props.stop) {
-      this.cleanUpActiveLinksAndCurrentNode(activeLinks, this.props.g);
+      this.cleanUpActiveLinksAndCurrentNode(activeLinks);
       return;
     }
     if (this.unMounting) return;
+    this.removeHighlightedLine('topsort-visit-10');
+    stack.push(node);
+    this.props.updateStack(stack);
+
+    this.highlightLine('topsort-visit-11');
+    await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
+    await this.checkPauseStatus();
+    if (this.props.stop) {
+      this.cleanUpActiveLinksAndCurrentNode(activeLinks);
+      return;
+    }
+    if (this.unMounting) return;
+    this.removeHighlightedLine('topsort-visit-11');
+    visited[node] = 'Complete';
+    this.props.updateVisited(visited);
 
     this.markNodeComplete(node);
     this.removeOutgoingLinks(activeLinks, node);
 
-    await new Promise((r) => setTimeout(r, 500 / this.props.speed));
+    this.highlightLine('topsort-visit-12');
+    await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
     await this.checkPauseStatus();
     if (this.props.stop) {
-      this.cleanUpActiveLinksAndCurrentNode(activeLinks, this.props.g);
+      this.cleanUpActiveLinksAndCurrentNode(activeLinks);
       return;
     }
     if (this.unMounting) return;
+    this.removeHighlightedLine('topsort-visit-12');
 
-    this.props.getOrdering(stack.slice().reverse());
-
+    this.props.updateNode(this.previousNodes.pop());
+    this.callStack.shift();
+    this.props.updateCallStack(this.callStack);
     return true;
   };
 
@@ -143,9 +322,8 @@ class Topsort extends Component {
   }
 
   activateNeighbor(neighbor) {
-    document
-      .getElementById(neighbor)
-      .classList.add('current-neighbor-of-interest');
+    let neighborEl = document.getElementById(neighbor);
+    if (neighborEl) neighborEl.classList.add('current-neighbor-of-interest');
   }
 
   activateLink(node, neighbor) {

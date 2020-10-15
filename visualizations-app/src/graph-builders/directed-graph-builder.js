@@ -26,12 +26,12 @@ function createDirectedGraph() {
     { source: 'd', target: 'b', strength: 20 * strength },
     { source: 'a', target: 'g', strength: 10 * strength },
     { source: 'a', target: 'b', strength: 10 * strength },
-    { source: 'a', target: 'c', strength: 20 * strength },
+    { source: 'a', target: 'c', strength: 30 * strength },
     { source: 'j', target: 'e', strength: 50 * strength },
     { source: 'e', target: 'b', strength: 20 * strength },
     { source: 'b', target: 'f', strength: 20 * strength },
   ];
-  const margin = { top: 20, right: 50, bottom: 200, left: -10 },
+  const margin = { top: 20, right: 200, bottom: 200, left: -100 },
     width = 800 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
 

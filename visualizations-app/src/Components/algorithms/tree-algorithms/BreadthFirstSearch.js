@@ -17,12 +17,12 @@ class BreadthFirstSearch extends Component {
   }
 
   highlightLine(lineNum) {
-    document.getElementById('bfs-' + lineNum).classList.add('active-code-line');
+    let el = document.getElementById('bfs-' + lineNum);
+    if (el) el.classList.add('active-code-line');
   }
   removeHighlightedLine(lineNum) {
-    document
-      .getElementById('bfs-' + lineNum)
-      .classList.remove('active-code-line');
+    let el = document.getElementById('bfs-' + lineNum);
+    if (el) el.classList.remove('active-code-line');
   }
 
   bfs = async () => {
@@ -75,7 +75,6 @@ class BreadthFirstSearch extends Component {
     this.props.updateQueue(queue);
     let nodePath = [];
     while (queue.length > 0) {
-
       this.highlightLine(6);
       await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
       await this.checkPauseStatus();
@@ -112,20 +111,15 @@ class BreadthFirstSearch extends Component {
       if (this.props.stop) return;
       if (this.unMounting) return;
 
-
-
       this.removeHighlightedLine(8);
       for (let child of this.props.g[currentNode]) {
-        this.props.updateChild(child)
+        this.props.updateChild(child);
         this.highlightLine(9);
-
 
         await new Promise((r) => setTimeout(r, 1000 / this.props.speed));
         await this.checkPauseStatus();
         if (this.props.stop) return;
         if (this.unMounting) return;
-
-
 
         this.removeHighlightedLine(9);
         if (visited[child] === false) {
@@ -146,11 +140,9 @@ class BreadthFirstSearch extends Component {
           queue.push(child);
           this.props.updateQueue(queue);
         }
-
       }
-      this.props.updateChild(null)
+      this.props.updateChild(null);
       this.props.updateCurrentNode(null);
-
     }
     this.props.updateChild(null);
     this.props.updateCurrentNode(null);
