@@ -17,7 +17,7 @@ class UndirectedGraphAlgorithms extends Component {
       runningAlg: '',
       priorityQueue: null,
       mstSet: {},
-      clicked: [false, false, false, false, false],
+      clicked: [false, false, false, false, false, false],
       node: null,
       neighbor: null,
       neighborCost: null,
@@ -235,6 +235,13 @@ class UndirectedGraphAlgorithms extends Component {
         el.classList.remove('current-node-of-interest');
       }
     });
+
+    for (let i = 1; i < 15; i++) {
+      let dijkstraPseduoElement = document.getElementById('dijkstra-' + i);
+      if (dijkstraPseduoElement) dijkstraPseduoElement.classList = '';
+      let primPseduoElement = document.getElementById('prim-' + i);
+      if (primPseduoElement) primPseduoElement.classList = '';
+    }
     let lines = document.getElementsByTagName('line');
     for (let line of lines) {
       line.classList = '';
@@ -247,6 +254,7 @@ class UndirectedGraphAlgorithms extends Component {
       neighbor: null,
       neighborCost: null,
       mstSet: {},
+      clicked: [false, false, false, false, false],
     });
     if (this.state.stop) {
       this.setState({ stop: false, pause: false });
@@ -644,6 +652,17 @@ class UndirectedGraphAlgorithms extends Component {
                     ''
                   )}
                 </li>
+                <li onClick={() => this.toggleClicked(3)}>
+                  {this.adjList ? (
+                    <RenderObjectComponent
+                      obj={this.adjList}
+                      objName={'G'}
+                      clicked={this.state.clicked[3]}
+                    />
+                  ) : (
+                    ''
+                  )}
+                </li>
               </Sidebar>
             ) : (
               ''
@@ -668,22 +687,11 @@ class UndirectedGraphAlgorithms extends Component {
                 ) : (
                   ''
                 )}
-                <li onClick={() => this.toggleClicked(2)}>
+                <li onClick={() => this.toggleClicked(0)}>
                   {this.state.priorityQueue ? (
                     <RenderListComponent
                       list={this.state.priorityQueue}
                       listName={'pq'}
-                      clicked={this.state.clicked[2]}
-                    />
-                  ) : (
-                    ''
-                  )}
-                </li>
-                <li onClick={() => this.toggleClicked(0)}>
-                  {Object.keys(this.state.distances).length > 0 ? (
-                    <RenderObjectComponent
-                      obj={this.state.distances}
-                      objName={'distances'}
                       clicked={this.state.clicked[0]}
                     />
                   ) : (
@@ -691,11 +699,33 @@ class UndirectedGraphAlgorithms extends Component {
                   )}
                 </li>
                 <li onClick={() => this.toggleClicked(1)}>
+                  {Object.keys(this.state.distances).length > 0 ? (
+                    <RenderObjectComponent
+                      obj={this.state.distances}
+                      objName={'distances'}
+                      clicked={this.state.clicked[1]}
+                    />
+                  ) : (
+                    ''
+                  )}
+                </li>
+                <li onClick={() => this.toggleClicked(2)}>
                   {Object.keys(this.state.parents).length > 0 ? (
                     <RenderObjectComponent
                       obj={this.state.parents}
                       objName={'parents'}
-                      clicked={this.state.clicked[1]}
+                      clicked={this.state.clicked[2]}
+                    />
+                  ) : (
+                    ''
+                  )}
+                </li>
+                <li onClick={() => this.toggleClicked(3)}>
+                  {this.adjList ? (
+                    <RenderObjectComponent
+                      obj={this.adjList}
+                      objName={'G'}
+                      clicked={this.state.clicked[3]}
                     />
                   ) : (
                     ''
@@ -703,7 +733,19 @@ class UndirectedGraphAlgorithms extends Component {
                 </li>
               </Sidebar>
             ) : (
-              ''
+              <Sidebar>
+                <li onClick={() => this.toggleClicked(4)}>
+                  {this.adjList ? (
+                    <RenderObjectComponent
+                      obj={this.adjList}
+                      objName={'G'}
+                      clicked={this.state.clicked[4]}
+                    />
+                  ) : (
+                    ''
+                  )}
+                </li>
+              </Sidebar>
             )}
           </div>
         </div>
