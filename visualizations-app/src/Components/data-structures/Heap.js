@@ -21,6 +21,7 @@ class Heap extends Component {
       heapA: [0],
       inputNum: '',
       executing: false,
+      pause: false,
       size: 0,
       parentIndex: null,
       currentIndex: null,
@@ -98,11 +99,13 @@ class Heap extends Component {
     this.setState({ newElement: e });
     this.highlightLine('Heap-insert-1');
     await new Promise((r) => setTimeout(r, 1000));
+    await this.checkPauseStatus();
     if (this.unMounting) return;
     this.removeHighlightedLine('Heap-insert-1');
 
     this.highlightLine('Heap-insert-2');
     await new Promise((r) => setTimeout(r, 1000));
+    await this.checkPauseStatus();
     if (this.unMounting) return;
     this.removeHighlightedLine('Heap-insert-2');
 
@@ -111,6 +114,7 @@ class Heap extends Component {
 
     this.highlightLine('Heap-insert-3');
     await new Promise((r) => setTimeout(r, 1000));
+    await this.checkPauseStatus();
     if (this.unMounting) return;
     this.removeHighlightedLine('Heap-insert-3');
     this.h[this.state.size] = e;
@@ -123,6 +127,7 @@ class Heap extends Component {
 
     this.highlightLine('Heap-insert-4');
     await new Promise((r) => setTimeout(r, 1000));
+    await this.checkPauseStatus();
     if (this.unMounting) return;
     await this.fixUp();
     this.removeHighlightedLine('Heap-insert-4');
@@ -131,11 +136,13 @@ class Heap extends Component {
   async fixUp() {
     this.highlightLine('Heap-fixup-1');
     await new Promise((r) => setTimeout(r, 1000));
+    await this.checkPauseStatus();
     if (this.unMounting) return;
     this.removeHighlightedLine('Heap-fixup-1');
 
     this.highlightLine('Heap-fixup-2');
     await new Promise((r) => setTimeout(r, 1000));
+    await this.checkPauseStatus();
     if (this.unMounting) return;
     this.removeHighlightedLine('Heap-fixup-2');
     let pos = this.state.size;
@@ -143,6 +150,7 @@ class Heap extends Component {
     if (pos <= 1) {
       this.highlightLine('Heap-fixup-3');
       await new Promise((r) => setTimeout(r, 1000));
+      await this.checkPauseStatus();
       if (this.unMounting) return;
       this.removeHighlightedLine('Heap-fixup-3');
     }
@@ -150,12 +158,14 @@ class Heap extends Component {
       // Check when inserting into an empty boy
       this.highlightLine('Heap-fixup-3');
       await new Promise((r) => setTimeout(r, 1000));
+      await this.checkPauseStatus();
       if (this.unMounting) return;
       this.removeHighlightedLine('Heap-fixup-3');
 
       let parent = Math.floor(pos / 2);
       this.highlightLine('Heap-fixup-4');
       await new Promise((r) => setTimeout(r, 1000));
+      await this.checkPauseStatus();
       if (this.unMounting) return;
       this.removeHighlightedLine('Heap-fixup-4');
       this.setState({ parentIndex: parent });
@@ -163,9 +173,9 @@ class Heap extends Component {
       this.highlightLine('Heap-fixup-5');
       this.activateChildAndParent(this.h[pos], this.h[parent]);
       await new Promise((r) => setTimeout(r, 1000));
+      await this.checkPauseStatus();
       if (this.unMounting) return;
-      await new Promise((r) => setTimeout(r, 1000));
-      if (this.unMounting) return;
+
       this.removeHighlightedLine('Heap-fixup-5');
       this.removeActiveChildParent(this.h[pos], this.h[parent]);
 
@@ -174,6 +184,7 @@ class Heap extends Component {
 
         this.highlightLine('Heap-fixup-6');
         await new Promise((r) => setTimeout(r, 1000));
+        await this.checkPauseStatus();
         if (this.unMounting) return;
         this.removeHighlightedLine('Heap-fixup-6');
 
@@ -185,6 +196,7 @@ class Heap extends Component {
 
         this.highlightLine('Heap-fixup-7');
         await new Promise((r) => setTimeout(r, 1000));
+        await this.checkPauseStatus();
         if (this.unMounting) return;
         this.removeHighlightedLine('Heap-fixup-7');
 
@@ -195,6 +207,7 @@ class Heap extends Component {
       } else {
         this.highlightLine('Heap-fixup-8');
         await new Promise((r) => setTimeout(r, 1000));
+        await this.checkPauseStatus();
         if (this.unMounting) return;
         this.removeHighlightedLine('Heap-fixup-8');
         break;
@@ -209,11 +222,13 @@ class Heap extends Component {
 
     this.highlightLine('Heap-removeRoot-1');
     await new Promise((r) => setTimeout(r, 1000));
+    await this.checkPauseStatus();
     if (this.unMounting) return;
     this.removeHighlightedLine('Heap-removeRoot-1');
 
     this.highlightLine('Heap-removeRoot-2');
     await new Promise((r) => setTimeout(r, 1000));
+    await this.checkPauseStatus();
     if (this.unMounting) return;
     this.removeHighlightedLine('Heap-removeRoot-2');
     let smallest = this.h[1];
@@ -221,6 +236,7 @@ class Heap extends Component {
 
     this.highlightLine('Heap-removeRoot-3');
     await new Promise((r) => setTimeout(r, 1000));
+    await this.checkPauseStatus();
     if (this.unMounting) return;
     this.removeHighlightedLine('Heap-removeRoot-3');
     this.h[1] = this.h.pop();
@@ -228,6 +244,7 @@ class Heap extends Component {
 
     this.highlightLine('Heap-removeRoot-4');
     await new Promise((r) => setTimeout(r, 1000));
+    await this.checkPauseStatus();
     if (this.unMounting) return;
     this.removeHighlightedLine('Heap-removeRoot-4');
     this.setState({ size: this.state.size - 1 });
@@ -244,6 +261,7 @@ class Heap extends Component {
 
     this.highlightLine('Heap-removeRoot-5');
     await new Promise((r) => setTimeout(r, 1000));
+    await this.checkPauseStatus();
     if (this.unMounting) return;
     if (this.state.size === 0) {
       clearTree();
@@ -254,9 +272,9 @@ class Heap extends Component {
     }
 
     this.removeHighlightedLine('Heap-removeRoot-5');
-    if (this.unMounting) return;
     this.highlightLine('Heap-removeRoot-6');
     await new Promise((r) => setTimeout(r, 1000));
+    await this.checkPauseStatus();
     if (this.unMounting) return;
     this.removeHighlightedLine('Heap-removeRoot-6');
     await this.setState({ executing: false, removedRoot: null });
@@ -265,11 +283,13 @@ class Heap extends Component {
   async fixDown() {
     this.highlightLine('Heap-fixdown-1');
     await new Promise((r) => setTimeout(r, 1000));
+    await this.checkPauseStatus();
     if (this.unMounting) return;
     this.removeHighlightedLine('Heap-fixdown-1');
 
     this.highlightLine('Heap-fixdown-2');
     await new Promise((r) => setTimeout(r, 1000));
+    await this.checkPauseStatus();
     if (this.unMounting) return;
     this.removeHighlightedLine('Heap-fixdown-2');
 
@@ -279,17 +299,20 @@ class Heap extends Component {
     if (pos * 2 > this.state.size) {
       this.highlightLine('Heap-fixdown-3');
       await new Promise((r) => setTimeout(r, 1000));
+      await this.checkPauseStatus();
       if (this.unMounting) return;
       this.removeHighlightedLine('Heap-fixdown-3');
     }
     while (pos * 2 <= this.state.size) {
       this.highlightLine('Heap-fixdown-3');
       await new Promise((r) => setTimeout(r, 1000));
+      await this.checkPauseStatus();
       if (this.unMounting) return;
       this.removeHighlightedLine('Heap-fixdown-3');
 
       this.highlightLine('Heap-fixdown-4');
       await new Promise((r) => setTimeout(r, 1000));
+      await this.checkPauseStatus();
       if (this.unMounting) return;
       this.removeHighlightedLine('Heap-fixdown-4');
 
@@ -302,6 +325,7 @@ class Heap extends Component {
       this.highlightLine('Heap-fixdown-6');
       this.activateLeftAndRightChildren(this.h[child], this.h[child + 1]);
       await new Promise((r) => setTimeout(r, 2000));
+      await this.checkPauseStatus();
       if (this.unMounting) return;
       this.removeHighlightedLine('Heap-fixdown-5');
       this.removeHighlightedLine('Heap-fixdown-6');
@@ -316,12 +340,14 @@ class Heap extends Component {
 
       this.highlightLine('Heap-fixdown-7');
       await new Promise((r) => setTimeout(r, 1000));
+      await this.checkPauseStatus();
       if (this.unMounting) return;
       this.removeHighlightedLine('Heap-fixdown-7');
 
       if (this.h[child] > this.h[child + 1]) {
         this.highlightLine('Heap-fixdown-8');
         await new Promise((r) => setTimeout(r, 1000));
+        await this.checkPauseStatus();
         if (this.unMounting) return;
         this.removeHighlightedLine('Heap-fixdown-8');
         child += 1;
@@ -331,6 +357,7 @@ class Heap extends Component {
 
       this.highlightLine('Heap-fixdown-9');
       await new Promise((r) => setTimeout(r, 2000));
+      await this.checkPauseStatus();
       if (this.unMounting) return;
       this.removeHighlightedLine('Heap-fixdown-9');
 
@@ -340,6 +367,7 @@ class Heap extends Component {
         this.activateLink(this.h[child]);
         this.highlightLine('Heap-fixdown-10');
         await new Promise((r) => setTimeout(r, 2000));
+        await this.checkPauseStatus();
         if (this.unMounting) return;
 
         this.removeHighlightedLine('Heap-fixdown-10');
@@ -354,6 +382,7 @@ class Heap extends Component {
 
         this.highlightLine('Heap-fixdown-11');
         await new Promise((r) => setTimeout(r, 1000));
+        await this.checkPauseStatus();
         if (this.unMounting) return;
         this.removeHighlightedLine('Heap-fixdown-11');
         pos = child;
@@ -361,6 +390,7 @@ class Heap extends Component {
       } else {
         this.highlightLine('Heap-fixdown-12');
         await new Promise((r) => setTimeout(r, 1000));
+        await this.checkPauseStatus();
         if (this.unMounting) return;
         this.removeHighlightedLine('Heap-fixdown-12');
         break;
@@ -459,6 +489,12 @@ class Heap extends Component {
   deActivateLink(child) {
     let childLinkElement = document.getElementById(child + 'link');
     childLinkElement.classList.remove('fade-in-out-link');
+  }
+  async checkPauseStatus() {
+    while (this.state.pause) {
+      await new Promise((r) => setTimeout(r, 1000));
+      continue;
+    }
   }
 
   renderHeapTableData() {
@@ -756,6 +792,14 @@ class Heap extends Component {
               }}
             >
               {this.state.executing ? 'Executing...' : 'Sample Heap'}
+            </button>
+            <button
+              className="graph-button"
+              onClick={() => {
+                this.setState({ pause: !this.state.pause });
+              }}
+            >
+              {this.state.pause ? 'UnPause' : 'Pause'}
             </button>
             <button
               disabled={this.state.executing}
