@@ -42,9 +42,10 @@ class KMeans extends Component {
     if (this.unMounting) return;
 
     let hasConverged = false;
-    let i = 0;
+    let iter = 0;
     do {
-      console.log('Iteration ', i);
+      console.log('Iteration ', iter);
+
       this.assignToClusters(this.props.points, centroids);
 
       await new Promise((r) => setTimeout(r, 2000 / this.props.speed));
@@ -52,7 +53,9 @@ class KMeans extends Component {
       if (this.props.stop) return;
       if (this.unMounting) return;
 
-      let centroidDifferences = [...centroids];
+      console.log('Clusters have been assigned.');
+
+      let prevCentroids = [...centroids];
       this.updateCentroids(this.props.points, k, centroids);
 
       await new Promise((r) => setTimeout(r, 2000 / this.props.speed));
@@ -64,6 +67,7 @@ class KMeans extends Component {
       console.log(JSON.stringify(centroids, null, 2));
 
       //calculate the sum of differences between the current and last step's centroids:  sum(|x - c_i| + |y - c_i|)
+      /*
       let totalDifference = centroidDifferences.reduce(
         (sum, currentCentroid, i) =>
           Math.abs(currentCentroid.x - centroids[i].x) +
@@ -73,9 +77,18 @@ class KMeans extends Component {
 
       console.log('centroid totalDifference: ', totalDifference);
       hasConverged = (totalDifference < 0.1);
+      */
       
-      i++;
-    } while (!hasConverged && i < 100);
+      hasConverged = prevCentroids.reduce(
+        (bool, currentCentroid, i) => (currentCentroid.x === centroids[i].x) && (currentCentroid.y === centroids[i].y),
+        true
+      );
+      
+      iter++;
+    } while (!hasConverged && iter < 100);
+
+    d3.selectAll(".centroid")
+      .attr("r", 7);
   };
 
   //Compute distance of each point from each centroid,
@@ -149,11 +162,15 @@ class KMeans extends Component {
     let pointElement = document.getElementById(
       `x:${parseFloat(point.x).toFixed(1)}-y:${parseFloat(point.y).toFixed(1)}`
     );
+    let pointClasses = pointElement.classList;
     if (pointElement) {
-      if (pointElement.classList.contains('cluster-unassigned')) {
-        pointElement.classList.remove('cluster-unassigned');
+      if (pointClasses.contains('cluster-unassigned')) {
+        pointClasses.remove('cluster-unassigned');
       }
-      pointElement.classList.add(`cluster${point.closestCentroid}`);
+      else {
+        pointClasses.remove(pointClasses[0]);
+      }
+      pointClasses.add(`cluster${point.closestCentroid}`);
     }
   }
 

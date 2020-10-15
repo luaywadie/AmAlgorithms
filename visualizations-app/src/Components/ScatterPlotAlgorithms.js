@@ -10,7 +10,7 @@ class ScatterPlotAlgorithms extends Component {
     this.state = {
       pause: false,
       stop: false,
-      speed: 1,
+      speed: 2,
       k: 5,
       points: [],
     };
@@ -37,6 +37,17 @@ class ScatterPlotAlgorithms extends Component {
   getStopStatus = () => this.state.stop;
   getSpeedRequest = () => Number(this.state.speed) + 0.1;
 
+  reset = () => {
+    //window.location.reload(false);
+    this.state.points.forEach( (p) => {
+      let circleElement = document.getElementById(`x:${parseFloat(p.x).toFixed(1)}-y:${parseFloat(p.y).toFixed(1)}`);
+      circleElement.classList.remove(...circleElement.classList);
+    });
+    if (this.state.stop) {
+      this.setState({ stop: false, pause: false });
+    }
+  };
+
   render() {
     return (
       <div>
@@ -50,9 +61,19 @@ class ScatterPlotAlgorithms extends Component {
               k={this.state.k}
               setPoints={this.setPoints}
             />
+            <div className={'divider'}></div>
+            <button
+              className="graph-button"
+              onClick={() => {
+                this.setState({ pause: false, stop: true });
+                this.reset();
+              }}
+            >
+            Reset
+            </button>
             <form onSubmit={(event) => event.preventDefault()}>
             <label>
-              K:
+              Number of Clusters (K):
               <input
                 style={{ width: '50px' }}
                 type="number"
