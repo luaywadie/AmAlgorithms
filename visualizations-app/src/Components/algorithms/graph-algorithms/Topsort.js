@@ -322,9 +322,8 @@ class Topsort extends Component {
   }
 
   activateNeighbor(neighbor) {
-    document
-      .getElementById(neighbor)
-      .classList.add('current-neighbor-of-interest');
+    let neighborEl = document.getElementById(neighbor);
+    if (neighborEl) neighborEl.classList.add('current-neighbor-of-interest');
   }
 
   activateLink(node, neighbor) {
