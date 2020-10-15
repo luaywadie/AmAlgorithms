@@ -87,14 +87,6 @@ class Heap extends Component {
     this.setState({ executing: false });
   };
 
-  toggleClicked = (i) => {
-    let a = this.state.clicked.slice();
-    a[i] = !a[i];
-    this.setState({
-      clicked: a,
-    });
-  };
-
   async insert(e) {
     this.setState({ newElement: e });
     this.highlightLine('Heap-insert-1');
@@ -255,9 +247,6 @@ class Heap extends Component {
       this.h = this.h.slice(0, 1);
     }
     await this.setState({ heapA: this.h, inputList: updatedList });
-
-    document.getElementById('root-extracted').innerHTML =
-      'Root Extracted: ' + smallest;
 
     this.highlightLine('Heap-removeRoot-5');
     await new Promise((r) => setTimeout(r, 1000));
@@ -422,7 +411,13 @@ class Heap extends Component {
     this.adjList = adjList;
     return this.adjList;
   };
-
+  toggleClicked = (i) => {
+    let a = this.state.clicked.slice();
+    a[i] = !a[i];
+    this.setState({
+      clicked: a,
+    });
+  };
   activateLeftAndRightChildren(leftChild, rightChild) {
     let leftChildElement = document.getElementsByClassName(
       'node-' + leftChild
@@ -495,30 +490,6 @@ class Heap extends Component {
       await new Promise((r) => setTimeout(r, 1000));
       continue;
     }
-  }
-
-  renderHeapTableData() {
-    return this.state.heapA.map((node, i) => {
-      return (
-        <td key={i} style={{ backgroundColor: i === 1 ? 'yellow' : '' }}>
-          {node}
-        </td>
-      );
-    });
-  }
-
-  renderHeapHeading() {
-    return (
-      <tr>
-        <th>size</th>
-      </tr>
-    );
-  }
-
-  renderInputListTableData() {
-    return this.state.inputList.map((node) => {
-      return <td key={node}>{node}</td>;
-    });
   }
 
   formatInsertButtonText() {
@@ -770,7 +741,11 @@ class Heap extends Component {
                 this.state.executing
               }
               onClick={() => {
-                this.setState({ removingRoot: false, inserting: true });
+                this.setState({
+                  removingRoot: false,
+                  inserting: true,
+                  pause: false,
+                });
                 this.handleInsertButton();
               }}
             >
@@ -779,7 +754,11 @@ class Heap extends Component {
             <button
               disabled={this.state.heapA.length <= 1 || this.state.executing}
               onClick={() => {
-                this.setState({ removingRoot: true, inserting: false });
+                this.setState({
+                  removingRoot: true,
+                  inserting: false,
+                  pause: false,
+                });
                 this.removeRoot();
               }}
             >
@@ -819,31 +798,6 @@ class Heap extends Component {
           </div>
         </div>
         <div className={'col-4'}>
-          <div className={'row'}>
-            <h4>Heap Array</h4>
-          </div>
-          <div className={'row'}>
-            <table id={'heap-table'} className={'float-left'}>
-              <tbody>
-                {this.renderHeapHeading()}
-                <tr>{this.renderHeapTableData()}</tr>
-              </tbody>
-            </table>
-          </div>
-          <div className={'row'}>
-            <h5 id={'root-extracted'}> </h5>
-          </div>
-          <div className={'row'}>
-            <h4>Input List</h4>
-          </div>
-          <div className={'row'}>
-            <table id={'input-list-table'} className={'float-left'}>
-              <tbody>
-                <tr>{this.renderInputListTableData()}</tr>
-              </tbody>
-            </table>
-          </div>
-
           <div className={'row'}>
             <Sidebar showButton={true}>
               <li> size = {this.state.size} </li>
@@ -909,3 +863,52 @@ class Heap extends Component {
 }
 
 export default Heap;
+
+// renderHeapTableData() {
+//   return this.state.heapA.map((node, i) => {
+//     return (
+//       <td key={i} style={{ backgroundColor: i === 1 ? 'yellow' : '' }}>
+//         {node}
+//       </td>
+//     );
+//   });
+// }
+
+// renderHeapHeading() {
+//   return (
+//     <tr>
+//       <th>size</th>
+//     </tr>
+//   );
+// }
+
+// renderInputListTableData() {
+//   return this.state.inputList.map((node) => {
+//     return <td key={node}>{node}</td>;
+//   });
+// }
+
+/* <div className={'row'}>
+            <h4>Heap Array</h4>
+          </div>
+          <div className={'row'}>
+            <table id={'heap-table'} className={'float-left'}>
+              <tbody>
+                {this.renderHeapHeading()}
+                <tr>{this.renderHeapTableData()}</tr>
+              </tbody>
+            </table>
+          </div>
+          <div className={'row'}>
+            <h5 id={'root-extracted'}> </h5>
+          </div>
+          <div className={'row'}>
+            <h4>Input List</h4>
+          </div>
+          <div className={'row'}>
+            <table id={'input-list-table'} className={'float-left'}>
+              <tbody>
+                <tr>{this.renderInputListTableData()}</tr>
+              </tbody>
+            </table>
+          </div> */
