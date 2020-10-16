@@ -22,19 +22,25 @@ class KMeans extends Component {
     //create a shallow copy of centroids (to make sure the assigned points don't change)
     let centroids = [...randomPoints];
     
-    //remove the centroids from the set of points (set difference: P = P \ C)
-    this.props.setPoints(
-      this.props.points.filter((p) => !centroids.includes(p))
-    );
-    
     //Set the classes of the initialized centroid elements
-    centroids.forEach((point, index) => {
-      let cent = document.getElementById(
-        `x:${parseFloat(point.x).toFixed(1)}-y:${parseFloat(point.y).toFixed(1)}`
-      );
-      cent.classList.replace('cluster-unassigned', `cluster${index}`);
-      cent.classList.add('centroid');
-    });
+    
+    let centGroup = d3.select("#scatter-no-margin")
+        .append("g")
+        .attr("id", "centroid-group")
+        .classed("centroid", true);
+  
+    // centroids.forEach((centroid, index) => {
+    d3.select("#centroid-group")
+      .selectAll("circle")  
+      .data(centroids)
+      .enter()
+      .append("circle")
+      .attr("cx", (centroid) => this.scaleX(centroid.x))
+      .attr("cy", (centroid) => this.scaleY(centroid.y))
+      .attr("r", 10)
+      .attr("id", (centroid,i) => `centroid${i}`)
+      .attr("class", (centroid,i) => `cluster${i} centroid`);
+    
 
     await new Promise((r) => setTimeout(r, 2000 / this.props.speed));
     await this.checkPauseStatus();
@@ -67,19 +73,6 @@ class KMeans extends Component {
       
       console.log('Centroids have been updated:');
       console.log(JSON.stringify(centroids, null, 2));
-
-      //calculate the sum of differences between the current and last step's centroids:  sum(|x - c_i| + |y - c_i|)
-      /*
-      let totalDifference = centroidDifferences.reduce(
-        (sum, currentCentroid, i) =>
-          Math.abs(currentCentroid.x - centroids[i].x) +
-          Math.abs(currentCentroid.y - centroids[i].y),
-        0
-      );
-
-      console.log('centroid totalDifference: ', totalDifference);
-      hasConverged = (totalDifference < 0.1);
-      */
       
       hasConverged = prevCentroids.reduce(
         (bool, currentCentroid, i) => (currentCentroid.x === centroids[i].x) && (currentCentroid.y === centroids[i].y),
@@ -88,9 +81,8 @@ class KMeans extends Component {
       
       iter++;
     } while (!hasConverged && iter < 100);
+    console.log("Converged.");
 
-    // d3.selectAll(".centroid")
-    //   .attr("r", 7);
   };
 
   //Compute distance of each point from each centroid,
@@ -180,21 +172,20 @@ class KMeans extends Component {
   }
 
   moveIthCentroid(i, centroid) {
-    const scatterEl = document.getElementById('scatter-no-margin');
-    const centroidEl = scatterEl.getElementsByClassName(`cluster${i} centroid`)[0];
-    //defining scale functions to translate the centroid's coordinates into (cx, cy)
-    const scaleX = d3.scaleLinear()
-      .domain([4, 8])
-      .range([0, scatterEl.parentElement.getAttribute('width') - 90]);
-    const scaleY = d3.scaleLinear()
-      .domain([0, 7])
-      .range([scatterEl.parentElement.getAttribute('height') - 40, 0]);
-    if(centroidEl) {
-      centroidEl.setAttribute('cx', scaleX(centroid.x));
-      centroidEl.setAttribute('cy', scaleY(centroid.y));
-      //centroidEl.setAttribute('transform', scatterEl.getAttribute('transform'));
-    }
+     d3.select(`#centroid${i}`)
+      .attr('cx', this.scaleX(centroid.x))
+      .attr('cy', this.scaleY(centroid.y));
   }
+
+  //Scale point coordinates to fit on the scatter plot
+  scaleX = d3.scaleLinear()
+      .domain([4, 8])
+      .range([0, 510]);
+      
+  scaleY = d3.scaleLinear()
+      .domain([0, 7])
+      .range([460, 0]);
+  
 
   async checkPauseStatus() {
     while (this.props.pause) {

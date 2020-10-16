@@ -39,33 +39,21 @@ class ScatterPlotAlgorithms extends Component {
 
   reset = () => {
 
+    //Remove all centroids from the DOM
+    const centroidGroup = document.getElementById("centroid-group");
+    centroidGroup.parentNode.removeChild(centroidGroup);
+
     //Clear the class list of each circle on scatterplot (reset) and restore to 'unassigned' state
     let circleElements = document.getElementsByTagName('circle');
     for (let i = 0; i < circleElements.length; i++) {
-
-      //if the element is a 'centroid' then remove from DOM completely
-      if (circleElements[i].classList.contains('centroid')) {
-        circleElements[i].parentNode.removeChild(circleElements[i]);
-      }
-      else {
-        //else, just remove the classes and reset the point to 'unassigned'
-        // circleElements[i].classList.remove(...circleElements[i].classList);
+        //Remove the classes and reset the point to 'unassigned'
         circleElements[i].setAttribute('class', '');
         circleElements[i].classList.add('cluster-unassigned');
       }
-      
-    }
-
-        // this.state.points.forEach( (p) => {
-    //   let circleElement = document.getElementById(`x:${parseFloat(p.x).toFixed(1)}-y:${parseFloat(p.y).toFixed(1)}`);
-    //   circleElement.classList.remove(...circleElement.classList);
-    // });
-
     //Set state
-    if (this.state.stop) {
+    if(this.state.stop) {
       this.setState({ stop: false, pause: false });
     }
-
   };
 
   render() {
@@ -84,10 +72,13 @@ class ScatterPlotAlgorithms extends Component {
             <div className={'divider'}></div>
             <button
               className="graph-button"
-              onClick={() => {
-                this.setState({ pause: false, stop: true });
+              onClick={ async () => {
+                // this.setState( (state, props) =>
+                //   ({...this.state, pause: false, stop: true }) );
+                await this.setState({pause: false, stop:true});
                 this.reset();
-              }}
+              }
+              }
             >
             Reset
             </button>
