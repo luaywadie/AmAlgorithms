@@ -38,14 +38,34 @@ class ScatterPlotAlgorithms extends Component {
   getSpeedRequest = () => Number(this.state.speed) + 0.1;
 
   reset = () => {
-    //window.location.reload(false);
-    this.state.points.forEach( (p) => {
-      let circleElement = document.getElementById(`x:${parseFloat(p.x).toFixed(1)}-y:${parseFloat(p.y).toFixed(1)}`);
-      circleElement.classList.remove(...circleElement.classList);
-    });
+
+    //Clear the class list of each circle on scatterplot (reset) and restore to 'unassigned' state
+    let circleElements = document.getElementsByTagName('circle');
+    for (let i = 0; i < circleElements.length; i++) {
+
+      //if the element is a 'centroid' then remove from DOM completely
+      if (circleElements[i].classList.contains('centroid')) {
+        circleElements[i].parentNode.removeChild(circleElements[i]);
+      }
+      else {
+        //else, just remove the classes and reset the point to 'unassigned'
+        // circleElements[i].classList.remove(...circleElements[i].classList);
+        circleElements[i].setAttribute('class', '');
+        circleElements[i].classList.add('cluster-unassigned');
+      }
+      
+    }
+
+        // this.state.points.forEach( (p) => {
+    //   let circleElement = document.getElementById(`x:${parseFloat(p.x).toFixed(1)}-y:${parseFloat(p.y).toFixed(1)}`);
+    //   circleElement.classList.remove(...circleElement.classList);
+    // });
+
+    //Set state
     if (this.state.stop) {
       this.setState({ stop: false, pause: false });
     }
+
   };
 
   render() {
@@ -71,6 +91,14 @@ class ScatterPlotAlgorithms extends Component {
             >
             Reset
             </button>
+            <div className={'divider'}></div>
+            <button
+            onClick={() => {
+              this.setState({ pause: !this.state.pause });
+            }}
+          >
+            {this.state.pause ? 'UnPause' : 'Pause'}
+          </button>
             <form onSubmit={(event) => event.preventDefault()}>
             <label>
               Number of Clusters (K):
@@ -86,6 +114,21 @@ class ScatterPlotAlgorithms extends Component {
               />
             </label>
           </form>
+          <form onSubmit={(event) => event.preventDefault()}>
+          <label>
+            Speed:
+            <input
+              style={{ width: '50px' }}
+              type="number"
+              value={this.state.speed}
+              onChange={(event) =>
+                this.setState({
+                  speed: event.target.value,
+                })
+              }
+            />
+          </label>
+        </form>
           </div>
         </div>
       </div>

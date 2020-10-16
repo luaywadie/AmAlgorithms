@@ -27,7 +27,7 @@ class KMeans extends Component {
       this.props.points.filter((p) => !centroids.includes(p))
     );
     
-    //Set the classes of the centroid elements
+    //Set the classes of the initialized centroid elements
     centroids.forEach((point, index) => {
       let cent = document.getElementById(
         `x:${parseFloat(point.x).toFixed(1)}-y:${parseFloat(point.y).toFixed(1)}`
@@ -41,6 +41,8 @@ class KMeans extends Component {
     if (this.props.stop) return;
     if (this.unMounting) return;
 
+
+    // Main K-Means loop
     let hasConverged = false;
     let iter = 0;
     do {
@@ -87,8 +89,8 @@ class KMeans extends Component {
       iter++;
     } while (!hasConverged && iter < 100);
 
-    d3.selectAll(".centroid")
-      .attr("r", 7);
+    // d3.selectAll(".centroid")
+    //   .attr("r", 7);
   };
 
   //Compute distance of each point from each centroid,
@@ -164,12 +166,15 @@ class KMeans extends Component {
     );
     let pointClasses = pointElement.classList;
     if (pointElement) {
+      //if it's the first iteration, remove 'unassigned' style
       if (pointClasses.contains('cluster-unassigned')) {
         pointClasses.remove('cluster-unassigned');
       }
+      //otherwise, remove the current cluster styles
       else {
         pointClasses.remove(pointClasses[0]);
       }
+      //finally, add the color associated with the closest centroid
       pointClasses.add(`cluster${point.closestCentroid}`);
     }
   }
