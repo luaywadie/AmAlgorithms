@@ -312,6 +312,7 @@ class TreeTraversals extends Component {
           >
             {this.state.pause ? 'UnPause' : 'Pause'}
           </button>
+
           <form onSubmit={(event) => event.preventDefault()}>
             <label>
               Speed:
@@ -328,6 +329,7 @@ class TreeTraversals extends Component {
             </label>
           </form>
         </div>
+        
 
         <div className={'col-4'}>
           <div className={'row'}>
@@ -338,6 +340,7 @@ class TreeTraversals extends Component {
               : this.renderDfsPseudocode()}
           </div>
         </div>
+
 
         <div className={'col-4'}>
           <Sidebar showButton={this.state.runningAlg !== ''}>

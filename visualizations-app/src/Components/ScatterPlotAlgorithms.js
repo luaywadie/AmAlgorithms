@@ -9,7 +9,7 @@ class ScatterPlotAlgorithms extends Component {
     this.state = {
       pause: false,
       stop: false,
-      speed: 2,
+      speed: 1,
       k: 5,
       points: [],
     };
@@ -54,6 +54,43 @@ class ScatterPlotAlgorithms extends Component {
       this.setState({ stop: false, pause: false });
     }
   };
+
+
+  renderKMeansPseudocode() {
+    const indentation = (num) => {
+      return num * 20;
+    };
+    return (
+      <div>
+        <div id={'kmeans-1'}>
+        1<span style={{ marginLeft: indentation(1) }}>KMeans(points, K)</span>
+        </div>
+        <div id={'kmeans-2'}>
+        2<span style={{ marginLeft: indentation(2) }}>randomly initialize K cluster centroids</span>
+        </div>
+        <div id={'kmeans-3'}>
+          3<span style={{ marginLeft: indentation(2) }}>let hasConverged = false</span>
+        </div>
+        <div id={'kmeans-4'}>
+          4
+          <span style={{ marginLeft: indentation(2) }}>
+            while !hasConverged
+          </span>
+        </div>
+        <div id={'kmeans-5'}>
+          5
+          <span style={{ marginLeft: indentation(3) }}>AssignClusters()</span>
+        </div>
+        <div id={'kmeans-6'}>
+          6<span style={{ marginLeft: indentation(3) }}>MoveCentroids()</span>
+        </div>
+        <div id={'kmeans-7'}>
+        7<span style={{ marginLeft: indentation(1) }}>DONE</span>
+      </div>
+        
+      </div>
+    );
+  }
 
   render() {
     return (
@@ -120,6 +157,14 @@ class ScatterPlotAlgorithms extends Component {
           </label>
         </form>
           </div>
+
+
+          <div className={'col-6'}>
+          <div className={'row'}>
+            {this.renderKMeansPseudocode()}
+          </div>
+        </div>
+
         </div>
       </div>
     );

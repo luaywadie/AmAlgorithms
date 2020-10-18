@@ -14,22 +14,49 @@ class KMeans extends Component {
 
   componentDidUpdate(prevProps) {}
 
+  async checkPauseStatus() {
+    while (this.props.pause) {
+      await new Promise((r) => setTimeout(r, 1000));
+      continue;
+    }
+  }
+
+  //For pseudocode line highlighting
+  highlightLine(lineNum) {
+    let el = document.getElementById('kmeans-' + lineNum);
+    if (el) el.classList.add('active-code-line');
+  }
+  removeHighlightedLine(lineNum) {
+    let el = document.getElementById('kmeans-' + lineNum);
+    if (el) el.classList.remove('active-code-line');
+  }
+
   //Perform K-Means clustering on points, plot, and animate
   kmeans = async () => {
+    this.highlightLine(1);
+    await new Promise((r) => setTimeout(r, 2000 / this.props.speed));
+    await this.checkPauseStatus();
+    if (this.props.stop) return;
+    if (this.unMounting) return;
+    this.removeHighlightedLine(1);
+
+    this.highlightLine(2);
+    
     const k = this.props.k;
     //Randomly initialize cluster centroids
     const randomPoints = this.getRandomElements(this.props.points, k);
     //create a shallow copy of centroids (to make sure the assigned points don't change)
     let centroids = [...randomPoints];
     
-    //Set the classes of the initialized centroid elements
     
-    let centGroup = d3.select("#scatter-no-margin")
+    // Create centroid container group
+    d3.select("#scatter-no-margin")
         .append("g")
         .attr("id", "centroid-group")
         .classed("centroid", true);
   
-    // centroids.forEach((centroid, index) => {
+    // Add initial centroids to the plot
+    //Set the classes of the initialized centroid elements
     d3.select("#centroid-group")
       .selectAll("circle")  
       .data(centroids)
@@ -40,29 +67,55 @@ class KMeans extends Component {
       .attr("r", 10)
       .attr("id", (centroid,i) => `centroid${i}`)
       .attr("class", (centroid,i) => `cluster${i} centroid`);
-    
 
     await new Promise((r) => setTimeout(r, 2000 / this.props.speed));
     await this.checkPauseStatus();
     if (this.props.stop) return;
     if (this.unMounting) return;
+    this.removeHighlightedLine(2);
+    
 
+    // await new Promise((r) => setTimeout(r, 2000 / this.props.speed));
+    // await this.checkPauseStatus();
+    // if (this.props.stop) return;
+    // if (this.unMounting) return;
+
+    this.highlightLine(3);
+    let hasConverged = false; //keep track of convergence
+    await new Promise((r) => setTimeout(r, 2000 / this.props.speed));
+    await this.checkPauseStatus();
+    if (this.props.stop) return;
+    if (this.unMounting) return;
+    this.removeHighlightedLine(3);
+
+
+    this.highlightLine(4);
+    await new Promise((r) => setTimeout(r, 2000 / this.props.speed));
+    await this.checkPauseStatus();
+    if (this.props.stop) return;
+    if (this.unMounting) return;
+    this.removeHighlightedLine(4);
 
     // Main K-Means loop
-    let hasConverged = false;
     let iter = 0;
     do {
       console.log('Iteration ', iter);
 
+      this.highlightLine(5);
+    
       this.assignToClusters(this.props.points, centroids);
 
       await new Promise((r) => setTimeout(r, 2000 / this.props.speed));
       await this.checkPauseStatus();
       if (this.props.stop) return;
       if (this.unMounting) return;
+      this.removeHighlightedLine(5);
 
       console.log('Clusters have been assigned.');
 
+
+      this.highlightLine(6);
+      
       let prevCentroids = [...centroids];
       this.updateCentroids(this.props.points, k, centroids);
 
@@ -70,18 +123,37 @@ class KMeans extends Component {
       await this.checkPauseStatus();
       if (this.props.stop) return;
       if (this.unMounting) return;
-      
+      this.removeHighlightedLine(6);
+
       console.log('Centroids have been updated:');
       console.log(JSON.stringify(centroids, null, 2));
-      
+
+
+      this.highlightLine(4);
+    
+      //Check convergence
       hasConverged = prevCentroids.reduce(
         (bool, currentCentroid, i) => (currentCentroid.x === centroids[i].x) && (currentCentroid.y === centroids[i].y),
         true
       );
       
+      await new Promise((r) => setTimeout(r, 2000 / this.props.speed));
+      await this.checkPauseStatus();
+      if (this.props.stop) return;
+      if (this.unMounting) return;
+      this.removeHighlightedLine(4);
+
       iter++;
     } while (!hasConverged && iter < 100);
+
+
     console.log("Converged.");
+    this.highlightLine(7);
+    await new Promise((r) => setTimeout(r, 2000 / this.props.speed));
+    await this.checkPauseStatus();
+    if (this.props.stop) return;
+    if (this.unMounting) return;
+    this.removeHighlightedLine(7);
 
   };
 
@@ -187,12 +259,7 @@ class KMeans extends Component {
       .range([460, 0]);
   
 
-  async checkPauseStatus() {
-    while (this.props.pause) {
-      await new Promise((r) => setTimeout(r, 1000));
-      continue;
-    }
-  }
+
 
   render() {
     return (
