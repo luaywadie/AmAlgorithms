@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import createScatterplot from '../graph-builders/scatterplot-builder';
 import * as d3 from 'd3';
 import KMeans from './algorithms/clustering-algorithms/KMeans';
-import fs from 'fs';
 
 class ScatterPlotAlgorithms extends Component {
   constructor(props) {
@@ -53,7 +52,7 @@ class ScatterPlotAlgorithms extends Component {
         circleElements[i].setAttribute('class', '');
         circleElements[i].classList.add('cluster-unassigned');
       }
-      
+
     }
 
         // this.state.points.forEach( (p) => {
