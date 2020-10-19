@@ -183,6 +183,7 @@ class DepthFirstSearch extends Component {
           await this.props.setRunningAlg('dfs');
           this.dfs();
         }}
+        disabled={this.props.runningAlg === 'dfs'}
       >
         DFS traverse
       </button>

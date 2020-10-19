@@ -173,12 +173,15 @@ class BreadthFirstSearch extends Component {
     return (
       <button
         onClick={async () => {
+
           if (this.unMounting) {
             this.unMounting = false;
           }
+
           await this.props.setRunningAlg('bfs');
           this.bfs();
         }}
+        disabled={this.props.runningAlg === 'bfs'}
       >
         BFS traverse
       </button>
