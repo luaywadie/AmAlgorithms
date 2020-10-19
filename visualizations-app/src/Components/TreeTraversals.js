@@ -21,6 +21,9 @@ class TreeTraversals extends Component {
       visitedMap: {},
       child: null,
       clicked: [false, false, false, false],
+      animationQueue: [],
+      activatedNode: null,
+      activatedLink: null,
     };
     this.adjList = {
       a: ['b', 'c', 'd'],
@@ -101,14 +104,8 @@ class TreeTraversals extends Component {
       queue: [],
       currentNode: null,
       child: null,
+      runningAlg: null,
     });
-    if (this.state.stop) {
-      this.setState({
-        stop: false,
-        pause: false,
-        runningAlg: '',
-      });
-    }
   };
 
   setRunningAlg = (alg) => {
@@ -136,6 +133,68 @@ class TreeTraversals extends Component {
     a[i] = !a[i];
     this.setState({
       clicked: a,
+    });
+  };
+
+  highlightLine(lineNum) {
+    if (!lineNum) return;
+    let el = document.getElementById(this.state.runningAlg + '-' + lineNum);
+    if (el) el.classList.add('active-code-line');
+  }
+  removeHighlightedLine(lineNum) {
+    if (!lineNum) return;
+    let el = document.getElementById(this.state.runningAlg + '-' + lineNum);
+    if (el) el.classList.remove('active-code-line');
+  }
+  activateVisitedNode(currentNode) {
+    let nodeElement = document.getElementById(currentNode);
+    if (nodeElement) nodeElement.classList.add('node-complete-tree');
+  }
+
+  activateLink(currentNode) {
+    let linkElement = document.getElementById(currentNode + 'link');
+    if (linkElement) {
+      linkElement.classList.add('link-traversed');
+    }
+  }
+  getAnimationQueue = async (aq) => {
+    await this.setState({
+      animationQueue: aq,
+    });
+    await this.renderAnimationQueue();
+  };
+
+  async checkPauseStatus() {
+    while (this.state.pause) {
+      await new Promise((r) => setTimeout(r, 1000));
+      continue;
+    }
+  }
+
+  renderAnimationQueue = async () => {
+    let initialRunningAlg = this.state.runningAlg;
+    for (let currentState of this.state.animationQueue) {
+      this.highlightLine(currentState.highlightedLine);
+
+      await new Promise((r) => setTimeout(r, 1000 / this.state.speed));
+      this.checkPauseStatus();
+      if (this.state.stop || initialRunningAlg !== this.state.runningAlg) {
+        return;
+      }
+
+      this.removeHighlightedLine(currentState.highlightedLine);
+      this.setState({ ...currentState });
+
+      this.activateVisitedNode(currentState.activatedNode);
+      this.activateLink(currentState.activatedLink);
+    }
+  };
+
+  updateStop = () => {
+    this.setState({
+      stop: false,
+      pause: false,
+      runningAlg: '',
     });
   };
 
@@ -283,22 +342,19 @@ class TreeTraversals extends Component {
           <div className={'divider'}></div>
           <BreathFirstSearch
             g={this.adjList}
-            pause={this.state.pause}
-            stop={this.state.stop}
-            speed={this.state.speed}
-            runningAlg={this.state.runningAlg}
             setRunningAlg={this.setRunningAlg}
-            buildNodePath={this.buildNodePath}
-            updateQueue={this.updateQueue}
-            updateCurrentNode={this.updateCurrentNode}
-            updateVisitedMap={this.updateVisitedMap}
-            updateChild={this.updateChild}
+            getAnimationQueue={this.getAnimationQueue}
+            updateStop={this.updateStop}
           />
           <div className={'divider'}></div>
           <button
             id={'reset-button'}
             onClick={async () => {
-              await this.setState({ pause: false, stop: true });
+              await this.setState({
+                pause: false,
+                stop: true,
+                animationQueue: [],
+              });
               this.reset();
             }}
           >
@@ -329,7 +385,6 @@ class TreeTraversals extends Component {
             </label>
           </form>
         </div>
-        
 
         <div className={'col-4'}>
           <div className={'row'}>
@@ -340,7 +395,6 @@ class TreeTraversals extends Component {
               : this.renderDfsPseudocode()}
           </div>
         </div>
-
 
         <div className={'col-4'}>
           <Sidebar showButton={this.state.runningAlg !== ''}>
