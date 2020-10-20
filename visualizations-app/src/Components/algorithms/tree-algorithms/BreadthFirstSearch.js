@@ -73,9 +73,13 @@ class BreadthFirstSearch extends Component {
           });
         }
       }
+      this.animationQueue.push({
+        child: null,
+        currentNode: null,
+        waitTime: 0,
+      });
     }
-    this.animationQueue.push({ currentNode: null });
-    this.props.getAnimationQueue(this.animationQueue);
+    this.props.updateAnimationQueue(this.animationQueue);
   };
 
   render() {
@@ -88,7 +92,7 @@ class BreadthFirstSearch extends Component {
           await this.props.setRunningAlg('bfs');
           this.bfs();
         }}
-        disabled={this.props.runningAlg === 'bfs'}
+        disabled={this.props.getRunningAlg === 'bfs'}
       >
         BFS traverse
       </button>

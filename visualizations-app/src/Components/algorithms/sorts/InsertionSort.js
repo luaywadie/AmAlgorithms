@@ -5,80 +5,105 @@ class InsertionSort extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      animation_queue : [],
-      data : [5,3,1]
+      animation_queue: [],
+      data: [5, 3, 1],
     };
-
   }
   componentDidMount() {
     // set the dimensions and margins of the graph
-    var margin = {top: 0, right: 30, bottom: 90, left: 200},
-        width = 1500 - margin.left - margin.right,
-        height = 700 - margin.top - margin.bottom;
+    var margin = { top: 0, right: 30, bottom: 90, left: 200 },
+      width = 1500 - margin.left - margin.right,
+      height = 700 - margin.top - margin.bottom;
 
     // append the svg object to the body of the page
-    var svg = d3.select("#sort-container")
-      .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-        .attr("transform",
-              "translate(" + margin.left + "," + margin.top + ")");
+    var svg = d3
+      .select('#sort-container')
+      .append('svg')
+      .attr('width', width + margin.left + margin.right)
+      .attr('height', height + margin.top + margin.bottom)
+      .append('g')
+      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
     // X axis
-    var x = d3.scaleBand()
-      .range([ 0, width ])
+    var x = d3
+      .scaleBand()
+      .range([0, width])
       .domain(this.state.data)
       .padding(0.2);
 
     // Add Y axis
-    var y = d3.scaleLinear()
-      .domain([0, 10])
-      .range([ height, 0]);
+    var y = d3.scaleLinear().domain([0, 10]).range([height, 0]);
 
     // Bars
-    svg.selectAll("mybar")
+    svg
+      .selectAll('mybar')
       .data(this.state.data)
       .enter()
-      .append("rect")
-        .attr("x", function(d) { return x(d); })
-        .attr("y", function(d) { return y(0); })
-        .attr("width", x.bandwidth())
-        .attr("fill", "#39a4ff")
-        .attr("height", function(d) { return height - y(0); }) // always equal to 0
-        .attr("value", function(d, index){ return index })
+      .append('rect')
+      .attr('x', function (d) {
+        return x(d);
+      })
+      .attr('y', function (d) {
+        return y(0);
+      })
+      .attr('width', x.bandwidth())
+      .attr('fill', '#39a4ff')
+      .attr('height', function (d) {
+        return height - y(0);
+      }) // always equal to 0
+      .attr('value', function (d, index) {
+        return index;
+      });
 
-    svg.selectAll("mybar")
+    svg
+      .selectAll('mybar')
       .data(this.state.data)
       .enter()
-      .append("text")
-      .attr("x", function(d) { return x(d) + 50; })
-      .attr("y", function(d) { return y(d) - 10; })
-      .attr("value", function(d, index){ return index })
-      .text(function(d) { return d })
+      .append('text')
+      .attr('x', function (d) {
+        return x(d) + 50;
+      })
+      .attr('y', function (d) {
+        return y(d) - 10;
+      })
+      .attr('value', function (d, index) {
+        return index;
+      })
+      .text(function (d) {
+        return d;
+      });
 
     // Animation
-    svg.selectAll("rect")
+    svg
+      .selectAll('rect')
       .transition()
       .duration(800)
-      .attr("y", function(d) { return y(d); })
-      .attr("height", function(d) { return height - y(d); })
+      .attr('y', function (d) {
+        return y(d);
+      })
+      .attr('height', function (d) {
+        return height - y(d);
+      });
 
-
-      // Sort
-      let sorted = this.insertionSort(this.state.data)
-      let interval = setInterval(() => {
-        if (this.state.animation_queue.length > 0) {
-          this.swapBars(this.state.animation_queue[0][0],this.state.animation_queue[0][1], svg, this.state.data)
-          this.state.animation_queue.shift()
-        }
-      }, 2000)
-      if (this.state.animation_queue.length == 0) {
-        clearInterval(interval)
+    // Sort
+    this.insertionSort(this.state.data);
+    let interval = setInterval(() => {
+      if (this.state.animation_queue.length > 0) {
+        this.swapBars(
+          this.state.animation_queue[0][0],
+          this.state.animation_queue[0][1],
+          svg,
+          this.state.data
+        );
+        this.state.animation_queue.shift();
       }
+    }, 2000);
+    if (this.state.animation_queue.length === 0) {
+      clearInterval(interval);
+    }
   }
 
-  insertionSort = arr => {
+  insertionSort = (arr) => {
     const len = arr.length;
     for (let i = 0; i < len; i++) {
       let el = arr[i];
@@ -86,10 +111,10 @@ class InsertionSort extends Component {
 
       for (j = i - 1; j >= 0 && arr[j] > el; j--) {
         arr[j + 1] = arr[j];
-        this.state.animation_queue.push([i, j])
+        this.state.animation_queue.push([i, j]);
       }
       arr[j + 1] = el;
-            console.log(arr)
+      console.log(arr);
     }
     return arr;
   };
@@ -100,50 +125,50 @@ class InsertionSort extends Component {
     let fromObjTxt = d3.selectAll("text[value='" + barFromIndex + "']");
     let toObjTxt = d3.selectAll("text[value='" + barToIndex + "']");
 
-    fromObjTxt.transition()
+    fromObjTxt
+      .transition()
       .duration(1000)
-      .attr("fill", "#9537ff")
+      .attr('fill', '#9537ff')
       .delay(500)
-      .attr("x", toObjTxt.attr("x"))
+      .attr('x', toObjTxt.attr('x'));
 
-    toObjTxt.transition()
+    toObjTxt
+      .transition()
       .duration(1000)
-      .attr("fill", "#9537ff")
+      .attr('fill', '#9537ff')
       .delay(500)
-      .attr("x", fromObjTxt.attr("x"))
+      .attr('x', fromObjTxt.attr('x'));
 
-    fromObj.transition()
+    fromObj
+      .transition()
       .duration(1000)
-      .attr("fill", "#9537ff")
+      .attr('fill', '#9537ff')
       .delay(500)
-      .attr("x", toObj.attr("x"))
+      .attr('x', toObj.attr('x'));
 
-    toObj.transition()
+    toObj
+      .transition()
       .duration(1000)
-      .attr("fill", "#ffa500")
+      .attr('fill', '#ffa500')
       .delay(500)
-      .attr("x", fromObj.attr("x"))
+      .attr('x', fromObj.attr('x'));
 
     // Reset Colors
-    fromObj.transition().duration(500).delay(1500).attr("fill", "#39a4ff")
-    toObj.transition().duration(500).delay(1500).attr("fill", "#39a4ff")
+    fromObj.transition().duration(500).delay(1500).attr('fill', '#39a4ff');
+    toObj.transition().duration(500).delay(1500).attr('fill', '#39a4ff');
 
-    let temp = fromObj.attr("value")
-    fromObj.attr("value", toObj.attr("value"))
-    toObj.attr("value", temp)
-    temp = fromObjTxt.attr("value")
-    fromObjTxt.attr("value", toObjTxt.attr("value"))
-    toObjTxt.attr("value", temp)
+    let temp = fromObj.attr('value');
+    fromObj.attr('value', toObj.attr('value'));
+    toObj.attr('value', temp);
+    temp = fromObjTxt.attr('value');
+    fromObjTxt.attr('value', toObjTxt.attr('value'));
+    toObjTxt.attr('value', temp);
   }
 
-  componentWillUnmount() {
-
-  }
+  componentWillUnmount() {}
 
   render() {
-    return (
-      <div id="sort-container"></div>
-    );
+    return <div id="sort-container"></div>;
   }
 }
 

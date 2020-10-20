@@ -5,6 +5,7 @@ import createTree from '../graph-builders/tree-builder';
 import Sidebar from './sidebar/Sidebar';
 import RenderListComponent from './sidebar/RenderListComponent';
 import RenderObjectComponent from './sidebar/RenderObjectComponent';
+import { FaStepBackward, FaStepForward, FaPause, FaPlay } from 'react-icons/fa';
 
 class TreeTraversals extends Component {
   constructor(props) {
@@ -14,9 +15,9 @@ class TreeTraversals extends Component {
       stop: false,
       speed: 1,
       nodePath: [],
-      runningAlg: '',
-      queue: [],
-      stack: [],
+      runningAlg: null,
+      queue: null,
+      stack: null,
       currentNode: null,
       visitedMap: {},
       child: null,
@@ -24,6 +25,8 @@ class TreeTraversals extends Component {
       animationQueue: [],
       activatedNode: null,
       activatedLink: null,
+      stepIndex: 0,
+      stepMode: false,
     };
     this.adjList = {
       a: ['b', 'c', 'd'],
@@ -65,21 +68,12 @@ class TreeTraversals extends Component {
     if (this.tree.hasChildNodes()) this.tree.removeChild(svg);
     this.reset();
   }
-  buildNodePath = (nodePath) => {
-    this.setState({ nodePath });
-  };
 
-  updateQueue = (q) => {
-    this.setState({ queue: q });
-  };
-
-  updateStack = (s) => {
-    this.setState({ stack: s });
-  };
-
-  getPauseStatus = () => this.state.pause;
-  getStopStatus = () => this.state.stop;
-  getSpeedRequest = () => Number(this.state.speed) + 0.1;
+  componentDidUpdate() {
+    if (this.state.stop) {
+      this.setState({ animationQueue: [], stop: false });
+    }
+  }
 
   reset = () => {
     Object.keys(this.adjList).forEach((e) => {
@@ -101,31 +95,18 @@ class TreeTraversals extends Component {
     this.setState({
       nodePath: [],
       visitedMap: {},
-      queue: [],
+      queue: null,
+      stack: null,
       currentNode: null,
       child: null,
       runningAlg: null,
+      pause: false,
     });
   };
 
   setRunningAlg = (alg) => {
     this.reset();
     this.setState({ runningAlg: alg });
-  };
-
-  updateStopState = async (val) => {
-    await this.setState({ stop: val });
-  };
-
-  updateCurrentNode = async (node) => {
-    await this.setState({ currentNode: node });
-  };
-
-  updateVisitedMap = async (map) => {
-    await this.setState({ visitedMap: map });
-  };
-  updateChild = async (child) => {
-    await this.setState({ child });
   };
 
   toggleClicked = (i) => {
@@ -157,7 +138,7 @@ class TreeTraversals extends Component {
       linkElement.classList.add('link-traversed');
     }
   }
-  getAnimationQueue = async (aq) => {
+  updateAnimationQueue = async (aq) => {
     await this.setState({
       animationQueue: aq,
     });
@@ -165,7 +146,7 @@ class TreeTraversals extends Component {
   };
 
   async checkPauseStatus() {
-    while (this.state.pause) {
+    while (this.state.pause && !this.state.stepMode) {
       await new Promise((r) => setTimeout(r, 1000));
       continue;
     }
@@ -173,12 +154,19 @@ class TreeTraversals extends Component {
 
   renderAnimationQueue = async () => {
     let initialRunningAlg = this.state.runningAlg;
-    for (let currentState of this.state.animationQueue) {
+    this.setState({ stepIndex: 0 });
+    while (this.state.stepIndex < this.state.animationQueue.length) {
+      let currentState = this.state.animationQueue[this.state.stepIndex];
       this.highlightLine(currentState.highlightedLine);
 
-      await new Promise((r) => setTimeout(r, 1000 / this.state.speed));
-      this.checkPauseStatus();
-      if (this.state.stop || initialRunningAlg !== this.state.runningAlg) {
+      let waitTime =
+        currentState.waitTime !== undefined ? currentState.waitTime : 1000;
+
+      await new Promise((r) => setTimeout(r, waitTime / this.state.speed));
+
+      await this.checkPauseStatus();
+
+      if (initialRunningAlg !== this.state.runningAlg) {
         return;
       }
 
@@ -187,6 +175,24 @@ class TreeTraversals extends Component {
 
       this.activateVisitedNode(currentState.activatedNode);
       this.activateLink(currentState.activatedLink);
+
+      if (!this.state.stepMode) {
+        this.setState({ stepIndex: this.state.stepIndex + 1 });
+      } else {
+        // need to reset everything up to the previous state starting from beggining since we only update what is neccessary at each element of the animation queue
+        this.reset();
+        this.setState({
+          stepMode: false,
+          runningAlg: initialRunningAlg,
+          pause: true,
+        });
+        for (let i = 0; i < this.state.stepIndex; i++) {
+          let prevState = this.state.animationQueue[i];
+          this.setState({ ...prevState });
+          this.activateVisitedNode(prevState.activatedNode);
+          this.activateLink(prevState.activatedLink);
+        }
+      }
     }
   };
 
@@ -328,22 +334,17 @@ class TreeTraversals extends Component {
         <div className={'col-4'} id={'graph-container'}>
           <DepthFirstSearch
             g={this.adjList}
-            pause={this.state.pause}
-            stop={this.state.stop}
-            speed={this.state.speed}
-            runningAlg={this.state.runningAlg}
+            getRunningAlg={this.state.runningAlg}
             setRunningAlg={this.setRunningAlg}
-            buildNodePath={this.buildNodePath}
-            updateStack={this.updateStack}
-            updateCurrentNode={this.updateCurrentNode}
-            updateVisitedMap={this.updateVisitedMap}
-            updateChild={this.updateChild}
+            updateAnimationQueue={this.updateAnimationQueue}
+            updateStop={this.updateStop}
           />
           <div className={'divider'}></div>
           <BreathFirstSearch
             g={this.adjList}
+            getRunningAlg={this.state.runningAlg}
             setRunningAlg={this.setRunningAlg}
-            getAnimationQueue={this.getAnimationQueue}
+            updateAnimationQueue={this.updateAnimationQueue}
             updateStop={this.updateStop}
           />
           <div className={'divider'}></div>
@@ -366,7 +367,7 @@ class TreeTraversals extends Component {
               this.setState({ pause: !this.state.pause });
             }}
           >
-            {this.state.pause ? 'UnPause' : 'Pause'}
+            {this.state.pause ? <FaPlay /> : <FaPause />}
           </button>
 
           <form onSubmit={(event) => event.preventDefault()}>
@@ -383,12 +384,37 @@ class TreeTraversals extends Component {
                 }
               />
             </label>
+            <label>
+              Step:{' '}
+              <button
+                onClick={() => {
+                  this.setState({
+                    stepIndex: this.state.stepIndex - 1,
+                    pause: true,
+                    stepMode: true,
+                  });
+                }}
+              >
+                <FaStepBackward />
+              </button>
+              <button
+                onClick={() => {
+                  this.setState({
+                    stepIndex: this.state.stepIndex + 1,
+                    pause: true,
+                    stepMode: true,
+                  });
+                }}
+              >
+                <FaStepForward />
+              </button>
+            </label>
           </form>
         </div>
 
         <div className={'col-4'}>
           <div className={'row'}>
-            {this.state.runningAlg === ''
+            {!this.state.runningAlg
               ? ''
               : this.state.runningAlg === 'bfs'
               ? this.renderBfsPseudocode()
@@ -406,20 +432,24 @@ class TreeTraversals extends Component {
             {this.state.child ? <li> child = {this.state.child} </li> : ''}
 
             <li onClick={() => this.toggleClicked(0)}>
-              <RenderListComponent
-                list={this.state.nodePath}
-                listName={'Node Path'}
-                clicked={this.state.clicked[0]}
-              />
+              {this.state.nodePath.length > 0 ? (
+                <RenderListComponent
+                  list={this.state.nodePath}
+                  listName={'Node Path'}
+                  clicked={this.state.clicked[0]}
+                />
+              ) : (
+                ''
+              )}
             </li>
             <li onClick={() => this.toggleClicked(1)}>
-              {this.state.runningAlg === 'bfs' ? (
+              {this.state.queue ? (
                 <RenderListComponent
                   list={this.state.queue}
                   listName={'Q'}
                   clicked={this.state.clicked[1]}
                 />
-              ) : this.state.runningAlg === 'dfs' ? (
+              ) : this.state.stack ? (
                 <RenderListComponent
                   list={this.state.stack}
                   listName={'S'}
