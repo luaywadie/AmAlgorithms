@@ -46,7 +46,6 @@ class Prim extends Component {
       mstSet[minNode] = true;
       this.animationQueue.push({ highlightedLine: 9, mstSet: { ...mstSet } });
 
-
       for (let [cost, neighbor] of this.props.g[minNode]) {
         this.animationQueue.push({
           highlightedLine: 10,
@@ -65,22 +64,26 @@ class Prim extends Component {
 
           if (costMap[neighbor] > cost) {
             costMap[neighbor] = cost;
+
+            let linkOfInterestString = this.generateLinkString(
+              minNode,
+              neighbor
+            );
+            let oldLinkOfInterestString = this.generateLinkString(
+              parents[neighbor],
+              neighbor
+            );
+
             this.animationQueue.push({
               highlightedLine: 13,
               distances: { ...costMap },
               deActivateOldLink: [neighbor, parents[neighbor]],
-              linkOfInterest: this.generateLinkString(minNode, neighbor),
+              linkOfInterest: linkOfInterestString,
             });
-            activeLinks.push(
-              document.getElementById(
-                this.generateLinkString(minNode, neighbor)
-              )
-            );
 
-            let el = document.getElementById(
-              this.generateLinkString(parents[neighbor], neighbor)
-            );
-
+            // replace old link with new link
+            activeLinks.push(document.getElementById(linkOfInterestString));
+            let el = document.getElementById(oldLinkOfInterestString);
             if (el) activeLinks.filter((e) => e !== el);
 
             parents[neighbor] = minNode;
@@ -120,22 +123,11 @@ class Prim extends Component {
     return minNode;
   }
 
-
   generateLinkString(currentNode, neighborNode) {
     return currentNode < neighborNode
       ? currentNode + '-' + neighborNode
       : neighborNode + '-' + currentNode;
   }
-
-
-
-
-
-
-
-
- 
-
 
   render() {
     return (
