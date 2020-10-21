@@ -80,6 +80,7 @@ class BreadthFirstSearch extends Component {
       });
     }
     this.props.updateAnimationQueue(this.animationQueue);
+    this.animationQueue = [];
   };
 
   render() {

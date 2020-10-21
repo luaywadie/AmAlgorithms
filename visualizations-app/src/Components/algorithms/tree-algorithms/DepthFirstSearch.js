@@ -75,6 +75,7 @@ class DepthFirstSearch extends Component {
       });
     }
     this.props.updateAnimationQueue(this.animationQueue);
+    this.animationQueue = [];
   };
 
   render() {

@@ -4,6 +4,8 @@ import createDirectedGraph from '../graph-builders/directed-graph-builder';
 import Sidebar from './sidebar/Sidebar';
 import RenderListComponent from './sidebar/RenderListComponent';
 import RenderObjectComponent from './sidebar/RenderObjectComponent';
+import { FaStepBackward, FaStepForward, FaPause, FaPlay } from 'react-icons/fa';
+
 class DirectedGraphAlgorithms extends Component {
   constructor(props) {
     super(props);
@@ -12,13 +14,17 @@ class DirectedGraphAlgorithms extends Component {
       stop: false,
       speed: 1,
       ordering: null,
-      runningAlg: '',
+      runningAlg: null,
       neighbor: null,
-      node: null,
+      currentNode: null,
       visited: null,
       stack: null,
       clicked: [false, false, false, false, false],
       callStack: [],
+      activeLinks: null,
+      activatedLink: null,
+      stepIndex: 0,
+      stepMode: false,
     };
     this.adjList = {
       a: ['g', 'c', 'b'],
@@ -43,16 +49,150 @@ class DirectedGraphAlgorithms extends Component {
     if (this.graph.hasChildNodes()) this.graph.removeChild(svg);
     this.reset();
   }
-  getOrdering = (ord) => {
-    this.setState({ ordering: ord });
+  updateAnimationQueue = async (aq) => {
+    await this.setState({
+      animationQueue: aq,
+    });
+    await this.renderAnimationQueue();
   };
+
+  renderAnimationQueue = async () => {
+    let initialRunningAlg = this.state.runningAlg;
+    this.setState({ stepIndex: 0 });
+    while (this.state.stepIndex < this.state.animationQueue.length) {
+      let currentState = this.state.animationQueue[this.state.stepIndex];
+
+      this.highlightLine(currentState.highlightedLine);
+
+      let waitTime =
+        currentState.waitTime !== undefined ? currentState.waitTime : 1000;
+
+      await new Promise((r) => setTimeout(r, waitTime / this.state.speed));
+      await this.checkPauseStatus();
+
+      if (initialRunningAlg !== this.state.runningAlg) {
+        return;
+      }
+      if (!currentState.keepLineHighlighted) {
+        this.removeHighlightedLine(currentState.highlightedLine);
+      }
+      if (currentState.removeHighlightedLine) {
+        this.removeHighlightedLine(currentState.removeHighlightedLine);
+      }
+
+      this.setState({ ...currentState });
+
+      this.activateCurrentNode(currentState.activatedNode);
+      this.activateNeighbor(currentState.neighbor);
+      this.markNodeComplete(currentState.nodeComplete);
+      this.activateLink(currentState.activatedLink);
+      if (currentState.outgoingLinks) {
+        this.removeOutgoingLinks(
+          currentState.outgoingLinks.activeLinks,
+          currentState.outgoingLinks.node
+        );
+      }
+
+      if (!this.state.stepMode) {
+        this.setState({ stepIndex: this.state.stepIndex + 1 });
+      } else {
+        // need to reset everything up to the previous state starting from beggining since we only update what is neccessary at each element of the animation queue
+        this.reset();
+        this.setState({
+          stepMode: false,
+          runningAlg: initialRunningAlg,
+          pause: true,
+        });
+        for (let i = 0; i < this.state.stepIndex; i++) {
+          let prevState = this.state.animationQueue[i];
+          this.setState({ ...prevState });
+          this.activateCurrentNode(prevState.activatedNode);
+          this.activateNeighbor(prevState.neighbor);
+          this.markNodeComplete(prevState.nodeComplete);
+          this.activateLink(prevState.activatedLink);
+          if (prevState.keepLineHighlighted) {
+            this.highlightLine(prevState.highlightedLine);
+          }
+          if (prevState.removeHighlightedLine) {
+            this.removeHighlightedLine(currentState.removeHighlightedLine);
+          }
+          if (prevState.outgoingLinks) {
+            this.removeOutgoingLinks(
+              prevState.outgoingLinks.activeLinks,
+              prevState.outgoingLinks.node
+            );
+          }
+        }
+      }
+    }
+  };
+
+  highlightLine(classId) {
+    let el = document.getElementById(classId);
+    if (el) el.classList.add('active-code-line');
+  }
+  removeHighlightedLine(classId) {
+    let el = document.getElementById(classId);
+    if (el) el.classList.remove('active-code-line');
+  }
+
+  activateCurrentNode(node) {
+    let currentElement = document.getElementById(node);
+    if (
+      currentElement &&
+      currentElement.classList.contains('current-neighbor-of-interest')
+    ) {
+      document
+        .getElementById(node)
+        .classList.remove('current-neighbor-of-interest');
+      document.getElementById(node).classList.add('child-to-current');
+    } else {
+      if (document.getElementById(node)) {
+        document.getElementById(node).classList.add('current-node-of-interest');
+      }
+    }
+  }
+
+  activateNeighbor(neighbor) {
+    let neighborEl = document.getElementById(neighbor);
+    if (neighborEl) neighborEl.classList.add('current-neighbor-of-interest');
+  }
+
+  activateLink(id) {
+    let lineElement = document.getElementById(id);
+    if (lineElement) lineElement.classList.add('link-of-interest-ts');
+    return lineElement;
+  }
+
+  removeOutgoingLinks(activeLinks, node) {
+    if (activeLinks[node] && activeLinks[node].length > 0) {
+      activeLinks[node].forEach((e) => {
+        e.classList.remove('link-of-interest-ts');
+      });
+    }
+  }
+
+  markNodeComplete(node) {
+    let nodeEl = document.getElementById(node);
+    if (nodeEl) {
+      nodeEl.classList.remove('current-neighbor-of-interest');
+      nodeEl.classList.remove('current-node-of-interest');
+      nodeEl.classList.add('node-complete-directed');
+    }
+  }
+
+  async checkPauseStatus() {
+    while (this.state.pause && !this.state.stepMode) {
+      await new Promise((r) => setTimeout(r, 1000));
+      continue;
+    }
+  }
+
   setRunningAlg = (alg) => {
     this.reset();
     this.setState({ runningAlg: alg });
   };
-  getPauseStatus = () => this.state.pause;
-  getStopStatus = () => this.state.stop;
-  getSpeedRequest = () => Number(this.state.speed) + 0.1;
+
   toggleClicked = (i) => {
     let a = this.state.clicked.slice();
     a[i] = !a[i];
@@ -60,30 +200,22 @@ class DirectedGraphAlgorithms extends Component {
       clicked: a,
     });
   };
-  updateVisited = (V) => {
-    this.setState({ visited: V });
-  };
-  updateNeighbor = (neighbor) => {
-    this.setState({ neighbor });
-  };
 
-  updateNode = (node) => {
-    this.setState({ node });
-  };
-
-  updateStack = (stack) => {
-    this.setState({ stack });
-  };
-
-  updateCallStack = (callStack) => {
-    this.setState({ callStack });
+  updateStop = () => {
+    this.setState({
+      stop: false,
+      pause: false,
+      runningAlg: null,
+    });
   };
 
   reset = () => {
     Object.keys(this.adjList).forEach((e) => {
+      // remove node coloring
       let el = document.getElementById(e);
       if (el) el.classList = '';
 
+      // remove highlighted pseudocode
       for (let i = 1; i < 9; i++) {
         let pseduoTopsortElements = document.getElementById('topsort-' + i);
         if (pseduoTopsortElements) pseduoTopsortElements.classList = '';
@@ -94,6 +226,15 @@ class DirectedGraphAlgorithms extends Component {
         );
         if (pseduoTopsortElements) pseduoTopsortElements.classList = '';
       }
+      // Remove Active Links
+      for (let neighbor of this.adjList[e]) {
+        let nodeNeighborLinkElement = document.getElementById(
+          e + '-' + neighbor
+        );
+        if (nodeNeighborLinkElement) {
+          nodeNeighborLinkElement.classList = '';
+        }
+      }
     });
 
     this.setState({
@@ -103,6 +244,9 @@ class DirectedGraphAlgorithms extends Component {
       stack: null,
       visited: null,
       callStack: [],
+      runningAlg: null,
+      activatedNode: null,
+      activatedLink: null,
     });
     if (this.state.stop) {
       this.setState({ stop: false, pause: false });
@@ -211,47 +355,22 @@ class DirectedGraphAlgorithms extends Component {
     );
   }
 
-  renderTopsortTableData() {
-    return this.state.ordering.map((node) => {
-      return (
-        <tr key={node}>
-          <td>{node}</td>
-        </tr>
-      );
-    });
-  }
-
-  renderTopsortHeading() {
-    return (
-      <tr>
-        <th>Potential Ordering</th>
-      </tr>
-    );
-  }
-
   render() {
     return (
       <div className={'row'}>
         <div className={'col-4'} id={'graph-container'}>
           <Topsort
             g={this.adjList}
-            pause={this.state.pause}
-            stop={this.state.stop}
-            speed={this.state.speed}
-            runningAlg={this.state.runningAlg}
+            getRunningAlg={this.state.runningAlg}
             setRunningAlg={this.setRunningAlg}
-            getOrdering={this.getOrdering}
-            updateVisited={this.updateVisited}
-            updateNeighbor={this.updateNeighbor}
-            updateNode={this.updateNode}
-            updateStack={this.updateStack}
-            updateCallStack={this.updateCallStack}
+            updateAnimationQueue={this.updateAnimationQueue}
+            updateStop={this.updateStop}
           />
           <div className={'divider'}></div>
           <button
             className="graph-button"
             onClick={() => {
-              this.setState({ pause: false, stop: true });
+              this.setState({ pause: false, stop: true, animationQueue: [] });
               this.reset();
             }}
           >
@@ -264,7 +383,7 @@ class DirectedGraphAlgorithms extends Component {
               this.setState({ pause: !this.state.pause });
             }}
           >
-            {this.state.pause ? 'UnPause' : 'Pause'}
+            {this.state.pause ? <FaPlay /> : <FaPause />}
           </button>
 
           <form onSubmit={(event) => event.preventDefault()}>
@@ -281,6 +400,31 @@ class DirectedGraphAlgorithms extends Component {
                   });
                 }}
               />
+            </label>
+            <label>
+              Step:{' '}
+              <button
+                onClick={() => {
+                  this.setState({
+                    stepIndex: this.state.stepIndex - 1,
+                    pause: true,
+                    stepMode: true,
+                  });
+                }}
+              >
+                <FaStepBackward />
+              </button>
+              <button
+                onClick={() => {
+                  this.setState({
+                    stepIndex: this.state.stepIndex + 1,
+                    pause: true,
+                    stepMode: true,
+                  });
+                }}
+              >
+                <FaStepForward />
+              </button>
             </label>
           </form>
         </div>
@@ -299,7 +443,11 @@ class DirectedGraphAlgorithms extends Component {
                 ''
               )}
             </li>
-            {this.state.node ? <li> node = {this.state.node} </li> : ''}
+            {this.state.currentNode ? (
+              <li> node = {this.state.currentNode} </li>
+            ) : (
+              ''
+            )}
             {this.state.neighbor ? (
               <li> neighbor = {this.state.neighbor} </li>
             ) : (
@@ -351,42 +499,6 @@ class DirectedGraphAlgorithms extends Component {
                 ''
               )}
             </li>
-
-            {/* {this.state.currentIndex ? (
-              <li> currentIndex = {this.state.currentIndex} </li>
-            ) : (
-              ''
-            )}
-
-            {this.state.parentIndex ? (
-              <li> parentIndex = {this.state.parentIndex} </li>
-            ) : (
-              ''
-            )}
-            {this.state.childIndex ? (
-              <li> childIndex = {this.state.childIndex} </li>
-            ) : (
-              ''
-            )}
-
-            {this.state.leftChild ? (
-              <li> leftChild = {this.state.leftChild} </li>
-            ) : (
-              ''
-            )}
-            {this.state.rightChild ? (
-              <li> rightChild = {this.state.rightChild} </li>
-            ) : (
-              ''
-            )} */}
-
-            {/* <li onClick={() => this.toggleClicked(1)}>
-              <RenderListComponent
-                list={this.state.inputList}
-                listName={'inputList'}
-                clicked={this.state.clicked[1]}
-              />
-            </li> */}
           </Sidebar>
         </div>
       </div>
@@ -395,10 +507,3 @@ class DirectedGraphAlgorithms extends Component {
 }
 
 export default DirectedGraphAlgorithms;
-
-//  <table id={'topsort-table'} className={'float-right'}>
-//           <tbody>
-//             {this.renderTopsortHeading()}
-//             {this.renderTopsortTableData()}
-//           </tbody>
-//         </table>
