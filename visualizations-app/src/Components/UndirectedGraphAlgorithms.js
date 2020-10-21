@@ -5,6 +5,8 @@ import Prim from './algorithms/graph-algorithms/Prim';
 import Sidebar from './sidebar/Sidebar';
 import RenderListComponent from './sidebar/RenderListComponent';
 import RenderObjectComponent from './sidebar/RenderObjectComponent';
+import { FaStepBackward, FaStepForward, FaPause, FaPlay } from 'react-icons/fa';
+
 class UndirectedGraphAlgorithms extends Component {
   constructor(props) {
     super(props);
@@ -15,14 +17,16 @@ class UndirectedGraphAlgorithms extends Component {
       distances: {},
       parents: {},
       runningAlg: '',
-      priorityQueue: null,
+      pq: null,
       mstSet: {},
       clicked: [false, false, false, false, false, false],
-      node: null,
-      neighbor: null,
-      neighborCost: null,
+      currentNode: null,
+      neighborNode: null,
+      neighborNodeWeight: null,
       minNode: null,
       potentialScore: null,
+      stepIndex: 0,
+      stepMode: false,
     };
     this.adjList = {
       a: [
@@ -172,36 +176,95 @@ class UndirectedGraphAlgorithms extends Component {
     this.reset();
   }
 
-  // updateDijkstraData = async (distances, parents) => {
-  //   await this.setState({
-  //     dijkstraDistances: distances,
-  //     parents,
-  //   });
-  // };
-
-  updateDistances = async (distances) => {
+  updateAnimationQueue = async (aq) => {
     await this.setState({
-      distances,
+      animationQueue: aq,
     });
+    await this.renderAnimationQueue();
   };
 
-  updateParents = async (parents) => {
-    await this.setState({
-      parents,
-    });
-  };
+  renderAnimationQueue = async () => {
+    let initialRunningAlg = this.state.runningAlg;
+    this.setState({ stepIndex: 0 });
+    while (this.state.stepIndex < this.state.animationQueue.length) {
+      let currentState = this.state.animationQueue[this.state.stepIndex];
 
-  updateNode = async (node) => {
-    await this.setState({ node });
-  };
-  updatePrimMinNode = async (minNode) => {
-    await this.setState({ minNode });
-  };
-  updateNeighbor = async (neighbor, cost) => {
-    await this.setState({ neighbor, neighborCost: cost });
-  };
-  updatePrimMstSet = async (mstSet) => {
-    await this.setState({ mstSet });
+      this.highlightLine(currentState.highlightedLine);
+
+      let waitTime =
+        currentState.waitTime !== undefined ? currentState.waitTime : 1000;
+
+      await new Promise((r) => setTimeout(r, waitTime / this.state.speed));
+      await this.checkPauseStatus();
+
+      if (initialRunningAlg !== this.state.runningAlg) {
+        return;
+      }
+      this.removeHighlightedLine(currentState.highlightedLine);
+
+      this.setState({ ...currentState });
+
+      this.activateCurrentNode(currentState.activatedNode);
+      if (currentState.nodeComplete) {
+        this.updateCurrentNodeToBeVisited(currentState.nodeComplete);
+      }
+      this.activateLink(currentState.linkOfInterest);
+      if (currentState.fadeOutLinks) {
+        this.fadeOutLinks(currentState.fadeOutLinks);
+      }
+      if (currentState.removeActiveLinks) {
+        this.removeActiveLinks(currentState.removeActiveLinks);
+      }
+
+      if (currentState.shortestPath) {
+        this.highlightShortestPath(currentState.shortestPath);
+      }
+
+      if (currentState.deActivateOldLink) {
+        this.deActivateOldLink(
+          currentState.deActivateOldLink[0],
+          currentState.deActivateOldLink[1]
+        );
+      }
+
+      if (!this.state.stepMode) {
+        this.setState({ stepIndex: this.state.stepIndex + 1 });
+      } else {
+        // need to reset everything up to the previous state starting from beggining since we only update what is neccessary at each element of the animation queue
+        this.reset();
+        this.setState({
+          stepMode: false,
+          runningAlg: initialRunningAlg,
+          pause: true,
+        });
+        for (let i = 0; i < this.state.stepIndex; i++) {
+          let prevState = this.state.animationQueue[i];
+          this.setState({ ...prevState });
+          this.activateCurrentNode(prevState.activatedNode);
+          if (prevState.nodeComplete) {
+            this.updateCurrentNodeToBeVisited(prevState.nodeComplete);
+          }
+
+          this.activateLink(prevState.linkOfInterest);
+          if (prevState.fadeOutLinks) {
+            this.fadeOutLinks(prevState.fadeOutLinks);
+          }
+          if (prevState.removeActiveLinks) {
+            this.removeActiveLinks(prevState.removeActiveLinks);
+          }
+
+          if (prevState.shortestPath) {
+            this.highlightShortestPath(prevState.shortestPath);
+          }
+          if (prevState.deActivateOldLink) {
+            this.deActivateOldLink(
+              prevState.deActivateOldLink[0],
+              prevState.deActivateOldLink[1]
+            );
+          }
+        }
+      }
+    }
   };
 
   setRunningAlg = async (alg) => {
@@ -209,17 +272,6 @@ class UndirectedGraphAlgorithms extends Component {
     await this.setState({ runningAlg: alg });
   };
 
-  updatePq = async (a) => {
-    await this.setState({ priorityQueue: a });
-  };
-
-  updatePotentialScore = (s) => {
-    this.setState({ potentialScore: s });
-  };
-
-  getPauseStatus = () => this.state.pause;
-  getStopStatus = () => this.state.stop;
-  getSpeedRequest = () => Number(this.state.speed) + 0.1;
   toggleClicked = (i) => {
     let a = this.state.clicked.slice();
     a[i] = !a[i];
@@ -227,6 +279,76 @@ class UndirectedGraphAlgorithms extends Component {
       clicked: a,
     });
   };
+
+  activateCurrentNode(currentNode) {
+    let currentNodeElement = document.getElementById(currentNode);
+    if (currentNodeElement) {
+      currentNodeElement.classList.add('current-node-of-interest');
+    }
+  }
+
+  removeActiveLinks(activeLinks) {
+    activeLinks.forEach((e) => {
+      if (e) {
+        e.classList.remove('fade-out-link', 'link-traversed');
+      }
+    });
+    return [];
+  }
+
+  highlightLine(lineNum) {
+    let el = document.getElementById(this.state.runningAlg + '-' + lineNum);
+    if (el) el.classList.add('active-code-line');
+  }
+  removeHighlightedLine(lineNum) {
+    let el = document.getElementById(this.state.runningAlg + '-' + lineNum);
+    if (el) el.classList.remove('active-code-line');
+  }
+
+  generateLinkString(currentNode, neighborNode) {
+    return currentNode < neighborNode
+      ? currentNode + '-' + neighborNode
+      : neighborNode + '-' + currentNode;
+  }
+
+  activateLink(linkString) {
+    let linkOfInterestElement = document.getElementById(linkString);
+    if (linkOfInterestElement)
+      linkOfInterestElement.classList.add('link-traversed');
+    return linkOfInterestElement;
+  }
+
+  updateCurrentNodeToBeVisited(currentNode) {
+    let currentNodeElement = document.getElementById(currentNode);
+    if (currentNodeElement) {
+      currentNodeElement.classList.remove('current-node-of-interest');
+      currentNodeElement.classList.add('node-complete-tree');
+    }
+  }
+
+  fadeOutLinks(activeLinks) {
+    activeLinks.forEach((e) => {
+      if (e) {
+        e.classList.add('fade-out-link');
+      }
+    });
+  }
+
+  async checkPauseStatus() {
+    while (this.state.pause && !this.state.stepMode) {
+      await new Promise((r) => setTimeout(r, 1000));
+      continue;
+    }
+  }
+
+  highlightShortestPath(shortestPath) {
+    for (let i = 1; i < shortestPath.length; i++) {
+      let prev = shortestPath[i - 1];
+      let current = shortestPath[i];
+      let linkString = this.generateLinkString(prev, current);
+      this.activateLink(linkString);
+    }
+  }
   reset = () => {
     Object.keys(this.adjList).forEach((e) => {
       let el = document.getElementById(e);
@@ -251,8 +373,8 @@ class UndirectedGraphAlgorithms extends Component {
       parents: {},
       runningAlg: '',
       minNode: null,
-      neighbor: null,
-      neighborCost: null,
+      neighborNode: null,
+      neighborNodeWeight: null,
       mstSet: {},
       clicked: [false, false, false, false, false],
     });
@@ -269,7 +391,7 @@ class UndirectedGraphAlgorithms extends Component {
           <td>{this.state.parents[key]}</td>
           <td>{this.state.distances[key]}</td>
           <td style={{ backgroundColor: index === 0 ? 'yellow' : '' }}>
-            {this.state.priorityQueue[index]}
+            {this.state.pq[index]}
           </td>
         </tr>
       );
@@ -286,7 +408,17 @@ class UndirectedGraphAlgorithms extends Component {
       </tr>
     );
   }
-
+  async deActivateOldLink(node, oldChild) {
+    let linkString =
+      node < oldChild ? node + '-' + oldChild : oldChild + '-' + node;
+    let el = document.getElementById(linkString);
+    if (el) {
+      el.classList.add('fade-out-link');
+      await new Promise((r) => setTimeout(r, 1000 / this.state.speed));
+      el.classList.remove('link-traversed', 'fade-out-link');
+      return el;
+    }
+  }
   renderPrimTableData() {
     return Object.keys(this.state.distances).map((key, index) => {
       return (
@@ -502,40 +634,24 @@ class UndirectedGraphAlgorithms extends Component {
         <div className={'col-4'} id={'graph-container'}>
           <Dijkstra
             g={this.adjList}
-            root={'source'}
-            target={'target'}
-            pause={this.state.pause}
-            stop={this.state.stop}
-            speed={this.state.speed}
-            runningAlg={this.state.runningAlg}
+            getRunningAlg={this.state.runningAlg}
             setRunningAlg={this.setRunningAlg}
-            updateDistances={this.updateDistances}
-            updateParents={this.updateParents}
-            updatePq={this.updatePq}
-            updatePotentialScore={this.updatePotentialScore}
-            updateNeighbor={this.updateNeighbor}
-            updateNode={this.updateNode}
+            updateAnimationQueue={this.updateAnimationQueue}
+            updateStop={this.updateStop}
           />
           <div className={'divider'}></div>
           <Prim
             g={this.adjList}
-            root={'source'}
-            pause={this.state.pause}
-            stop={this.state.stop}
-            speed={this.state.speed}
-            runningAlg={this.state.runningAlg}
+            getRunningAlg={this.state.runningAlg}
             setRunningAlg={this.setRunningAlg}
-            updateDistances={this.updateDistances}
-            updateParents={this.updateParents}
-            updateNeighbor={this.updateNeighbor}
-            updatePrimMinNode={this.updatePrimMinNode}
-            updatePrimMstSet={this.updatePrimMstSet}
+            updateAnimationQueue={this.updateAnimationQueue}
+            updateStop={this.updateStop}
           />
           <div className={'divider'}></div>
           <button
             className="graph-button"
             onClick={() => {
-              this.setState({ pause: false, stop: true });
+              this.setState({ pause: false, stop: true, animationQueue: [] });
               this.reset();
             }}
           >
@@ -548,7 +664,7 @@ class UndirectedGraphAlgorithms extends Component {
               this.setState({ pause: !this.state.pause });
             }}
           >
-            {this.state.pause ? 'UnPause' : 'Pause'}
+            {this.state.pause ? <FaPlay /> : <FaPause />}
           </button>
           <form onSubmit={(event) => event.preventDefault()}>
             <label>
@@ -564,6 +680,31 @@ class UndirectedGraphAlgorithms extends Component {
                   });
                 }}
               />
+            </label>
+            <label>
+              Step:{' '}
+              <button
+                onClick={() => {
+                  this.setState({
+                    stepIndex: this.state.stepIndex - 1,
+                    pause: true,
+                    stepMode: true,
+                  });
+                }}
+              >
+                <FaStepBackward />
+              </button>
+              <button
+                onClick={() => {
+                  this.setState({
+                    stepIndex: this.state.stepIndex + 1,
+                    pause: true,
+                    stepMode: true,
+                  });
+                }}
+              >
+                <FaStepForward />
+              </button>
             </label>
           </form>
         </div>
@@ -607,14 +748,14 @@ class UndirectedGraphAlgorithms extends Component {
                 )}
 
                 {this.state.node ? <li> current = {this.state.node} </li> : ''}
-                {this.state.neighbor ? (
-                  <li> neighbor = {this.state.neighbor} </li>
+                {this.state.neighborNode ? (
+                  <li> neighbor = {this.state.neighborNode} </li>
                 ) : (
                   ''
                 )}
 
-                {this.state.neighborCost ? (
-                  <li> neighborCost = {this.state.neighborCost} </li>
+                {this.state.neighborNodeWeight ? (
+                  <li> neighborCost = {this.state.neighborNodeWeight} </li>
                 ) : (
                   ''
                 )}
@@ -669,15 +810,19 @@ class UndirectedGraphAlgorithms extends Component {
             )}
             {this.state.runningAlg === 'dijkstra' ? (
               <Sidebar showButton={this.state.runningAlg !== ''}>
-                {this.state.node ? <li> current = {this.state.node} </li> : ''}
-                {this.state.neighbor ? (
-                  <li> neighbor = {this.state.neighbor} </li>
+                {this.state.currentNode ? (
+                  <li> current = {this.state.currentNode} </li>
+                ) : (
+                  ''
+                )}
+                {this.state.neighborNode ? (
+                  <li> neighbor = {this.state.neighborNode} </li>
                 ) : (
                   ''
                 )}
 
-                {this.state.neighborCost ? (
-                  <li> neighborCost = {this.state.neighborCost} </li>
+                {this.state.neighborNodeWeight ? (
+                  <li> neighborCost = {this.state.neighborNodeWeight} </li>
                 ) : (
                   ''
                 )}
@@ -688,9 +833,9 @@ class UndirectedGraphAlgorithms extends Component {
                   ''
                 )}
                 <li onClick={() => this.toggleClicked(0)}>
-                  {this.state.priorityQueue ? (
+                  {this.state.pq ? (
                     <RenderListComponent
-                      list={this.state.priorityQueue}
+                      list={this.state.pq}
                       listName={'pq'}
                       clicked={this.state.clicked[0]}
                     />
