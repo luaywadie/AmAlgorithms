@@ -1,0 +1,14 @@
+text {
+  pointer-events: none;
+}
+
+.node:hover {
+  stroke: #999;
+  stroke-opacity: 0.6;
+  stroke-width: 4px;
+}
+
+.link {
+  stroke: #999;
+  stroke-opacity: 0.6;
+}

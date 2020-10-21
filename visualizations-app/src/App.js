@@ -8,6 +8,7 @@ import './styles/OutputTable.scss';
 import './styles/Clusters.scss';
 import './styles/Pseudocode.scss';
 import './styles/Sidebar.scss';
+import './styles/NeuralNets.scss';
 
 function App() {
   return (
