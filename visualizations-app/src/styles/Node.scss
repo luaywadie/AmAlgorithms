@@ -94,7 +94,7 @@
   // Heap
   .child-node {
     fill: #fff;
-    animation: child-node 2s;
+    animation: child-node 1s;
   }
   @keyframes child-node {
     0%,
@@ -108,7 +108,7 @@
 
   .parent-node {
     fill: #fff;
-    animation: parent-node 2s;
+    animation: parent-node 1s;
   }
   @keyframes parent-node {
     0%,
@@ -121,14 +121,15 @@
   }
 
   .left-right-child-node {
-    fill: #03fca5;
-    animation: left-right-child-node 1s;
+    fill: white;
+    animation: left-right-child-node 0.75s;
   }
   @keyframes left-right-child-node {
-    from {
+    0%,
+    100% {
       fill: #fff;
     }
-    to {
+    50% {
       fill: #03fca5;
     }
   }

@@ -6,6 +6,7 @@ import {
   removeRootOfDynamicTree,
   clearTree,
 } from '../../graph-builders/dynamic-tree-builder';
+import { FaStepBackward, FaStepForward, FaPause, FaPlay } from 'react-icons/fa';
 
 import Sidebar from '../sidebar/Sidebar';
 
@@ -33,7 +34,12 @@ class Heap extends Component {
       childIndex: null,
       leftChild: null,
       rightChild: null,
+      animationQueue: [],
+      stepIndex: 0,
+      stepMode: false,
+      speed: 1,
     };
+    this.animationQueue = [];
     this.unMounting = false;
     this.adjList = {};
   }
@@ -65,12 +71,15 @@ class Heap extends Component {
   }
 
   async clearHeap() {
-    await this.setState({ inputList: [], heapA: [0] });
+    await this.setState({ inputList: [], heapA: [0], animationQueue: [] });
     this.h = [0];
     this.setState({ size: 0 });
     this.adjList = {};
+    this.clearPseudocode();
     clearTree();
   }
+
+
 
   handleInsertButton = async () => {
     let newNode = this.state.inputNum;
@@ -84,309 +93,394 @@ class Heap extends Component {
       this.convertHeapArrayToAdjList(this.h);
       createDynamicTree(this.adjList);
     }
-    this.setState({ executing: false });
+    await this.setState({
+      executing: false,
+      animationQueue: this.animationQueue,
+    });
+    this.animationQueue = [];
   };
 
-  async insert(e) {
-    this.setState({ newElement: e });
-    this.highlightLine('Heap-insert-1');
-    await new Promise((r) => setTimeout(r, 1000));
-    await this.checkPauseStatus();
-    if (this.unMounting) return;
-    this.removeHighlightedLine('Heap-insert-1');
+  async renderAnimationQueue() {
+    await this.setState({ stepIndex: 0 });
+    while (this.state.stepIndex < this.state.animationQueue.length) {
+      let currentState = this.state.animationQueue[this.state.stepIndex];
 
-    this.highlightLine('Heap-insert-2');
-    await new Promise((r) => setTimeout(r, 1000));
-    await this.checkPauseStatus();
-    if (this.unMounting) return;
-    this.removeHighlightedLine('Heap-insert-2');
+      this.highlightLine(currentState.highlightedLine);
 
-    this.setState({ size: this.state.size + 1 });
-    this.h[0] = this.state.size;
+      let waitTime =
+        currentState.waitTime !== undefined ? currentState.waitTime : 1000;
 
-    this.highlightLine('Heap-insert-3');
-    await new Promise((r) => setTimeout(r, 1000));
-    await this.checkPauseStatus();
-    if (this.unMounting) return;
-    this.removeHighlightedLine('Heap-insert-3');
-    this.h[this.state.size] = e;
-    await this.setState({ heapA: this.h });
+      if (this.state.stepMode) {
+        waitTime = 0;
+      }
+
+      await new Promise((r) => setTimeout(r, waitTime / this.state.speed));
+      await this.checkPauseStatus();
+
+      if (!currentState.keepLineHighlighted) {
+        this.removeHighlightedLine(currentState.highlightedLine);
+      }
+      if (currentState.removeHighlightedLine) {
+        this.removeHighlightedLine(currentState.removeHighlightedLine);
+      }
+
+      await this.setState({ ...currentState });
+
+      if (currentState.activateChildAndParent) {
+        this.activateChildAndParent(
+          currentState.activateChildAndParent[0],
+          currentState.activateChildAndParent[1]
+        );
+      }
+
+      this.activateParent(currentState.activateParent);
+      this.deActivateParent(currentState.deActivateParent);
+
+      if (currentState.activateLeftAndRightChildren) {
+        this.activateLeftAndRightChildren(
+          currentState.activateLeftAndRightChildren[0],
+          currentState.activateLeftAndRightChildren[1]
+        );
+      }
+
+      if (currentState.deActivateLeftAndRightChildren) {
+        this.deActivateLeftAndRightChildren(
+          currentState.deActivateLeftAndRightChildren[0],
+          currentState.deActivateLeftAndRightChildren[1]
+        );
+      }
+
+      if (currentState.swap && !this.state.stepMode) {
+        swap(currentState.swap[0], currentState.swap[1]);
+      }
+
+      if (currentState.removeActiveChildParent) {
+        this.removeActiveChildParent(
+          currentState.removeActiveChildParent[0],
+          currentState.removeActiveChildParent[1]
+        );
+      }
+      this.activateLink(currentState.activatedLink);
+      this.deActivateLink(currentState.deActivateLink);
+
+      if (!this.state.stepMode) {
+        this.setState({ stepIndex: this.state.stepIndex + 1 });
+      } else {
+        // need to reset everything up to the previous state starting from beggining since we only update what is neccessary at each element of the animation queue
+
+        this.setState({
+          stepMode: false,
+          pause: true,
+        });
+        this.convertHeapArrayToAdjList(this.state.heapA);
+        insertIntoDynamicTree(this.state.heapA[1], this.adjList);
+        for (let i = 0; i < this.state.stepIndex; i++) {
+          let prevState = this.state.animationQueue[i];
+          this.setState({ ...prevState });
+
+          if (prevState.activateChildAndParent) {
+            this.activateChildAndParent(
+              prevState.activateChildAndParent[0],
+              prevState.activateChildAndParent[1]
+            );
+          }
+
+          if (prevState.removeActiveChildParent) {
+            this.removeActiveChildParent(
+              prevState.removeActiveChildParent[0],
+              prevState.removeActiveChildParent[1]
+            );
+          }
+
+          this.activateLink(prevState.activatedLink);
+          this.deActivateLink(prevState.deActivateLink);
+
+          if (prevState.keepLineHighlighted) {
+            this.highlightLine(prevState.highlightedLine);
+          }
+          if (prevState.removeHighlightedLine) {
+            this.removeHighlightedLine(prevState.removeHighlightedLine);
+          }
+        }
+      }
+    }
+    this.setState({ animationQueue: [] });
+  }
+
+  insert(e) {
+    this.animationQueue.push({
+      highlightedLine: 'Heap-insert-1',
+      newElement: e,
+    });
+    this.h[0] = this.state.size + 1;
+    this.animationQueue.push({
+      highlightedLine: 'Heap-insert-2',
+      size: this.h[0],
+      heapA: [...this.h],
+    });
+
+    this.h[this.h[0]] = e;
+    this.animationQueue.push({
+      highlightedLine: 'Heap-insert-3',
+      heapA: [...this.h],
+    });
 
     this.convertHeapArrayToAdjList(this.h);
-    if (this.state.size !== 1) {
+    if (this.h[0] !== 1) {
       insertIntoDynamicTree(this.h[1], this.adjList);
     }
 
-    this.highlightLine('Heap-insert-4');
-    await new Promise((r) => setTimeout(r, 1000));
-    await this.checkPauseStatus();
-    if (this.unMounting) return;
-    await this.fixUp();
-    this.removeHighlightedLine('Heap-insert-4');
-    this.setState({ newElement: null });
+    this.animationQueue.push({
+      highlightedLine: 'Heap-insert-4',
+      keepLineHighlighted: true,
+    });
+
+    this.fixUp();
+    this.animationQueue.push({
+      removeHighlightedLine: 'Heap-insert-4',
+      newElement: null,
+      animationQueue: this.animationQueue,
+    });
   }
-  async fixUp() {
-    this.highlightLine('Heap-fixup-1');
-    await new Promise((r) => setTimeout(r, 1000));
-    await this.checkPauseStatus();
-    if (this.unMounting) return;
-    this.removeHighlightedLine('Heap-fixup-1');
+  fixUp() {
+    this.animationQueue.push({ highlightedLine: 'Heap-fixup-1' });
 
-    this.highlightLine('Heap-fixup-2');
-    await new Promise((r) => setTimeout(r, 1000));
-    await this.checkPauseStatus();
-    if (this.unMounting) return;
-    this.removeHighlightedLine('Heap-fixup-2');
-    let pos = this.state.size;
-    this.setState({ currentIndex: pos });
-    if (pos <= 1) {
-      this.highlightLine('Heap-fixup-3');
-      await new Promise((r) => setTimeout(r, 1000));
-      await this.checkPauseStatus();
-      if (this.unMounting) return;
-      this.removeHighlightedLine('Heap-fixup-3');
+    let currentIndex = this.h[0];
+    this.animationQueue.push({
+      highlightedLine: 'Heap-fixup-2',
+      currentIndex: currentIndex,
+    });
+
+    if (currentIndex <= 1) {
+      this.animationQueue.push({
+        highlightedLine: 'Heap-fixup-3',
+        currentIndex: null,
+      });
     }
-    while (pos > 1) {
-      // Check when inserting into an empty boy
-      this.highlightLine('Heap-fixup-3');
-      await new Promise((r) => setTimeout(r, 1000));
-      await this.checkPauseStatus();
-      if (this.unMounting) return;
-      this.removeHighlightedLine('Heap-fixup-3');
+    while (currentIndex > 1) {
+      this.animationQueue.push({ highlightedLine: 'Heap-fixup-3' });
 
-      let parent = Math.floor(pos / 2);
-      this.highlightLine('Heap-fixup-4');
-      await new Promise((r) => setTimeout(r, 1000));
-      await this.checkPauseStatus();
-      if (this.unMounting) return;
-      this.removeHighlightedLine('Heap-fixup-4');
-      this.setState({ parentIndex: parent });
+      let parentIndex = Math.floor(currentIndex / 2);
+      this.animationQueue.push({
+        highlightedLine: 'Heap-fixup-4',
+        parentIndex: parentIndex,
+        activateChildAndParent: [this.h[currentIndex], this.h[parentIndex]],
+      });
 
-      this.highlightLine('Heap-fixup-5');
-      this.activateChildAndParent(this.h[pos], this.h[parent]);
-      await new Promise((r) => setTimeout(r, 1000));
-      await this.checkPauseStatus();
-      if (this.unMounting) return;
+      this.animationQueue.push({
+        highlightedLine: 'Heap-fixup-5',
+        removeActiveChildParent: [this.h[currentIndex], this.h[parentIndex]],
+        activatedLink: this.h[currentIndex],
+      });
 
-      this.removeHighlightedLine('Heap-fixup-5');
-      this.removeActiveChildParent(this.h[pos], this.h[parent]);
+      if (this.h[parentIndex] > this.h[currentIndex]) {
+        let temp = this.h[parentIndex];
+        this.h[parentIndex] = this.h[currentIndex];
+        this.h[currentIndex] = temp;
 
-      if (this.h[parent] > this.h[pos]) {
-        this.activateLink(this.h[pos]);
+        this.animationQueue.push({
+          highlightedLine: 'Heap-fixup-6',
 
-        this.highlightLine('Heap-fixup-6');
-        await new Promise((r) => setTimeout(r, 1000));
-        await this.checkPauseStatus();
-        if (this.unMounting) return;
-        this.removeHighlightedLine('Heap-fixup-6');
+          removeActiveChildParent: [this.h[parentIndex], this.h[currentIndex]],
+          heapA: [...this.h],
+          swap: [this.h[parentIndex], this.h[currentIndex]],
+        });
 
-        swap(this.h[parent], this.h[pos]);
-        let temp = this.h[parent];
-        this.h[parent] = this.h[pos];
-        this.h[pos] = temp;
-        await this.setState({ heapA: this.h });
-
-        this.highlightLine('Heap-fixup-7');
-        await new Promise((r) => setTimeout(r, 1000));
-        await this.checkPauseStatus();
-        if (this.unMounting) return;
-        this.removeHighlightedLine('Heap-fixup-7');
-
-        this.deActivateLink(this.h[pos]);
-
-        pos = parent;
-        this.setState({ currentIndex: pos });
+        currentIndex = parentIndex;
+        this.animationQueue.push({
+          highlightedLine: 'Heap-fixup-7',
+          deActivateLink: this.h[currentIndex],
+          currentIndex: currentIndex,
+        });
       } else {
-        this.highlightLine('Heap-fixup-8');
-        await new Promise((r) => setTimeout(r, 1000));
-        await this.checkPauseStatus();
-        if (this.unMounting) return;
-        this.removeHighlightedLine('Heap-fixup-8');
+        this.animationQueue.push({ highlightedLine: 'Heap-fixup-8' });
         break;
       }
-      this.setState({ parentIndex: null });
+      this.animationQueue.push({ waitTime: 0, parentIndex: null });
     }
-    this.setState({ currentIndex: null, parentIndex: null });
+    this.animationQueue.push({
+      waitTime: 0,
+      parentIndex: null,
+      currentIndex: null,
+    });
   }
 
   async removeRoot() {
     await this.setState({ executing: true });
+    this.animationQueue.push({
+      highlightedLine: 'Heap-removeRoot-1',
+    });
 
-    this.highlightLine('Heap-removeRoot-1');
-    await new Promise((r) => setTimeout(r, 1000));
-    await this.checkPauseStatus();
-    if (this.unMounting) return;
-    this.removeHighlightedLine('Heap-removeRoot-1');
-
-    this.highlightLine('Heap-removeRoot-2');
-    await new Promise((r) => setTimeout(r, 1000));
-    await this.checkPauseStatus();
-    if (this.unMounting) return;
-    this.removeHighlightedLine('Heap-removeRoot-2');
     let smallest = this.h[1];
-    this.setState({ removedRoot: smallest });
-
-    this.highlightLine('Heap-removeRoot-3');
-    await new Promise((r) => setTimeout(r, 1000));
-    await this.checkPauseStatus();
-    if (this.unMounting) return;
-    this.removeHighlightedLine('Heap-removeRoot-3');
-    this.h[1] = this.h.pop();
-    this.setState({ heapA: this.h });
-
-    this.highlightLine('Heap-removeRoot-4');
-    await new Promise((r) => setTimeout(r, 1000));
-    await this.checkPauseStatus();
-    if (this.unMounting) return;
-    this.removeHighlightedLine('Heap-removeRoot-4');
-    this.setState({ size: this.state.size - 1 });
-    this.h[0] = this.state.size;
+    this.animationQueue.push({
+      highlightedLine: 'Heap-removeRoot-2',
+      removedRoot: smallest,
+    });
 
     let updatedList = this.state.inputList.filter((e) => e !== smallest);
+    updatedList[0] -= 1;
+
+    this.h[1] = this.h.pop();
+
+    this.h[0] = this.state.size - 1;
+    await this.setState({
+      size: this.state.size - 1,
+      heapA: [...this.h],
+      inputList: updatedList,
+    });
+
+    this.animationQueue.push({
+      highlightedLine: 'Heap-removeRoot-3',
+      heapA: [...this.h],
+    });
+
     if (this.state.size === 0) {
       this.h = this.h.slice(0, 1);
     }
-    await this.setState({ heapA: this.h, inputList: updatedList });
 
-    this.highlightLine('Heap-removeRoot-5');
-    await new Promise((r) => setTimeout(r, 1000));
-    await this.checkPauseStatus();
-    if (this.unMounting) return;
+    this.animationQueue.push({
+      highlightedLine: 'Heap-removeRoot-4',
+      heapA: [...this.h],
+      inputList: updatedList,
+    });
+
+    this.animationQueue.push({
+      highlightedLine: 'Heap-removeRoot-5',
+      keepLineHighlighted: true,
+    });
+
     if (this.state.size === 0) {
       clearTree();
     } else {
-      this.convertHeapArrayToAdjList(this.h);
+      this.convertHeapArrayToAdjList([...this.h]);
       removeRootOfDynamicTree(this.h[1], this.adjList);
       await this.fixDown();
     }
 
-    this.removeHighlightedLine('Heap-removeRoot-5');
-    this.highlightLine('Heap-removeRoot-6');
-    await new Promise((r) => setTimeout(r, 1000));
-    await this.checkPauseStatus();
-    if (this.unMounting) return;
-    this.removeHighlightedLine('Heap-removeRoot-6');
-    await this.setState({ executing: false, removedRoot: null });
+    this.animationQueue.push({
+      removeHighlightedLine: 'Heap-removeRoot-5',
+    });
+
+    this.animationQueue.push({
+      highlightedLine: 'Heap-removeRoot-6',
+      removedRoot: null,
+    });
+
+    await this.setState({
+      executing: false,
+      animationQueue: this.animationQueue,
+    });
+    this.animationQueue = [];
+
     return smallest;
   }
   async fixDown() {
-    this.highlightLine('Heap-fixdown-1');
-    await new Promise((r) => setTimeout(r, 1000));
-    await this.checkPauseStatus();
-    if (this.unMounting) return;
-    this.removeHighlightedLine('Heap-fixdown-1');
+    this.animationQueue.push({ highlightedLine: 'Heap-fixdown-1' });
 
-    this.highlightLine('Heap-fixdown-2');
-    await new Promise((r) => setTimeout(r, 1000));
-    await this.checkPauseStatus();
-    if (this.unMounting) return;
-    this.removeHighlightedLine('Heap-fixdown-2');
+    let currentIndex = 1;
+    this.animationQueue.push({
+      highlightedLine: 'Heap-fixdown-2',
+      currentIndex: currentIndex,
+    });
 
-    let pos = 1;
-    this.setState({ currentIndex: pos });
-
-    if (pos * 2 > this.state.size) {
-      this.highlightLine('Heap-fixdown-3');
-      await new Promise((r) => setTimeout(r, 1000));
-      await this.checkPauseStatus();
-      if (this.unMounting) return;
-      this.removeHighlightedLine('Heap-fixdown-3');
+    if (currentIndex * 2 > this.state.size) {
+      this.animationQueue.push({ highlightedLine: 'Heap-fixdown-3' });
     }
-    while (pos * 2 <= this.state.size) {
-      this.highlightLine('Heap-fixdown-3');
-      await new Promise((r) => setTimeout(r, 1000));
-      await this.checkPauseStatus();
-      if (this.unMounting) return;
-      this.removeHighlightedLine('Heap-fixdown-3');
+    while (currentIndex * 2 <= this.state.size) {
+      this.animationQueue.push({ highlightedLine: 'Heap-fixdown-3' });
 
-      this.highlightLine('Heap-fixdown-4');
-      await new Promise((r) => setTimeout(r, 1000));
-      await this.checkPauseStatus();
-      if (this.unMounting) return;
-      this.removeHighlightedLine('Heap-fixdown-4');
-
-      let child = pos * 2;
-      this.setState({ childIndex: child });
-
-      this.activateParent(this.h[pos]);
-
-      this.highlightLine('Heap-fixdown-5');
-      this.highlightLine('Heap-fixdown-6');
-      this.activateLeftAndRightChildren(this.h[child], this.h[child + 1]);
-      await new Promise((r) => setTimeout(r, 2000));
-      await this.checkPauseStatus();
-      if (this.unMounting) return;
-      this.removeHighlightedLine('Heap-fixdown-5');
-      this.removeHighlightedLine('Heap-fixdown-6');
-
-      this.setState({
-        leftChild: this.h[child],
-        rightChild: this.h[child + 1],
+      let childIndex = currentIndex * 2;
+      this.animationQueue.push({
+        highlightedLine: 'Heap-fixdown-4',
+        childIndex: childIndex,
+        activateParent: this.h[currentIndex],
       });
 
-      this.deActivateParent(this.h[pos]);
-      this.deActivateLeftAndRightChildren(this.h[child], this.h[child + 1]);
 
-      this.highlightLine('Heap-fixdown-7');
-      await new Promise((r) => setTimeout(r, 1000));
-      await this.checkPauseStatus();
-      if (this.unMounting) return;
-      this.removeHighlightedLine('Heap-fixdown-7');
+      this.animationQueue.push({
+        highlightedLine: 'Heap-fixdown-4',
+        childIndex: childIndex,
+        activateParent: this.h[currentIndex],
+      });
 
-      if (this.h[child] > this.h[child + 1]) {
-        this.highlightLine('Heap-fixdown-8');
-        await new Promise((r) => setTimeout(r, 1000));
-        await this.checkPauseStatus();
-        if (this.unMounting) return;
-        this.removeHighlightedLine('Heap-fixdown-8');
-        child += 1;
+      this.animationQueue.push({
+        highlightedLine: 'Heap-fixdown-56',
+        activateLeftAndRightChildren: [
+          this.h[childIndex],
+          this.h[childIndex + 1],
+        ],
+        leftChild: this.h[childIndex],
+        rightChild: this.h[childIndex + 1],
+      });
+
+      this.animationQueue.push({
+        highlightedLine: 'Heap-fixdown-7',
+        deActivateParent: this.h[currentIndex],
+        deActivateLeftAndRightChildren: [
+          this.h[childIndex],
+          this.h[childIndex + 1],
+        ],
+      });
+
+      if (this.h[childIndex] > this.h[childIndex + 1]) {
+        childIndex += 1;
+        this.animationQueue.push({
+          highlightedLine: 'Heap-fixdown-8',
+          childIndex: childIndex,
+        });
       }
 
-      this.activateChildAndParent(this.h[child], this.h[pos]);
+      this.animationQueue.push({
+        waitTime: 0,
+        activateChildAndParent: [this.h[childIndex], this.h[currentIndex]],
+      });
 
-      this.highlightLine('Heap-fixdown-9');
-      await new Promise((r) => setTimeout(r, 2000));
-      await this.checkPauseStatus();
-      if (this.unMounting) return;
-      this.removeHighlightedLine('Heap-fixdown-9');
+      this.animationQueue.push({
+        highlightedLine: 'Heap-fixdown-9',
+        removeActiveChildParent: [this.h[childIndex], this.h[currentIndex]],
+        activatedLink: this.h[childIndex],
+      });
 
-      this.removeActiveChildParent(this.h[child], this.h[pos]);
+      if (this.h[currentIndex] > this.h[childIndex]) {
+        let temp = this.h[childIndex];
+        this.h[childIndex] = this.h[currentIndex];
+        this.h[currentIndex] = temp;
 
-      if (this.h[pos] > this.h[child]) {
-        this.activateLink(this.h[child]);
-        this.highlightLine('Heap-fixdown-10');
-        await new Promise((r) => setTimeout(r, 2000));
-        await this.checkPauseStatus();
-        if (this.unMounting) return;
+        this.animationQueue.push({
+          highlightedLine: 'Heap-fixdown-10',
 
-        this.removeHighlightedLine('Heap-fixdown-10');
+          heapA: [...this.h],
+          swap: [this.h[currentIndex], this.h[childIndex]],
+        });
 
-        this.deActivateLink(this.h[child]);
+        this.animationQueue.push({
+          waitTime: 1000,
+          deActivateLink: this.h[currentIndex],
+        });
 
-        swap(this.h[pos], this.h[child]);
-        let temp = this.h[child];
-        this.h[child] = this.h[pos];
-        this.h[pos] = temp;
-        await this.setState({ heapA: this.h });
+        currentIndex = childIndex;
 
-        this.highlightLine('Heap-fixdown-11');
-        await new Promise((r) => setTimeout(r, 1000));
-        await this.checkPauseStatus();
-        if (this.unMounting) return;
-        this.removeHighlightedLine('Heap-fixdown-11');
-        pos = child;
-        this.setState({ currentIndex: pos });
+        this.animationQueue.push({
+          highlightedLine: 'Heap-fixdown-11',
+          currentIndex: currentIndex,
+        });
       } else {
-        this.highlightLine('Heap-fixdown-12');
-        await new Promise((r) => setTimeout(r, 1000));
-        await this.checkPauseStatus();
-        if (this.unMounting) return;
-        this.removeHighlightedLine('Heap-fixdown-12');
+        this.animationQueue.push({
+          highlightedLine: 'Heap-fixdown-12',
+        });
         break;
       }
-      this.setState({ childIndex: null, leftChild: null, rightChild: null });
+      this.animationQueue.push({
+        childIndex: null,
+        leftChild: null,
+        rightChild: null,
+        waitTime: 0,
+      });
     }
-    this.setState({ currentIndex: null });
+    this.animationQueue.push({
+      currentIndex: null,
+      waitTime: 0,
+    });
   }
 
   convertHeapArrayToAdjList = (a) => {
@@ -452,43 +546,54 @@ class Heap extends Component {
 
   activateParent(parent) {
     let parentElement = document.getElementsByClassName('node-' + parent)[0];
-    parentElement.classList.add('parent-node');
+    if (parentElement) parentElement.classList.add('parent-node');
   }
 
   deActivateParent(parent) {
     let parentElement = document.getElementsByClassName('node-' + parent)[0];
-    parentElement.classList.remove('parent-node');
+    if (parentElement) parentElement.classList.remove('parent-node');
   }
 
   activateChildAndParent(child, parent) {
     let childElement = document.getElementsByClassName('node-' + child)[0];
-    childElement.classList.add('child-node');
+    if (childElement) childElement.classList.add('child-node');
     let parentElement = document.getElementsByClassName('node-' + parent)[0];
-    parentElement.classList.add('parent-node');
+    if (parentElement) parentElement.classList.add('parent-node');
   }
 
   removeActiveChildParent(child, parent) {
     let childElement = document.getElementsByClassName('node-' + child)[0];
     let parentElement = document.getElementsByClassName('node-' + parent)[0];
     let childLinkElement = document.getElementById(child + 'link');
-
-    childElement.classList.remove('child-node');
-    parentElement.classList.remove('parent-node');
-    childLinkElement.classList.remove('fade-in-out-link');
+    if (childElement) childElement.classList.remove('child-node');
+    if (parentElement) parentElement.classList.remove('parent-node');
+    if (childLinkElement) childLinkElement.classList.remove('fade-in-out-link');
   }
 
   activateLink(child) {
     let childLinkElement = document.getElementById(child + 'link');
-    childLinkElement.classList.add('fade-in-out-link');
+    if (childLinkElement) childLinkElement.classList.add('fade-in-out-link');
   }
   deActivateLink(child) {
     let childLinkElement = document.getElementById(child + 'link');
-    childLinkElement.classList.remove('fade-in-out-link');
+    if (childLinkElement) childLinkElement.classList.remove('fade-in-out-link');
   }
   async checkPauseStatus() {
-    while (this.state.pause) {
+    while (this.state.pause && !this.state.stepMode) {
       await new Promise((r) => setTimeout(r, 1000));
       continue;
+    }
+  }
+  clearPseudocode() {
+    for (let i = 1; i < 13; i++) {
+      let insertEl = document.getElementById('Heap-insert-' + i);
+      if (insertEl) insertEl.classList = '';
+      let fixupEl = document.getElementById('Heap-fixup-' + i);
+      if (fixupEl) fixupEl.classList = '';
+      let removeRootEl = document.getElementById('Heap-removeRoot-' + i);
+      if (removeRootEl) removeRootEl.classList = '';
+      let fixdownEl = document.getElementById('Heap-fixdown-' + i);
+      if (fixdownEl) fixdownEl.classList = '';
     }
   }
 
@@ -653,18 +758,21 @@ class Heap extends Component {
             let childIndex be currentIndex * 2
           </span>
         </div>
-        <div id={'Heap-fixdown-5'}>
-          5
-          <span style={{ marginLeft: indentation(3) }}>
-            let leftChild be h[currentIndex]
-          </span>
+        <div id={'Heap-fixdown-56'}>
+          <div>
+            5
+            <span style={{ marginLeft: indentation(3) }}>
+              let leftChild be h[currentIndex]
+            </span>
+          </div>
+          <div>
+            6
+            <span style={{ marginLeft: indentation(3) }}>
+              let rightChild be h[currentIndex+1]
+            </span>
+          </div>
         </div>
-        <div id={'Heap-fixdown-6'}>
-          6
-          <span style={{ marginLeft: indentation(3) }}>
-            let rightChild be h[currentIndex+1]
-          </span>
-        </div>
+        {/* <div id={'Heap-fixdown-6'}></div> */}
         <div id={'Heap-fixdown-7'}>
           7
           <span style={{ marginLeft: indentation(3) }}>
@@ -740,26 +848,28 @@ class Heap extends Component {
                 this.state.inputList.includes(Number(this.state.inputNum)) ||
                 this.state.executing
               }
-              onClick={() => {
+              onClick={async () => {
                 this.setState({
                   removingRoot: false,
                   inserting: true,
                   pause: false,
                 });
-                this.handleInsertButton();
+                await this.handleInsertButton();
+                await this.renderAnimationQueue();
               }}
             >
               {this.formatInsertButtonText()}
             </button>
             <button
               disabled={this.state.heapA.length <= 1 || this.state.executing}
-              onClick={() => {
+              onClick={async () => {
                 this.setState({
                   removingRoot: true,
                   inserting: false,
                   pause: false,
                 });
-                this.removeRoot();
+                await this.removeRoot();
+                await this.renderAnimationQueue();
               }}
             >
               {this.state.executing ? 'Executing...' : 'Remove Root'}
@@ -775,10 +885,10 @@ class Heap extends Component {
             <button
               className="graph-button"
               onClick={() => {
-                this.setState({ pause: !this.state.pause });
+                this.setState({ pause: !this.state.pause, stepMode: false });
               }}
             >
-              {this.state.pause ? 'UnPause' : 'Pause'}
+              {this.state.pause ? <FaPlay /> : <FaPause />}
             </button>
             <button
               disabled={this.state.executing}
@@ -788,6 +898,60 @@ class Heap extends Component {
             >
               {this.state.executing ? 'Executing...' : 'Clear'}
             </button>
+
+            <label>
+              Step:{' '}
+              <button
+                onClick={async () => {
+                  let newStepIndex = this.state.stepIndex - 1;
+                  while (
+                    newStepIndex >= 0 &&
+                    !this.state.animationQueue[newStepIndex].highlightedLine
+                  ) {
+                    newStepIndex -= 1;
+                  }
+                  await this.setState({
+                    stepIndex: newStepIndex,
+                    pause: true,
+                    stepMode: true,
+                  });
+                }}
+              >
+                <FaStepBackward />
+              </button>
+              <button
+                onClick={async () => {
+                  let newStepIndex = this.state.stepIndex + 1;
+                  while (
+                    newStepIndex < this.state.animationQueue.length &&
+                    !this.state.animationQueue[newStepIndex].highlightedLine
+                  ) {
+                    newStepIndex += 1;
+                  }
+                  await this.setState({
+                    stepIndex: newStepIndex,
+                    pause: true,
+                    stepMode: true,
+                  });
+                }}
+              >
+                <FaStepForward />
+              </button>
+            </label>
+            <label>
+              Speed:
+              <input
+                style={{ width: '50px' }}
+                type="number"
+                value={this.state.speed}
+                onChange={(event) => {
+                  event.preventDefault();
+                  this.setState({
+                    speed: event.target.value,
+                  });
+                }}
+              />
+            </label>
           </form>
         </div>
         <div className={'col-4'}>
