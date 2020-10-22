@@ -2,6 +2,8 @@
 A React app for intuitively visualizing data structures, algorithms, and fundamental computer science concepts.
 
 
+<br>
+<br>
 
 ## Application Goals
 
