@@ -8,6 +8,7 @@ import DirectedGraphAlgorithms from '../Components/DirectedGraphAlgorithms';
 import ScatterPlotAlgorithms from '../Components/ScatterPlotAlgorithms';
 import Heap from '../Components/data-structures/Heap';
 import InsertionSort from '../Components/algorithms/sorts/InsertionSort';
+import NeuralNets from '../Components/NeuralNets';
 
 import '../styles/Navigation-bar.scss';
 import MainPage from './MainPage';
@@ -68,6 +69,13 @@ const NavigationBar = () => {
             >
               K-Means
             </NavDropdown.Item>
+            <NavDropdown.Item
+              eventKey="4"
+              as={Link}
+              to="/neural_nets"
+            >
+              Neural Nets
+            </NavDropdown.Item>
           </NavDropdown>
 
           <div className="burgerContainer">
@@ -90,6 +98,7 @@ const NavigationBar = () => {
       <Route path="/heap" component={Heap} />
       <Route path="/insertion_sort" component={InsertionSort} />
       <Route path="/ScatterPlotAlgorithms" component={ScatterPlotAlgorithms} />
+      <Route path="/neural_nets" component={NeuralNets} />
       <Route exact path="/" component={MainPage} />
     </Router>
   );
