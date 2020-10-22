@@ -3,7 +3,6 @@ A React app for intuitively visualizing data structures, algorithms, and fundame
 
 
 <br>
-<br>
 
 ## Application Goals
 
