@@ -134,9 +134,8 @@ class Prim extends Component {
       <button
         className="graph-button"
         onClick={async () => {
-          if (this.props.stop) {
-            this.props.updateStop();
-          }
+          await this.props.freshStart();
+
           await this.props.setRunningAlg('prim');
           this.prim();
         }}

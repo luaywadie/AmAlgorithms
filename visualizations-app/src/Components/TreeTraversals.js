@@ -99,9 +99,10 @@ class TreeTraversals extends Component {
       stack: null,
       currentNode: null,
       child: null,
-      runningAlg: null,
-      pause: false,
     });
+    if (this.state.stop) {
+      this.setState({ stop: false, pause: false });
+    }
   };
 
   setRunningAlg = (alg) => {
@@ -162,6 +163,10 @@ class TreeTraversals extends Component {
       let waitTime =
         currentState.waitTime !== undefined ? currentState.waitTime : 1000;
 
+      if (this.state.stepMode) {
+        waitTime = 0;
+      }
+
       await new Promise((r) => setTimeout(r, waitTime / this.state.speed));
 
       await this.checkPauseStatus();
@@ -182,7 +187,6 @@ class TreeTraversals extends Component {
         // need to reset everything up to the previous state starting from beggining since we only update what is neccessary at each element of the animation queue
         this.reset();
         this.setState({
-          stepMode: false,
           runningAlg: initialRunningAlg,
           pause: true,
         });
@@ -196,11 +200,12 @@ class TreeTraversals extends Component {
     }
   };
 
-  updateStop = () => {
+  freshStart = () => {
     this.setState({
       stop: false,
       pause: false,
-      runningAlg: '',
+      runningAlg: null,
+      stepMode: false,
     });
   };
 
@@ -337,7 +342,7 @@ class TreeTraversals extends Component {
             getRunningAlg={this.state.runningAlg}
             setRunningAlg={this.setRunningAlg}
             updateAnimationQueue={this.updateAnimationQueue}
-            updateStop={this.updateStop}
+            freshStart={this.freshStart}
           />
           <div className={'divider'}></div>
           <BreathFirstSearch
@@ -345,7 +350,7 @@ class TreeTraversals extends Component {
             getRunningAlg={this.state.runningAlg}
             setRunningAlg={this.setRunningAlg}
             updateAnimationQueue={this.updateAnimationQueue}
-            updateStop={this.updateStop}
+            freshStart={this.freshStart}
           />
           <div className={'divider'}></div>
           <button
@@ -355,6 +360,7 @@ class TreeTraversals extends Component {
                 pause: false,
                 stop: true,
                 animationQueue: [],
+                runningAlg: null,
               });
               this.reset();
             }}
@@ -364,7 +370,7 @@ class TreeTraversals extends Component {
           <div className={'divider'}></div>
           <button
             onClick={() => {
-              this.setState({ pause: !this.state.pause });
+              this.setState({ pause: !this.state.pause, stepMode: false });
             }}
           >
             {this.state.pause ? <FaPlay /> : <FaPause />}
@@ -388,8 +394,14 @@ class TreeTraversals extends Component {
               Step:{' '}
               <button
                 onClick={() => {
+                  let newStepIndex = this.state.stepIndex - 1;
+                  while (
+                    !this.state.animationQueue[newStepIndex].highlightedLine
+                  ) {
+                    newStepIndex -= 1;
+                  }
                   this.setState({
-                    stepIndex: this.state.stepIndex - 1,
+                    stepIndex: newStepIndex,
                     pause: true,
                     stepMode: true,
                   });
@@ -399,8 +411,14 @@ class TreeTraversals extends Component {
               </button>
               <button
                 onClick={() => {
+                  let newStepIndex = this.state.stepIndex + 1;
+                  while (
+                    !this.state.animationQueue[newStepIndex].highlightedLine
+                  ) {
+                    newStepIndex += 1;
+                  }
                   this.setState({
-                    stepIndex: this.state.stepIndex + 1,
+                    stepIndex: newStepIndex,
                     pause: true,
                     stepMode: true,
                   });

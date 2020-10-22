@@ -67,6 +67,9 @@ class DirectedGraphAlgorithms extends Component {
       let waitTime =
         currentState.waitTime !== undefined ? currentState.waitTime : 1000;
 
+      if (this.state.stepMode) {
+        waitTime = 0;
+      }
       await new Promise((r) => setTimeout(r, waitTime / this.state.speed));
       await this.checkPauseStatus();
 
@@ -99,7 +102,6 @@ class DirectedGraphAlgorithms extends Component {
         // need to reset everything up to the previous state starting from beggining since we only update what is neccessary at each element of the animation queue
         this.reset();
         this.setState({
-          stepMode: false,
           runningAlg: initialRunningAlg,
           pause: true,
         });
@@ -201,11 +203,12 @@ class DirectedGraphAlgorithms extends Component {
     });
   };
 
-  updateStop = () => {
+  freshStart = () => {
     this.setState({
       stop: false,
       pause: false,
       runningAlg: null,
+      stepMode: false,
     });
   };
 
@@ -244,7 +247,6 @@ class DirectedGraphAlgorithms extends Component {
       stack: null,
       visited: null,
       callStack: [],
-      runningAlg: null,
       activatedNode: null,
       activatedLink: null,
     });
@@ -364,13 +366,18 @@ class DirectedGraphAlgorithms extends Component {
             getRunningAlg={this.state.runningAlg}
             setRunningAlg={this.setRunningAlg}
             updateAnimationQueue={this.updateAnimationQueue}
-            updateStop={this.updateStop}
+            freshStart={this.freshStart}
           />
           <div className={'divider'}></div>
           <button
             className="graph-button"
             onClick={() => {
-              this.setState({ pause: false, stop: true, animationQueue: [] });
+              this.setState({
+                pause: false,
+                stop: true,
+                animationQueue: [],
+                runningAlg: null,
+              });
               this.reset();
             }}
           >
@@ -380,7 +387,7 @@ class DirectedGraphAlgorithms extends Component {
           <button
             className="graph-button"
             onClick={() => {
-              this.setState({ pause: !this.state.pause });
+              this.setState({ pause: !this.state.pause, stepMode: false });
             }}
           >
             {this.state.pause ? <FaPlay /> : <FaPause />}
@@ -405,8 +412,14 @@ class DirectedGraphAlgorithms extends Component {
               Step:{' '}
               <button
                 onClick={() => {
+                  let newStepIndex = this.state.stepIndex - 1;
+                  while (
+                    !this.state.animationQueue[newStepIndex].highlightedLine
+                  ) {
+                    newStepIndex -= 1;
+                  }
                   this.setState({
-                    stepIndex: this.state.stepIndex - 1,
+                    stepIndex: newStepIndex,
                     pause: true,
                     stepMode: true,
                   });
@@ -416,8 +429,14 @@ class DirectedGraphAlgorithms extends Component {
               </button>
               <button
                 onClick={() => {
+                  let newStepIndex = this.state.stepIndex + 1;
+                  while (
+                    !this.state.animationQueue[newStepIndex].highlightedLine
+                  ) {
+                    newStepIndex += 1;
+                  }
                   this.setState({
-                    stepIndex: this.state.stepIndex + 1,
+                    stepIndex: newStepIndex,
                     pause: true,
                     stepMode: true,
                   });

@@ -87,9 +87,8 @@ class BreadthFirstSearch extends Component {
     return (
       <button
         onClick={async () => {
-          if (this.props.stop) {
-            this.props.updateStop();
-          }
+          this.props.freshStart();
+
           await this.props.setRunningAlg('bfs');
           this.bfs();
         }}

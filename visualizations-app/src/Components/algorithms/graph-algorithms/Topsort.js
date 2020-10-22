@@ -162,9 +162,8 @@ class Topsort extends Component {
       <button
         className="graph-button"
         onClick={() => {
-          if (this.props.stop) {
-            this.props.updateStop();
-          }
+          this.props.freshStart();
+
           this.props.setRunningAlg('topsort');
           this.topSort();
         }}

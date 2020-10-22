@@ -176,6 +176,15 @@ class UndirectedGraphAlgorithms extends Component {
     this.reset();
   }
 
+  freshStart = async () => {
+    await this.setState({
+      stop: false,
+      pause: false,
+      runningAlg: null,
+      stepMode: false,
+    });
+  };
+
   updateAnimationQueue = async (aq) => {
     await this.setState({
       animationQueue: aq,
@@ -193,6 +202,10 @@ class UndirectedGraphAlgorithms extends Component {
 
       let waitTime =
         currentState.waitTime !== undefined ? currentState.waitTime : 1000;
+
+      if (this.state.stepMode) {
+        waitTime = 0;
+      }
 
       await new Promise((r) => setTimeout(r, waitTime / this.state.speed));
       await this.checkPauseStatus();
@@ -233,10 +246,10 @@ class UndirectedGraphAlgorithms extends Component {
         // need to reset everything up to the previous state starting from beggining since we only update what is neccessary at each element of the animation queue
         this.reset();
         this.setState({
-          stepMode: false,
           runningAlg: initialRunningAlg,
           pause: true,
         });
+
         for (let i = 0; i < this.state.stepIndex; i++) {
           let prevState = this.state.animationQueue[i];
           this.setState({ ...prevState });
@@ -371,7 +384,6 @@ class UndirectedGraphAlgorithms extends Component {
     this.setState({
       distances: {},
       parents: {},
-      runningAlg: '',
       minNode: null,
       neighborNode: null,
       neighborNodeWeight: null,
@@ -637,7 +649,7 @@ class UndirectedGraphAlgorithms extends Component {
             getRunningAlg={this.state.runningAlg}
             setRunningAlg={this.setRunningAlg}
             updateAnimationQueue={this.updateAnimationQueue}
-            updateStop={this.updateStop}
+            freshStart={this.freshStart}
           />
           <div className={'divider'}></div>
           <Prim
@@ -645,13 +657,18 @@ class UndirectedGraphAlgorithms extends Component {
             getRunningAlg={this.state.runningAlg}
             setRunningAlg={this.setRunningAlg}
             updateAnimationQueue={this.updateAnimationQueue}
-            updateStop={this.updateStop}
+            freshStart={this.freshStart}
           />
           <div className={'divider'}></div>
           <button
             className="graph-button"
             onClick={() => {
-              this.setState({ pause: false, stop: true, animationQueue: [] });
+              this.setState({
+                pause: false,
+                stop: true,
+                animationQueue: [],
+                runningAlg: '',
+              });
               this.reset();
             }}
           >
@@ -661,7 +678,7 @@ class UndirectedGraphAlgorithms extends Component {
           <button
             className="graph-button"
             onClick={() => {
-              this.setState({ pause: !this.state.pause });
+              this.setState({ pause: !this.state.pause, stepMode: false });
             }}
           >
             {this.state.pause ? <FaPlay /> : <FaPause />}
@@ -685,8 +702,14 @@ class UndirectedGraphAlgorithms extends Component {
               Step:{' '}
               <button
                 onClick={() => {
+                  let newStepIndex = this.state.stepIndex - 1;
+                  while (
+                    !this.state.animationQueue[newStepIndex].highlightedLine
+                  ) {
+                    newStepIndex -= 1;
+                  }
                   this.setState({
-                    stepIndex: this.state.stepIndex - 1,
+                    stepIndex: newStepIndex,
                     pause: true,
                     stepMode: true,
                   });
@@ -696,8 +719,14 @@ class UndirectedGraphAlgorithms extends Component {
               </button>
               <button
                 onClick={() => {
+                  let newStepIndex = this.state.stepIndex + 1;
+                  while (
+                    !this.state.animationQueue[newStepIndex].highlightedLine
+                  ) {
+                    newStepIndex += 1;
+                  }
                   this.setState({
-                    stepIndex: this.state.stepIndex + 1,
+                    stepIndex: newStepIndex,
                     pause: true,
                     stepMode: true,
                   });
