@@ -1,4 +1,4 @@
-const { Heap: PriorityQueue } = require('./heap.js');
+// const { Heap: PriorityQueue } = require('./heap.js');
 
 let adjList = {
   a: [
@@ -138,8 +138,8 @@ let adjList = {
 };
 
 let res = prim(adjList, 'source');
-// console.log(res[0]);
-// console.log(res[1]);
+console.log(res[0]);
+console.log(res[1]);
 
 function prim(g, root) {
   let costMap = {};
@@ -158,29 +158,25 @@ function prim(g, root) {
 
     mstSet[minNode] = true;
 
-    for (let node of Object.keys(costMap)) {
-      for (let [cost, neighbor] of g[minNode]) {
-        if (neighbor == node) {
-          if (mstSet[node] == false) {
-            if (costMap[node] > cost) {
-              costMap[node] = cost;
-              parents[node] = minNode;
-            }
-          }
+    for (let [cost, neighbor] of g[minNode]) {
+      if (mstSet[neighbor] == false) {
+        if (costMap[neighbor] > cost) {
+          costMap[neighbor] = cost;
+          parents[neighbor] = minNode;
         }
       }
     }
   }
-  calculateCumulativeDistance(costMap, parents);
+  // calculateCumulativeDistance(costMap, parents);
   return [costMap, parents];
 }
 
-function findMin(key, mstSet) {
+function findMin(costMap, mstSet) {
   let min = Infinity;
   let minNode = null;
-  for (let node of Object.keys(key)) {
-    if (key[node] < min && mstSet[node] == false) {
-      min = key[node];
+  for (let node of Object.keys(costMap)) {
+    if (costMap[node] < min && !mstSet[node]) {
+      min = costMap[node];
       minNode = node;
     }
   }

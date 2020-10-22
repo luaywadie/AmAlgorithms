@@ -17,10 +17,10 @@ function topSort(g) {
   let stack = [];
   let visited = {};
   for (let key of Object.keys(g)) {
-    visited[key] = 0;
+    visited[key] = null;
   }
   for (let node of Object.keys(g)) {
-    if (visited[node] == 0) {
+    if (visited[node] == null) {
       if (visit(g, node, stack, visited) == false) {
         return null;
       }
@@ -45,4 +45,3 @@ function visit(g, node, stack, visited) {
   visited[node] = 2;
   return true;
 }
-
