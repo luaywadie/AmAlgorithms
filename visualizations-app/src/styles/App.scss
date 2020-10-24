@@ -18,14 +18,15 @@ body {
 }
 
 button {
-  color: black;
+  color: #444;
   background-color: #ffffff;
-  border-radius: 3px;
-  border-width: 2px;
-  padding-top: 6px;
-  padding-bottom: 6px;
-  padding-right: 12px;
-  padding-left: 12px;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 15px ;
+  box-shadow: 0px 6px 5px 0px #4444441f;
+  font-size: 1.2em;
+  transition: .6s;
+  margin: 5px;
 }
 button:disabled,
 button[disabled] {
@@ -33,6 +34,31 @@ button[disabled] {
   background-color: #cccccc;
   color: #666666;
 }
+button:focus {
+  border: none;
+  outline: none;
+}
+button:active:hover {
+  box-shadow:
+    0px 6px 5px 0px #4444441f,
+    inset 0px 0px 5px 0px #736ffe;
+}
+button:hover {
+  transition: .3s;
+  transform: translateY(-3px);
+  box-shadow: 0px 9px 15px 0px #44444450;
+  background-color: #8a48fe90;
+  color: #fff;
+  animation: diff-colors infinite 2s ease-in-out;
+  filter: blur(0px);
+}
+
+@keyframes diff-colors {
+  0% {background-color: #8a48fe90;}
+  50% {background-color: #589cfd90;}
+  100% {background-color: #8a48fe90;}
+}
+
 // .row {
 //   // padding-left: 200px;
 //   // padding-right: 500px;

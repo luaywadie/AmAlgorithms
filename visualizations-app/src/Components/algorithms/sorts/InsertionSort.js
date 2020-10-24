@@ -1,5 +1,9 @@
+// Core Imports
 import React, { Component } from 'react';
 import * as d3 from 'd3';
+// Libraries
+import { FaStepBackward, FaStepForward, FaPause, FaPlay } from 'react-icons/fa';
+
 
 class InsertionSort extends Component {
   constructor(props) {
@@ -7,13 +11,14 @@ class InsertionSort extends Component {
     this.state = {
       animation_queue: [],
       data: [5, 3, 1],
+      paused: false
     };
   }
   componentDidMount() {
     // set the dimensions and margins of the graph
-    var margin = { top: 0, right: 30, bottom: 90, left: 200 },
-      width = 1500 - margin.left - margin.right,
-      height = 700 - margin.top - margin.bottom;
+    var margin = { top: 20, right: 0, bottom: 0, left: 20 },
+      width = 500 - margin.left - margin.right,
+      height = 500 - margin.top - margin.bottom;
 
     // append the svg object to the body of the page
     var svg = d3
@@ -88,7 +93,8 @@ class InsertionSort extends Component {
     // Sort
     this.insertionSort(this.state.data);
     let interval = setInterval(() => {
-      if (this.state.animation_queue.length > 0) {
+      if (this.state.animation_queue.length > 0
+          && !this.state.paused) {
         this.swapBars(
           this.state.animation_queue[0][0],
           this.state.animation_queue[0][1],
@@ -96,11 +102,19 @@ class InsertionSort extends Component {
           this.state.data
         );
         this.state.animation_queue.shift();
+      } else if (this.state.animation_queue.length == 0) {
+        clearInterval(interval);
+      } else if (this.state.paused) {
+        console.log("Paused")
+        svg
+          .selectAll('mybar')
+          .attr('fill', 'red')
       }
     }, 2000);
-    if (this.state.animation_queue.length === 0) {
-      clearInterval(interval);
-    }
+
+    // if (this.state.animation_queue.length === 0) {
+    //   clearInterval(interval);
+    // }
   }
 
   insertionSort = (arr) => {
@@ -111,7 +125,7 @@ class InsertionSort extends Component {
 
       for (j = i - 1; j >= 0 && arr[j] > el; j--) {
         arr[j + 1] = arr[j];
-        this.state.animation_queue.push([i, j]);
+        this.state.animation_queue.push([j, j + 1]);
       }
       arr[j + 1] = el;
       console.log(arr);
@@ -168,7 +182,19 @@ class InsertionSort extends Component {
   componentWillUnmount() {}
 
   render() {
-    return <div id="sort-container"></div>;
+    return (
+      <div>
+        <button
+          className="graph-button"
+          onClick={() => {
+            this.setState({ paused: !this.state.paused });
+          }}
+        >
+          {this.state.paused ? <FaPlay /> : <FaPause />}
+        </button>
+        <div id="sort-container"></div>
+      </div>
+    );
   }
 }
 
