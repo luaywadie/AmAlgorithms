@@ -2,7 +2,8 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
 // Libraries
-import { FaStepBackward, FaStepForward, FaPause, FaPlay } from 'react-icons/fa';
+import { FaStepBackward, FaStepForward, FaPause, FaPlay,
+        FaPlus, FaMinus} from 'react-icons/fa';
 
 
 class InsertionSort extends Component {
@@ -10,14 +11,15 @@ class InsertionSort extends Component {
     super(props);
     this.state = {
       animation_queue: [],
-      data: [5, 3, 1],
+      data: [2, 5, 3, 1, 6, 9, 4],
+      speed: 1000,
       paused: false
     };
   }
   componentDidMount() {
     // set the dimensions and margins of the graph
     var margin = { top: 20, right: 0, bottom: 0, left: 20 },
-      width = 500 - margin.left - margin.right,
+      width = 900 - margin.left - margin.right,
       height = 500 - margin.top - margin.bottom;
 
     // append the svg object to the body of the page
@@ -92,7 +94,12 @@ class InsertionSort extends Component {
 
     // Sort
     this.insertionSort(this.state.data);
+    let speed = this.state.speed;
     let interval = setInterval(() => {
+      if (this.state.speed != speed) {
+        clearInterval(interval);
+        setInterval(interval, this.state.speed);
+      }
       if (this.state.animation_queue.length > 0
           && !this.state.paused) {
         this.swapBars(
@@ -110,7 +117,7 @@ class InsertionSort extends Component {
           .selectAll('mybar')
           .attr('fill', 'red')
       }
-    }, 2000);
+    }, this.state.speed);
 
     // if (this.state.animation_queue.length === 0) {
     //   clearInterval(interval);
@@ -141,35 +148,35 @@ class InsertionSort extends Component {
 
     fromObjTxt
       .transition()
-      .duration(1000)
+      .duration(500)
       .attr('fill', '#9537ff')
-      .delay(500)
+      .delay(400)
       .attr('x', toObjTxt.attr('x'));
 
     toObjTxt
       .transition()
-      .duration(1000)
+      .duration(500)
       .attr('fill', '#9537ff')
-      .delay(500)
+      .delay(400)
       .attr('x', fromObjTxt.attr('x'));
 
     fromObj
       .transition()
-      .duration(1000)
+      .duration(500)
       .attr('fill', '#9537ff')
-      .delay(500)
+      .delay(400)
       .attr('x', toObj.attr('x'));
 
     toObj
       .transition()
-      .duration(1000)
+      .duration(500)
       .attr('fill', '#ffa500')
-      .delay(500)
+      .delay(400)
       .attr('x', fromObj.attr('x'));
 
     // Reset Colors
-    fromObj.transition().duration(500).delay(1500).attr('fill', '#39a4ff');
-    toObj.transition().duration(500).delay(1500).attr('fill', '#39a4ff');
+    fromObj.transition().duration(400).delay(1500).attr('fill', '#39a4ff');
+    toObj.transition().duration(400).delay(1500).attr('fill', '#39a4ff');
 
     let temp = fromObj.attr('value');
     fromObj.attr('value', toObj.attr('value'));
@@ -184,6 +191,31 @@ class InsertionSort extends Component {
   render() {
     return (
       <div>
+
+        <button
+          className="graph-button"
+          onClick={() => {
+            if (this.state.speed >= 1600) {
+              this.setState({ speed: this.state.speed - 200 });
+            }
+          }}
+        >
+          <FaMinus></FaMinus>
+        </button>
+        <button>
+          Speed: {this.state.speed / 1000}s
+        </button>
+        <button
+          className="graph-button"
+          onClick={() => {
+            if (this.state.speed <= 3000) {
+              this.setState({ speed: this.state.speed + 200 });
+            }
+          }}
+        >
+          <FaPlus></FaPlus>
+        </button>
+
         <button
           className="graph-button"
           onClick={() => {
