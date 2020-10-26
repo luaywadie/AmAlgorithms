@@ -59,6 +59,7 @@ class DirectedGraphAlgorithms extends Component {
   renderAnimationQueue = async () => {
     let initialRunningAlg = this.state.runningAlg;
     this.setState({ stepIndex: 0 });
+    let shouldWait = true;
     while (this.state.stepIndex < this.state.animationQueue.length) {
       let currentState = this.state.animationQueue[this.state.stepIndex];
 
@@ -67,7 +68,7 @@ class DirectedGraphAlgorithms extends Component {
       let waitTime =
         currentState.waitTime !== undefined ? currentState.waitTime : 1000;
 
-      if (this.state.stepMode) {
+      if (!shouldWait) {
         waitTime = 0;
       }
       await new Promise((r) => setTimeout(r, waitTime / this.state.speed));
@@ -98,12 +99,14 @@ class DirectedGraphAlgorithms extends Component {
 
       if (!this.state.stepMode) {
         this.setState({ stepIndex: this.state.stepIndex + 1 });
+        shouldWait = true;
       } else {
         // need to reset everything up to the previous state starting from beggining since we only update what is neccessary at each element of the animation queue
         this.reset();
         this.setState({
           runningAlg: initialRunningAlg,
           pause: true,
+          stepMode: false,
         });
         for (let i = 0; i < this.state.stepIndex; i++) {
           let prevState = this.state.animationQueue[i];
@@ -125,6 +128,7 @@ class DirectedGraphAlgorithms extends Component {
             );
           }
         }
+        shouldWait = false;
       }
     }
   };
@@ -185,7 +189,7 @@ class DirectedGraphAlgorithms extends Component {
 
   async checkPauseStatus() {
     while (this.state.pause && !this.state.stepMode) {
-      await new Promise((r) => setTimeout(r, 1000));
+      await new Promise((r) => setTimeout(r, 100));
       continue;
     }
   }

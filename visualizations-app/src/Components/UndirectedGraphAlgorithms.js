@@ -195,6 +195,7 @@ class UndirectedGraphAlgorithms extends Component {
   renderAnimationQueue = async () => {
     let initialRunningAlg = this.state.runningAlg;
     this.setState({ stepIndex: 0 });
+    let shouldWait = true;
     while (this.state.stepIndex < this.state.animationQueue.length) {
       let currentState = this.state.animationQueue[this.state.stepIndex];
 
@@ -203,7 +204,7 @@ class UndirectedGraphAlgorithms extends Component {
       let waitTime =
         currentState.waitTime !== undefined ? currentState.waitTime : 1000;
 
-      if (this.state.stepMode) {
+      if (!shouldWait) {
         waitTime = 0;
       }
 
@@ -242,14 +243,15 @@ class UndirectedGraphAlgorithms extends Component {
 
       if (!this.state.stepMode) {
         this.setState({ stepIndex: this.state.stepIndex + 1 });
+        shouldWait = true;
       } else {
         // need to reset everything up to the previous state starting from beggining since we only update what is neccessary at each element of the animation queue
         this.reset();
         this.setState({
           runningAlg: initialRunningAlg,
           pause: true,
+          stepMode: false,
         });
-
         for (let i = 0; i < this.state.stepIndex; i++) {
           let prevState = this.state.animationQueue[i];
           this.setState({ ...prevState });
@@ -257,8 +259,8 @@ class UndirectedGraphAlgorithms extends Component {
           if (prevState.nodeComplete) {
             this.updateCurrentNodeToBeVisited(prevState.nodeComplete);
           }
-
           this.activateLink(prevState.linkOfInterest);
+
           if (prevState.fadeOutLinks) {
             this.fadeOutLinks(prevState.fadeOutLinks);
           }
@@ -276,6 +278,8 @@ class UndirectedGraphAlgorithms extends Component {
             );
           }
         }
+
+        shouldWait = false;
       }
     }
   };
@@ -349,7 +353,7 @@ class UndirectedGraphAlgorithms extends Component {
 
   async checkPauseStatus() {
     while (this.state.pause && !this.state.stepMode) {
-      await new Promise((r) => setTimeout(r, 1000));
+      await new Promise((r) => setTimeout(r, 100));
       continue;
     }
   }
@@ -426,7 +430,7 @@ class UndirectedGraphAlgorithms extends Component {
     let el = document.getElementById(linkString);
     if (el) {
       el.classList.add('fade-out-link');
-      await new Promise((r) => setTimeout(r, 1000 / this.state.speed));
+      // await new Promise((r) => setTimeout(r, 1000 / this.state.speed));
       el.classList.remove('link-traversed', 'fade-out-link');
       return el;
     }
@@ -745,16 +749,20 @@ class UndirectedGraphAlgorithms extends Component {
             style={{ marginRight: '40px' }}
           >
             <tbody>
-              {this.state.runningAlg === 'prim'
-                ? this.renderPrimHeading()
-                : this.state.runningAlg === 'dijkstra'
-                ? this.renderDijkstraHeading()
-                : ''}
-              {this.state.runningAlg === 'prim'
-                ? this.renderPrimTableData()
-                : this.state.runningAlg === 'dijkstra'
-                ? this.renderDijkstraTableData()
-                : ''}
+              {this.state.runningAlg === 'prim' ? (
+                this.renderPrimHeading()
+              ) : this.state.runningAlg === 'dijkstra' ? (
+                this.renderDijkstraHeading()
+              ) : (
+                <tr></tr>
+              )}
+              {this.state.runningAlg === 'prim' ? (
+                this.renderPrimTableData()
+              ) : this.state.runningAlg === 'dijkstra' ? (
+                this.renderDijkstraTableData()
+              ) : (
+                <tr></tr>
+              )}
             </tbody>
           </table>
         </div>
