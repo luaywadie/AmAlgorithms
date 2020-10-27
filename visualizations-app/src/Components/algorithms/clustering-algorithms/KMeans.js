@@ -12,7 +12,7 @@ class KMeans extends Component {
     this.unMounting = true;
   }
 
-  componentDidUpdate(prevProps) {}
+  componentDidUpdate(prevProps) { }
 
   async checkPauseStatus() {
     while (this.props.pause) {
@@ -21,138 +21,69 @@ class KMeans extends Component {
     }
   }
 
-  //For pseudocode line highlighting
-  highlightLine(lineNum) {
-    let el = document.getElementById('kmeans-' + lineNum);
-    if (el) el.classList.add('active-code-line');
-  }
-  removeHighlightedLine(lineNum) {
-    let el = document.getElementById('kmeans-' + lineNum);
-    if (el) el.classList.remove('active-code-line');
-  }
-
   //Perform K-Means clustering on points, plot, and animate
   kmeans = async () => {
-    this.highlightLine(1);
-    await new Promise((r) => setTimeout(r, 2000 / this.props.speed));
-    await this.checkPauseStatus();
-    if (this.props.stop) return;
-    if (this.unMounting) return;
-    this.removeHighlightedLine(1);
+    let animationQueue = [];
+    animationQueue.push({ line: 1 });
 
-    this.highlightLine(2);
-    
     const k = this.props.k;
     //Randomly initialize cluster centroids
     const randomPoints = this.getRandomElements(this.props.points, k);
     //create a shallow copy of centroids (to make sure the assigned points don't change)
     let centroids = [...randomPoints];
-    
-    
+    animationQueue.push({ line: 2,  centroids: [...centroids] });
+
     // Create centroid container group
     d3.select("#scatter-no-margin")
-        .append("g")
-        .attr("id", "centroid-group")
-        .classed("centroid", true);
-  
+      .append("g")
+      .attr("id", "centroid-group")
+      .classed("centroid", true);
+
     // Add initial centroids to the plot
     //Set the classes of the initialized centroid elements
     d3.select("#centroid-group")
-      .selectAll("circle")  
+      .selectAll("circle")
       .data(centroids)
       .enter()
       .append("circle")
       .attr("cx", (centroid) => this.scaleX(centroid.x))
       .attr("cy", (centroid) => this.scaleY(centroid.y))
       .attr("r", 10)
-      .attr("id", (centroid,i) => `centroid${i}`)
-      .attr("class", (centroid,i) => `cluster${i} centroid`);
-
-    await new Promise((r) => setTimeout(r, 2000 / this.props.speed));
-    await this.checkPauseStatus();
-    if (this.props.stop) return;
-    if (this.unMounting) return;
-    this.removeHighlightedLine(2);
-    
-
-    // await new Promise((r) => setTimeout(r, 2000 / this.props.speed));
-    // await this.checkPauseStatus();
-    // if (this.props.stop) return;
-    // if (this.unMounting) return;
-
-    this.highlightLine(3);
-    let hasConverged = false; //keep track of convergence
-    await new Promise((r) => setTimeout(r, 2000 / this.props.speed));
-    await this.checkPauseStatus();
-    if (this.props.stop) return;
-    if (this.unMounting) return;
-    this.removeHighlightedLine(3);
+      .attr("id", (centroid, i) => `centroid${i}`)
+      .attr("class", (centroid, i) => `cluster${i} centroid`);
 
 
-    this.highlightLine(4);
-    await new Promise((r) => setTimeout(r, 2000 / this.props.speed));
-    await this.checkPauseStatus();
-    if (this.props.stop) return;
-    if (this.unMounting) return;
-    this.removeHighlightedLine(4);
+    //keep track of convergence
+    let hasConverged = false; 
+    animationQueue.push({ line: 3, hasConverged});
+
 
     // Main K-Means loop
-    let iter = 0;
     do {
-      console.log('Iteration ', iter);
 
       this.highlightLine(5);
-    
-      this.assignToClusters(this.props.points, centroids);
 
-      await new Promise((r) => setTimeout(r, 2000 / this.props.speed));
-      await this.checkPauseStatus();
-      if (this.props.stop) return;
-      if (this.unMounting) return;
+      this.assignToClusters(this.props.points, centroids);
       this.removeHighlightedLine(5);
 
-      console.log('Clusters have been assigned.');
-
-
-      this.highlightLine(6);
-      
       let prevCentroids = [...centroids];
       this.updateCentroids(this.props.points, k, centroids);
 
-      await new Promise((r) => setTimeout(r, 2000 / this.props.speed));
-      await this.checkPauseStatus();
-      if (this.props.stop) return;
-      if (this.unMounting) return;
-      this.removeHighlightedLine(6);
-
-      console.log('Centroids have been updated:');
-      console.log(JSON.stringify(centroids, null, 2));
-
-
       this.highlightLine(4);
-    
+
       //Check convergence
       hasConverged = prevCentroids.reduce(
         (bool, currentCentroid, i) => (currentCentroid.x === centroids[i].x) && (currentCentroid.y === centroids[i].y),
         true
       );
-      
-      await new Promise((r) => setTimeout(r, 2000 / this.props.speed));
-      await this.checkPauseStatus();
-      if (this.props.stop) return;
-      if (this.unMounting) return;
+      animationQueue.push({ line: 3, hasConverged});
+
       this.removeHighlightedLine(4);
 
-      iter++;
-    } while (!hasConverged && iter < 100);
+    } while (!hasConverged);
 
 
-    console.log("Converged.");
     this.highlightLine(7);
-    await new Promise((r) => setTimeout(r, 2000 / this.props.speed));
-    await this.checkPauseStatus();
-    if (this.props.stop) return;
-    if (this.unMounting) return;
     this.removeHighlightedLine(7);
 
   };
@@ -167,15 +98,13 @@ class KMeans extends Component {
           //calculate the Euclidean distance from each point to each centroid
           Math.sqrt(
             Math.pow(point.x - centroid.x, 2) +
-              Math.pow(point.y - centroid.y, 2)
+            Math.pow(point.y - centroid.y, 2)
           )
         );
       });
       //Assign the point to its closest centroid using the minimum of all distances
       point.closestCentroid = distances.indexOf(Math.min(...distances));
 
-      //Color the point on the D3.js scatterplot
-      this.colorPoint(point);
     });
   }
 
@@ -203,13 +132,9 @@ class KMeans extends Component {
       //update the centroid at index i
       centroids[i] = { x: mean.x, y: mean.y };
 
-      this.moveIthCentroid(i, centroids[i]);
     }
   }
 
-  // ------------------
-  // Helper functions
-  // -------------------
   getRandomElements(arr, n) {
     let result = new Array(n),
       len = arr.length,
@@ -224,42 +149,7 @@ class KMeans extends Component {
     return result;
   }
 
-  colorPoint(point) {
-    let pointElement = document.getElementById(
-      `x:${parseFloat(point.x).toFixed(1)}-y:${parseFloat(point.y).toFixed(1)}`
-    );
-    let pointClasses = pointElement.classList;
-    if (pointElement) {
-      //if it's the first iteration, remove 'unassigned' style
-      if (pointClasses.contains('cluster-unassigned')) {
-        pointClasses.remove('cluster-unassigned');
-      }
-      //otherwise, remove the current cluster styles
-      else {
-        pointClasses.remove(pointClasses[0]);
-      }
-      //finally, add the color associated with the closest centroid
-      pointClasses.add(`cluster${point.closestCentroid}`);
-    }
-  }
-
-  moveIthCentroid(i, centroid) {
-     d3.select(`#centroid${i}`)
-      .attr('cx', this.scaleX(centroid.x))
-      .attr('cy', this.scaleY(centroid.y));
-  }
-
-  //Scale point coordinates to fit on the scatter plot
-  scaleX = d3.scaleLinear()
-      .domain([4, 8])
-      .range([0, 510]);
-      
-  scaleY = d3.scaleLinear()
-      .domain([0, 7])
-      .range([460, 0]);
   
-
-
 
   render() {
     return (
@@ -275,6 +165,6 @@ class KMeans extends Component {
       </button>
     );
   }
-} //End of KMeans Component
+}
 
 export default KMeans;

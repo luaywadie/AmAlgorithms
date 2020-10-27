@@ -185,14 +185,18 @@ class TreeTraversals extends Component {
       if (!this.state.stepMode) {
         this.setState({ stepIndex: this.state.stepIndex + 1 });
         shouldWait = true;
-      } else {
-        // need to reset everything up to the previous state starting from beggining since we only update what is neccessary at each element of the animation queue
+      } 
+      
+      else {
+        // need to reset everything up to the previous state starting from beginning 
+        // since we only update what is necessary at each element of the animation queue
         this.reset();
         this.setState({
           runningAlg: initialRunningAlg,
           pause: true,
           stepMode: false,
         });
+        
         for (let i = 0; i < this.state.stepIndex; i++) {
           let prevState = this.state.animationQueue[i];
           this.setState({ ...prevState });

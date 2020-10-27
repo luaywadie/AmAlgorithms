@@ -9,6 +9,7 @@ class DepthFirstSearch extends Component {
   dfs = async () => {
     let root = 'a';
     let visited = {};
+    //initializes the visited object, all values set to false
     Object.keys(this.props.g).map((node) => (visited[node] = false));
 
     this.animationQueue.push({ highlightedLine: 1 });
