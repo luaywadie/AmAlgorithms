@@ -92,7 +92,6 @@ class Heap extends Component {
       createDynamicTree(this.adjList);
     }
     await this.setState({
-      executing: false,
       animationQueue: this.animationQueue,
     });
     this.animationQueue = [];
@@ -119,8 +118,8 @@ class Heap extends Component {
       if (!currentState.keepLineHighlighted) {
         this.removeHighlightedLine(currentState.highlightedLine);
       }
-      if (currentState.removeHighlightedLine) {
-        this.removeHighlightedLine(currentState.removeHighlightedLine);
+      if (currentState.removeKeptHighlightedLine) {
+        this.removeHighlightedLine(currentState.removeKeptHighlightedLine);
       }
 
       await this.setState({ ...currentState });
@@ -149,7 +148,7 @@ class Heap extends Component {
         );
       }
 
-      if (currentState.swap && !this.state.stepMode) {
+      if (currentState.swap) {
         swap(currentState.swap[0], currentState.swap[1]);
       }
 
@@ -198,14 +197,14 @@ class Heap extends Component {
           if (prevState.keepLineHighlighted) {
             this.highlightLine(prevState.highlightedLine);
           }
-          if (prevState.removeHighlightedLine) {
-            this.removeHighlightedLine(prevState.removeHighlightedLine);
+          if (prevState.removeKeptHighlightedLine) {
+            this.removeHighlightedLine(prevState.removeKeptHighlightedLine);
           }
         }
         shouldWait = false;
       }
     }
-    this.setState({ animationQueue: [], pause: false });
+    this.setState({ animationQueue: [], pause: false, executing: false });
   }
 
   insert(e) {
@@ -238,7 +237,7 @@ class Heap extends Component {
 
     this.fixUp();
     this.animationQueue.push({
-      removeHighlightedLine: 'Heap-insert-4',
+      removeKeptHighlightedLine: 'Heap-insert-4',
       newElement: null,
       animationQueue: this.animationQueue,
     });
@@ -359,7 +358,7 @@ class Heap extends Component {
     }
 
     this.animationQueue.push({
-      removeHighlightedLine: 'Heap-removeRoot-5',
+      removeKeptHighlightedLine: 'Heap-removeRoot-5',
     });
 
     this.animationQueue.push({
@@ -368,7 +367,6 @@ class Heap extends Component {
     });
 
     await this.setState({
-      executing: false,
       animationQueue: this.animationQueue,
     });
     this.animationQueue = [];
@@ -454,7 +452,7 @@ class Heap extends Component {
         });
 
         this.animationQueue.push({
-          waitTime: 1000,
+          waitTime: 0,
           deActivateLink: this.h[currentIndex],
         });
 
@@ -463,6 +461,9 @@ class Heap extends Component {
         this.animationQueue.push({
           highlightedLine: 'Heap-fixdown-11',
           currentIndex: currentIndex,
+          childIndex: null,
+          leftChild: null,
+          rightChild: null,
         });
       } else {
         this.animationQueue.push({
@@ -479,6 +480,9 @@ class Heap extends Component {
     }
     this.animationQueue.push({
       currentIndex: null,
+      childIndex: null,
+      leftChild: null,
+      rightChild: null,
       waitTime: 0,
     });
   }
@@ -899,45 +903,44 @@ class Heap extends Component {
               {this.state.executing ? 'Executing...' : 'Clear'}
             </button>
 
-            <label>
-              Step:{' '}
-              <button
-                onClick={async () => {
-                  let newStepIndex = this.state.stepIndex - 1;
-                  while (
-                    newStepIndex >= 0 &&
-                    !this.state.animationQueue[newStepIndex].highlightedLine
-                  ) {
-                    newStepIndex -= 1;
-                  }
-                  await this.setState({
-                    stepIndex: newStepIndex,
-                    pause: true,
-                    stepMode: true,
-                  });
-                }}
-              >
-                <FaStepBackward />
-              </button>
-              <button
-                onClick={async () => {
-                  let newStepIndex = this.state.stepIndex + 1;
-                  while (
-                    newStepIndex < this.state.animationQueue.length &&
-                    !this.state.animationQueue[newStepIndex].highlightedLine
-                  ) {
-                    newStepIndex += 1;
-                  }
-                  await this.setState({
-                    stepIndex: newStepIndex,
-                    pause: true,
-                    stepMode: true,
-                  });
-                }}
-              >
-                <FaStepForward />
-              </button>
-            </label>
+            <label>Step: </label>
+
+            <button
+              onClick={async () => {
+                let newStepIndex = this.state.stepIndex - 1;
+                while (
+                  newStepIndex >= 0 &&
+                  !this.state.animationQueue[newStepIndex].highlightedLine
+                ) {
+                  newStepIndex -= 1;
+                }
+                await this.setState({
+                  stepIndex: newStepIndex,
+                  pause: true,
+                  stepMode: true,
+                });
+              }}
+            >
+              <FaStepBackward />
+            </button>
+            <button
+              onClick={async () => {
+                let newStepIndex = this.state.stepIndex + 1;
+                while (
+                  newStepIndex < this.state.animationQueue.length &&
+                  !this.state.animationQueue[newStepIndex].highlightedLine
+                ) {
+                  newStepIndex += 1;
+                }
+                await this.setState({
+                  stepIndex: newStepIndex,
+                  pause: true,
+                  stepMode: true,
+                });
+              }}
+            >
+              <FaStepForward />
+            </button>
             <label>
               Speed:
               <input

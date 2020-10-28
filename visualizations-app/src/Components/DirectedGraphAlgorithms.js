@@ -412,43 +412,42 @@ class DirectedGraphAlgorithms extends Component {
                 }}
               />
             </label>
-            <label>
-              Step:{' '}
-              <button
-                onClick={() => {
-                  let newStepIndex = this.state.stepIndex - 1;
-                  while (
-                    !this.state.animationQueue[newStepIndex].highlightedLine
-                  ) {
-                    newStepIndex -= 1;
-                  }
-                  this.setState({
-                    stepIndex: newStepIndex,
-                    pause: true,
-                    stepMode: true,
-                  });
-                }}
-              >
-                <FaStepBackward />
-              </button>
-              <button
-                onClick={() => {
-                  let newStepIndex = this.state.stepIndex + 1;
-                  while (
-                    !this.state.animationQueue[newStepIndex].highlightedLine
-                  ) {
-                    newStepIndex += 1;
-                  }
-                  this.setState({
-                    stepIndex: newStepIndex,
-                    pause: true,
-                    stepMode: true,
-                  });
-                }}
-              >
-                <FaStepForward />
-              </button>
-            </label>
+            <label>Step: </label>
+
+            <button
+              onClick={() => {
+                let newStepIndex = this.state.stepIndex - 1;
+                while (
+                  !this.state.animationQueue[newStepIndex].highlightedLine
+                ) {
+                  newStepIndex -= 1;
+                }
+                this.setState({
+                  stepIndex: newStepIndex,
+                  pause: true,
+                  stepMode: true,
+                });
+              }}
+            >
+              <FaStepBackward />
+            </button>
+            <button
+              onClick={() => {
+                let newStepIndex = this.state.stepIndex + 1;
+                while (
+                  !this.state.animationQueue[newStepIndex].highlightedLine
+                ) {
+                  newStepIndex += 1;
+                }
+                this.setState({
+                  stepIndex: newStepIndex,
+                  pause: true,
+                  stepMode: true,
+                });
+              }}
+            >
+              <FaStepForward />
+            </button>
           </form>
         </div>
         {/* <div className={'col-6'} id={'output-tables'}> */}

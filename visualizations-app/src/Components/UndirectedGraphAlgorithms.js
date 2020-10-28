@@ -392,7 +392,7 @@ class UndirectedGraphAlgorithms extends Component {
       neighborNode: null,
       neighborNodeWeight: null,
       mstSet: {},
-      clicked: [false, false, false, false, false],
+      // clicked: [false, false, false, false, false],
     });
     if (this.state.stop) {
       this.setState({ stop: false, pause: false });
@@ -702,43 +702,42 @@ class UndirectedGraphAlgorithms extends Component {
                 }}
               />
             </label>
-            <label>
-              Step:{' '}
-              <button
-                onClick={() => {
-                  let newStepIndex = this.state.stepIndex - 1;
-                  while (
-                    !this.state.animationQueue[newStepIndex].highlightedLine
-                  ) {
-                    newStepIndex -= 1;
-                  }
-                  this.setState({
-                    stepIndex: newStepIndex,
-                    pause: true,
-                    stepMode: true,
-                  });
-                }}
-              >
-                <FaStepBackward />
-              </button>
-              <button
-                onClick={() => {
-                  let newStepIndex = this.state.stepIndex + 1;
-                  while (
-                    !this.state.animationQueue[newStepIndex].highlightedLine
-                  ) {
-                    newStepIndex += 1;
-                  }
-                  this.setState({
-                    stepIndex: newStepIndex,
-                    pause: true,
-                    stepMode: true,
-                  });
-                }}
-              >
-                <FaStepForward />
-              </button>
-            </label>
+            <label>Step: </label>
+
+            <button
+              onClick={() => {
+                let newStepIndex = this.state.stepIndex - 1;
+                while (
+                  !this.state.animationQueue[newStepIndex].highlightedLine
+                ) {
+                  newStepIndex -= 1;
+                }
+                this.setState({
+                  stepIndex: newStepIndex,
+                  pause: true,
+                  stepMode: true,
+                });
+              }}
+            >
+              <FaStepBackward />
+            </button>
+            <button
+              onClick={() => {
+                let newStepIndex = this.state.stepIndex + 1;
+                while (
+                  !this.state.animationQueue[newStepIndex].highlightedLine
+                ) {
+                  newStepIndex += 1;
+                }
+                this.setState({
+                  stepIndex: newStepIndex,
+                  pause: true,
+                  stepMode: true,
+                });
+              }}
+            >
+              <FaStepForward />
+            </button>
           </form>
         </div>
 
