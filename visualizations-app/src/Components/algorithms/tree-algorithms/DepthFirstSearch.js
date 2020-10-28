@@ -12,17 +12,17 @@ class DepthFirstSearch extends Component {
     //initializes the visited object, all values set to false
     Object.keys(this.props.g).map((node) => (visited[node] = false));
 
-    this.animationQueue.push({ highlightedLine: 1 });
-    this.animationQueue.push({ highlightedLine: 2, stack: [] });
+    this.animationQueue.push({ highlightedLine: 0 });
+    this.animationQueue.push({ highlightedLine: 1, stack: [] });
     this.animationQueue.push({
-      highlightedLine: 3,
+      highlightedLine: 2,
       visitedMap: { ...visited },
     });
 
     visited[root] = true;
 
     this.animationQueue.push({
-      highlightedLine: 4,
+      highlightedLine: 3,
       visitedMap: { ...visited },
     });
 
@@ -30,20 +30,20 @@ class DepthFirstSearch extends Component {
     let nodePath = [];
 
     this.animationQueue.push({
-      highlightedLine: 5,
+      highlightedLine: 4,
       stack: [...stack],
     });
 
     while (stack.length > 0) {
       this.animationQueue.push({
-        highlightedLine: 6,
+        highlightedLine: 5,
       });
 
       let currentNode = stack.pop();
       nodePath.push(currentNode);
 
       this.animationQueue.push({
-        highlightedLine: 7,
+        highlightedLine: 6,
         stack: [...stack],
         currentNode: currentNode,
         activatedNode: currentNode,
@@ -52,19 +52,19 @@ class DepthFirstSearch extends Component {
       });
 
       for (let child of this.props.g[currentNode]) {
-        this.animationQueue.push({ highlightedLine: 8, child: child });
-        this.animationQueue.push({ highlightedLine: 9 });
+        this.animationQueue.push({ highlightedLine: 7, child: child });
+        this.animationQueue.push({ highlightedLine: 8 });
 
         if (visited[child] === false) {
           visited[child] = true;
           this.animationQueue.push({
-            highlightedLine: 10,
+            highlightedLine: 9,
             visitedMap: { ...visited },
           });
 
           stack.push(child);
           this.animationQueue.push({
-            highlightedLine: 11,
+            highlightedLine: 10,
             stack: [...stack],
           });
         }

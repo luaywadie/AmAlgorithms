@@ -5,7 +5,7 @@ import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import TreeTraversals from '../Components/TreeTraversals';
 import UndirectedGraphAlgorithms from '../Components/UndirectedGraphAlgorithms';
 import DirectedGraphAlgorithms from '../Components/DirectedGraphAlgorithms';
-import ScatterPlotAlgorithms from '../Components/ScatterPlotAlgorithms';
+import ClusteringAlgorithms from '../Components/ClusteringAlgorithms';
 import Heap from '../Components/data-structures/Heap';
 import InsertionSort from '../Components/algorithms/sorts/InsertionSort';
 import NeuralNets from '../Components/NeuralNets';
@@ -65,7 +65,7 @@ const NavigationBar = () => {
             <NavDropdown.Item
               eventKey="3"
               as={Link}
-              to="/ScatterPlotAlgorithms"
+              to="/ClusteringAlgorithms"
             >
               K-Means
             </NavDropdown.Item>
@@ -97,7 +97,7 @@ const NavigationBar = () => {
       />
       <Route path="/heap" component={Heap} />
       <Route path="/insertion_sort" component={InsertionSort} />
-      <Route path="/ScatterPlotAlgorithms" component={ScatterPlotAlgorithms} />
+      <Route path="/ClusteringAlgorithms" component={ClusteringAlgorithms} />
       <Route path="/neural_nets" component={NeuralNets} />
       <Route exact path="/" component={MainPage} />
     </Router>

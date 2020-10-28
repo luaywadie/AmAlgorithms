@@ -1,97 +1,66 @@
-//import { cloneElement } from 'react';
+"use strict";
+
+import { cloneElement } from 'react';
 import React, { Component } from 'react';
-import * as d3 from 'd3';
 
 class KMeans extends Component {
   constructor(props) {
     super(props);
-    this.unMounting = false;
-  }
-
-  componentWillUnmount() {
-    this.unMounting = true;
-  }
-
-  componentDidUpdate(prevProps) { }
-
-  async checkPauseStatus() {
-    while (this.props.pause) {
-      await new Promise((r) => setTimeout(r, 1000));
-      continue;
-    }
   }
 
   //Perform K-Means clustering on points, plot, and animate
   kmeans = async () => {
     let animationQueue = [];
-    animationQueue.push({ line: 1 });
+    animationQueue.push({ line: 0, centroids: null, closestCentroids: null});
 
     const k = this.props.k;
     //Randomly initialize cluster centroids
     const randomPoints = this.getRandomElements(this.props.points, k);
     //create a shallow copy of centroids (to make sure the assigned points don't change)
     let centroids = [...randomPoints];
-    animationQueue.push({ line: 2,  centroids: [...centroids] });
-
-    // Create centroid container group
-    d3.select("#scatter-no-margin")
-      .append("g")
-      .attr("id", "centroid-group")
-      .classed("centroid", true);
-
-    // Add initial centroids to the plot
-    //Set the classes of the initialized centroid elements
-    d3.select("#centroid-group")
-      .selectAll("circle")
-      .data(centroids)
-      .enter()
-      .append("circle")
-      .attr("cx", (centroid) => this.scaleX(centroid.x))
-      .attr("cy", (centroid) => this.scaleY(centroid.y))
-      .attr("r", 10)
-      .attr("id", (centroid, i) => `centroid${i}`)
-      .attr("class", (centroid, i) => `cluster${i} centroid`);
-
+    animationQueue.push({ line: 1, centroids: [...centroids], shouldInitCentroids: true });
 
     //keep track of convergence
     let hasConverged = false; 
-    animationQueue.push({ line: 3, hasConverged});
+    animationQueue.push({ line: 2, shouldInitCentroids: false});
 
+    //closestCentroids[8] === point 8's closest cluster centroid
+    let closestCentroids = [];
+
+    //highlights the "do" line, snapshots initial centroids
+    animationQueue.push({ line: 3, centroids: [...centroids], closestCentroids: [] });
 
     // Main K-Means loop
     do {
-
-      this.highlightLine(5);
-
-      this.assignToClusters(this.props.points, centroids);
-      this.removeHighlightedLine(5);
+      //assign points to clusters
+      closestCentroids = this.getClusterAssignments(this.props.points, centroids);
+      animationQueue.push({ line: 4, closestCentroids: [...closestCentroids] });
 
       let prevCentroids = [...centroids];
-      this.updateCentroids(this.props.points, k, centroids);
+      animationQueue.push({ line: 5, centroids: [...centroids] });
 
-      this.highlightLine(4);
+      this.updateCentroids(this.props.points, k, centroids, closestCentroids);
+      animationQueue.push({ line: 6, centroids: [...centroids], hasConverged});
 
       //Check convergence
       hasConverged = prevCentroids.reduce(
         (bool, currentCentroid, i) => (currentCentroid.x === centroids[i].x) && (currentCentroid.y === centroids[i].y),
         true
       );
-      animationQueue.push({ line: 3, hasConverged});
-
-      this.removeHighlightedLine(4);
+      animationQueue.push({ line: 7, hasConverged});
+      animationQueue.push({ line: 8, hasConverged});
 
     } while (!hasConverged);
+    animationQueue.push({ line: 9});
 
-
-    this.highlightLine(7);
-    this.removeHighlightedLine(7);
-
+    console.log(JSON.stringify(animationQueue, null, 2));
+    this.props.renderAnimationQueue(animationQueue);
   };
 
-  //Compute distance of each point from each centroid,
-  // and assign points to closest centroid
-  assignToClusters(points, centroids) {
-    points.forEach((point) => {
+  
+  getClusterAssignments(points, centroids) {
+    let closestCentroids = [];
+    points.forEach((point, i) => {
       let distances = [];
       centroids.forEach((centroid) => {
         distances.push(
@@ -102,18 +71,18 @@ class KMeans extends Component {
           )
         );
       });
-      //Assign the point to its closest centroid using the minimum of all distances
-      point.closestCentroid = distances.indexOf(Math.min(...distances));
-
+      //Set the closest centroid of the ith point to the minimum of all distances
+      closestCentroids[i] = distances.indexOf(Math.min(...distances));
     });
+    return closestCentroids;
   }
 
   //Calculate new cluster centroids, which will be the mean of all points in that cluster
-  updateCentroids(points, k, centroids) {
-    for (let i = 0; i < k; i++) {
-      //clusterArray = [{x: "1.2", y: "2", closestCentroid: "i"}, ...]
+  updateCentroids(points, k, centroids, closestCentroids) {
+    for (let cIndex = 0; cIndex < k; cIndex++) {
+      //clusterArray = [{x: "1.2", y: "2", closestCentroid: "cIndex"}, ...]
       const clusterArray = points.filter(
-        (point) => point.closestCentroid === i
+        (point, pointIndex) => closestCentroids[pointIndex] === cIndex
       );
 
       //calculate the mean in x and y directions
@@ -129,8 +98,8 @@ class KMeans extends Component {
       mean.x = mean.x / clusterArray.length;
       mean.y = mean.y / clusterArray.length;
 
-      //update the centroid at index i
-      centroids[i] = { x: mean.x, y: mean.y };
+      //update the centroid at cIndex
+      centroids[cIndex] = { x: mean.x, y: mean.y };
 
     }
   }
@@ -149,17 +118,16 @@ class KMeans extends Component {
     return result;
   }
 
-  
 
   render() {
     return (
       <button
-        onClick={() => {
-          if (this.unMounting) {
-            this.unMounting = false;
-          }
+        onClick={async () => {
+          await this.props.setRunningAlg('kmeans');
+          await this.props.toggleStop();
           this.kmeans();
         }}
+        disabled={this.props.getRunningAlg === 'kmeans'}
       >
         K-Means Clustering
       </button>
