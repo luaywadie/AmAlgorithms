@@ -2,8 +2,11 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
 // Libraries
+import {Container, Row, Col, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import { FaStepBackward, FaStepForward, FaPause, FaPlay,
         FaPlus, FaMinus} from 'react-icons/fa';
+import { to } from 'mathjs';
+import { svg } from 'd3';
 
 
 class InsertionSort extends Component {
@@ -11,11 +14,13 @@ class InsertionSort extends Component {
     super(props);
     this.state = {
       animation_queue: [],
+      stepper_queue: [],
       data: [9, 5, 3, 1, 6, 2, 4],
       speed: 1000,
       speedFactor: 1,
       speedChanged: false,
       paused: false,
+      swapping: false,
       interval: null
     };
   }
@@ -27,83 +32,87 @@ class InsertionSort extends Component {
     }
     // set the dimensions and margins of the graph
     var margin = { top: 20, right: 0, bottom: 0, left: 20 },
-      width = 900 - margin.left - margin.right,
-      height = 500 - margin.top - margin.bottom;
-
+    width = 900 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+    
     // append the svg object to the body of the page
     var svg = d3
-      .select('#sort-container')
-      .append('svg')
-      .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom)
-      .append('g')
-      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
+    .select('#sort-container')
+    .append('svg')
+    .attr('width', width + margin.left + margin.right)
+    .attr('height', height + margin.top + margin.bottom)
+    .append('g')
+    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+    
     // X axis
     var x = d3
-      .scaleBand()
-      .range([0, width])
-      .domain(this.state.data)
-      .padding(0.2);
-
+    .scaleBand()
+    .range([0, width])
+    .domain(this.state.data)
+    .padding(0.2);
+    
     // Add Y axis
     var y = d3.scaleLinear().domain([0, 10]).range([height, 0]);
-
+    
     // Bars
     svg
-      .selectAll('mybar')
-      .data(this.state.data)
-      .enter()
-      .append('rect')
-      .attr('x', function (d) {
-        return x(d);
-      })
-      .attr('y', function (d) {
-        return y(0);
-      })
-      .attr('width', x.bandwidth())
-      .attr('fill', '#39a4ff')
-      .attr('height', function (d) {
-        return height - y(0);
-      }) // always equal to 0
-      .attr('value', function (d, index) {
-        return index;
-      });
-
+    .selectAll('mybar')
+    .data(this.state.data)
+    .enter()
+    .append('rect')
+    .attr('x', function (d) {
+      return x(d);
+    })
+    .attr('y', function (d) {
+      return y(0);
+    })
+    .attr('width', x.bandwidth())
+    .attr('fill', '#39a4ff')
+    .attr('height', function (d) {
+      return height - y(0);
+    }) // always equal to 0
+    .attr('value', function (d, index) {
+      return index;
+    });
+    
     svg
-      .selectAll('mybar')
-      .data(this.state.data)
-      .enter()
-      .append('text')
-      .attr('x', function (d) {
-        return x(d) + 50;
-      })
-      .attr('y', function (d) {
-        return y(d) - 10;
-      })
-      .attr('value', function (d, index) {
-        return index;
-      })
-      .text(function (d) {
-        return d;
-      });
-
+    .selectAll('mybar')
+    .data(this.state.data)
+    .enter()
+    .append('text')
+    .attr('x', function (d) {
+      return x(d) + 50;
+    })
+    .attr('y', function (d) {
+      return y(d) - 10;
+    })
+    .attr('value', function (d, index) {
+      return index;
+    })
+    .text(function (d) {
+      return d;
+    });
+    
     // Animation
     svg
-      .selectAll('rect')
-      .transition()
-      .duration(800)
-      .attr('y', function (d) {
-        return y(d);
-      })
-      .attr('height', function (d) {
-        return height - y(d);
-      });
-
+    .selectAll('rect')
+    .transition()
+    .duration(800)
+    .attr('y', function (d) {
+      return y(d);
+    })
+    .attr('height', function (d) {
+      return height - y(d);
+    });
+    
     // Sort
     this.insertionSort(this.state.data)
     // Calculate Speed
     this.startInterval()
+  }
+  
+  componentWillUnmount() {
+    this.endInterval();
   }
 
   insertionSort = (arr) => {
@@ -111,7 +120,7 @@ class InsertionSort extends Component {
     for (let i = 0; i < len; i++) {
       let el = arr[i];
       let j;
-
+      
       for (j = i - 1; j >= 0 && arr[j] > el; j--) {
         arr[j + 1] = arr[j];
         this.state.animation_queue.push([j, j + 1]);
@@ -149,6 +158,7 @@ class InsertionSort extends Component {
           this.state.animation_queue[0][1],
           this.state.speed
         );
+        this.state.stepper_queue.push(this.state.animation_queue[0]);
         this.state.animation_queue.shift();
       } else if (this.state.animation_queue.length == 0) {
         clearInterval(interval);
@@ -161,6 +171,7 @@ class InsertionSort extends Component {
   }
 
   swapBars(barFromIndex, barToIndex) {
+    this.setState({swapping: true})
     let speed = this.state.speed;
     let fromObj = d3.selectAll("rect[value='" + barFromIndex + "']");
     let toObj = d3.selectAll("rect[value='" + barToIndex + "']");
@@ -204,52 +215,118 @@ class InsertionSort extends Component {
     temp = fromObjTxt.attr('value');
     fromObjTxt.attr('value', toObjTxt.attr('value'));
     toObjTxt.attr('value', temp);
+
+    // Allow next swapping
+    setTimeout(() => {
+      this.setState({swapping: false})
+    }, speed)
+  }
+  
+  // Stepper
+  stepBack = () => {
+    if (this.state.stepper_queue.length > 0) {
+      let toElement = this.state.stepper_queue[0][1]
+      let fromElement = this.state.stepper_queue[0][0]
+      this.swapBars(toElement, fromElement)
+      this.state.stepper_queue.shift()
+      this.state.animation_queue.unshift([fromElement, toElement])
+    } else {
+      // Handle Button Animations
+    }
   }
 
-  componentWillUnmount() {
-    this.endInterval();
+  stepForward = () => {
+    if (this.state.animation_queue.length > 0) {
+      let toElement = this.state.animation_queue[0][0]
+      let fromElement = this.state.animation_queue[0][1]
+      this.swapBars(toElement, fromElement)
+      this.state.animation_queue.shift()
+      this.state.stepper_queue.unshift([fromElement, toElement])
+    } else {
+      // Handle Button Animations
+    }
   }
+
 
   render() {
     return (
-      <div>
-
-        <button
-          className="graph-button"
-          onClick={() => {
-            if (this.state.speedFactor >= 0.1) {
-              this.setState({speedChanged: true});
-              this.setState({ speedFactor: parseFloat((this.state.speedFactor - .1).toFixed(1))});
+      <Container fluid>
+        <Row>
+          <button
+            className="graph-button"
+            onClick={() => {
+              if (this.state.speedFactor >= 0.1) {
+                this.setState({speedChanged: true});
+                this.setState({ speedFactor: parseFloat((this.state.speedFactor - .1).toFixed(1))});
+              }
+            }}
+          >
+            <FaMinus></FaMinus>
+          </button>
+          <button className="btn-label">
+            Speed: {this.state.speedFactor}x
+          </button>
+          <button
+            className="graph-button"
+            onClick={() => {
+              if (this.state.speedFactor <= 1.4) {
+                this.setState({speedChanged: true});
+                this.setState({ speedFactor: parseFloat((this.state.speedFactor + .1).toFixed(1))});
+              }
+            }}
+          >
+            <FaPlus></FaPlus>
+          </button>
+          <OverlayTrigger
+            key="top"
+            placement="top"
+            overlay={
+              <Tooltip id="tooltip-top">
+                Pause / Un-Pause Algorithm
+              </Tooltip>
             }
-          }}
-        >
-          <FaMinus></FaMinus>
-        </button>
-        <button>
-          Speed: {this.state.speedFactor}x
-        </button>
-        <button
-          className="graph-button"
-          onClick={() => {
-            if (this.state.speedFactor <= 1.4) {
-              this.setState({speedChanged: true});
-              this.setState({ speedFactor: parseFloat((this.state.speedFactor + .1).toFixed(1))});
-            }
-          }}
-        >
-          <FaPlus></FaPlus>
-        </button>
-
-        <button
-          className="graph-button"
-          onClick={() => {
-            this.setState({ paused: !this.state.paused });
-          }}
-        >
-          {this.state.paused ? <FaPlay /> : <FaPause />}
-        </button>
-        <div id="sort-container"></div>
-      </div>
+          >
+            <button
+              className="graph-button"
+              ref="top"
+              onClick={() => {
+                this.setState({ paused: !this.state.paused });
+              }}
+            >
+              {this.state.paused ? <FaPlay /> : <FaPause />}
+            </button>
+          </OverlayTrigger>
+        </Row>
+        <Row>
+          <button
+            className="graph-button step-back"
+            onClick={() => {
+              if (!this.state.swapping) this.stepBack()
+            }}
+          >
+            <FaStepBackward></FaStepBackward>
+          </button>
+          <button
+            className="graph-button btn-label"
+            onClick={(e) => {
+              e.preventDefault()
+            }}
+          >
+            Stepper
+          </button>
+          <button
+            className="graph-button"
+            onClick={() => {
+              if (!this.state.swapping) this.stepForward()
+            }}
+          >
+            <FaStepForward></FaStepForward>
+          </button>
+        </Row>
+        <Row>
+          <div id="sort-container"></div>
+        </Row>
+      </Container>
     );
   }
 }

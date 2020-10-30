@@ -30,7 +30,6 @@ button {
 }
 button:disabled,
 button[disabled] {
-  border: 1px solid #999999;
   background-color: #cccccc;
   color: #666666;
 }
@@ -51,6 +50,12 @@ button:hover {
   color: #fff;
   animation: diff-colors infinite 2s ease-in-out;
   filter: blur(0px);
+}
+.btn-label:hover {
+  transform: none !important;
+  animation: none;
+  box-shadow: 0px 6px 5px 0px #4444441f;
+  cursor: default;
 }
 
 @keyframes diff-colors {
