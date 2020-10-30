@@ -11,12 +11,20 @@ class InsertionSort extends Component {
     super(props);
     this.state = {
       animation_queue: [],
-      data: [2, 5, 3, 1, 6, 9, 4],
+      data: [9, 5, 3, 1, 6, 2, 4],
       speed: 1000,
-      paused: false
+      speedFactor: 1,
+      speedChanged: false,
+      paused: false,
+      interval: null
     };
   }
   componentDidMount() {
+    // Event Listener to check if window lost focus
+    // If so pause the algorithm
+    window.onblur = () => {
+      this.setState({paused: true})
+    }
     // set the dimensions and margins of the graph
     var margin = { top: 20, right: 0, bottom: 0, left: 20 },
       width = 900 - margin.left - margin.right,
@@ -93,35 +101,9 @@ class InsertionSort extends Component {
       });
 
     // Sort
-    this.insertionSort(this.state.data);
-    let speed = this.state.speed;
-    let interval = setInterval(() => {
-      if (this.state.speed != speed) {
-        clearInterval(interval);
-        setInterval(interval, this.state.speed);
-      }
-      if (this.state.animation_queue.length > 0
-          && !this.state.paused) {
-        this.swapBars(
-          this.state.animation_queue[0][0],
-          this.state.animation_queue[0][1],
-          svg,
-          this.state.data
-        );
-        this.state.animation_queue.shift();
-      } else if (this.state.animation_queue.length == 0) {
-        clearInterval(interval);
-      } else if (this.state.paused) {
-        console.log("Paused")
-        svg
-          .selectAll('mybar')
-          .attr('fill', 'red')
-      }
-    }, this.state.speed);
-
-    // if (this.state.animation_queue.length === 0) {
-    //   clearInterval(interval);
-    // }
+    this.insertionSort(this.state.data)
+    // Calculate Speed
+    this.startInterval()
   }
 
   insertionSort = (arr) => {
@@ -140,7 +122,46 @@ class InsertionSort extends Component {
     return arr;
   };
 
-  swapBars(barFromIndex, barToIndex, svg) {
+  startInterval = () => {
+    this.setState({speed: (1000 - ((this.state.speedFactor * 1000) - 1000))})
+    this.setState({interval: this.intervalEngine()})
+  }
+
+  restartInterval = () => {
+    clearInterval(this.state.interval);
+    this.startInterval();
+    this.setState({speedChanged: false})
+  }
+
+  endInterval = () => {
+    clearInterval(this.state.interval);
+  }
+
+  intervalEngine = () => {
+    // Calculate Speed Factor
+    let interval = setInterval(() => {
+      if (this.state.speedChanged) this.restartInterval();
+      if (this.state.animation_queue.length > 0
+          && !this.state.paused) {
+        console.log("Called Swap")
+        this.swapBars(
+          this.state.animation_queue[0][0],
+          this.state.animation_queue[0][1],
+          this.state.speed
+        );
+        this.state.animation_queue.shift();
+      } else if (this.state.animation_queue.length == 0) {
+        clearInterval(interval);
+      } else if (this.state.paused) {
+        console.log("Paused")
+      }
+    }, this.state.speed);
+    
+    return interval;
+  }
+
+  swapBars(barFromIndex, barToIndex) {
+    let speed = this.state.speed;
     let fromObj = d3.selectAll("rect[value='" + barFromIndex + "']");
     let toObj = d3.selectAll("rect[value='" + barToIndex + "']");
     let fromObjTxt = d3.selectAll("text[value='" + barFromIndex + "']");
@@ -148,36 +169,35 @@ class InsertionSort extends Component {
 
     fromObjTxt
       .transition()
-      .duration(500)
-      .attr('fill', '#9537ff')
-      .delay(400)
+      .duration(speed)
+      // .delay(speed - 500)
       .attr('x', toObjTxt.attr('x'));
 
     toObjTxt
       .transition()
-      .duration(500)
-      .attr('fill', '#9537ff')
-      .delay(400)
+      .duration(speed)
+      // .delay(speed - 500)
       .attr('x', fromObjTxt.attr('x'));
 
     fromObj
       .transition()
-      .duration(500)
+      .duration(speed)
       .attr('fill', '#9537ff')
-      .delay(400)
+      // .delay(speed - 500)
       .attr('x', toObj.attr('x'));
 
     toObj
       .transition()
-      .duration(500)
+      .duration(speed)
       .attr('fill', '#ffa500')
-      .delay(400)
+      // .delay(speed - 500)
       .attr('x', fromObj.attr('x'));
 
     // Reset Colors
-    fromObj.transition().duration(400).delay(1500).attr('fill', '#39a4ff');
-    toObj.transition().duration(400).delay(1500).attr('fill', '#39a4ff');
-
+    fromObj.transition().duration(speed).delay(speed).attr('fill', '#39a4ff');
+    toObj.transition().duration(speed).delay(speed).attr('fill', '#39a4ff');
+    
+    // Swap
     let temp = fromObj.attr('value');
     fromObj.attr('value', toObj.attr('value'));
     toObj.attr('value', temp);
@@ -186,7 +206,9 @@ class InsertionSort extends Component {
     toObjTxt.attr('value', temp);
   }
 
-  componentWillUnmount() {}
+  componentWillUnmount() {
+    this.endInterval();
+  }
 
   render() {
     return (
@@ -195,21 +217,23 @@ class InsertionSort extends Component {
         <button
           className="graph-button"
           onClick={() => {
-            if (this.state.speed >= 1600) {
-              this.setState({ speed: this.state.speed - 200 });
+            if (this.state.speedFactor >= 0.1) {
+              this.setState({speedChanged: true});
+              this.setState({ speedFactor: parseFloat((this.state.speedFactor - .1).toFixed(1))});
             }
           }}
         >
           <FaMinus></FaMinus>
         </button>
         <button>
-          Speed: {this.state.speed / 1000}s
+          Speed: {this.state.speedFactor}x
         </button>
         <button
           className="graph-button"
           onClick={() => {
-            if (this.state.speed <= 3000) {
-              this.setState({ speed: this.state.speed + 200 });
+            if (this.state.speedFactor <= 1.4) {
+              this.setState({speedChanged: true});
+              this.setState({ speedFactor: parseFloat((this.state.speedFactor + .1).toFixed(1))});
             }
           }}
         >
