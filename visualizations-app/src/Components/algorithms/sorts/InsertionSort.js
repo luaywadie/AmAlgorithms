@@ -4,9 +4,7 @@ import * as d3 from 'd3';
 // Libraries
 import {Container, Row, Col, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import { FaStepBackward, FaStepForward, FaPause, FaPlay,
-        FaPlus, FaMinus} from 'react-icons/fa';
-import { to } from 'mathjs';
-import { svg } from 'd3';
+        FaPlus, FaMinus, FaSyncAlt} from 'react-icons/fa';
 
 
 class InsertionSort extends Component {
@@ -15,7 +13,7 @@ class InsertionSort extends Component {
     this.state = {
       animation_queue: [],
       stepper_queue: [],
-      data: [9, 5, 3, 1, 6, 2, 4],
+      data: [9, 5, 3, 8, 1, 6, 2, 4, 7],
       speed: 1000,
       speedFactor: 1,
       speedChanged: false,
@@ -30,6 +28,15 @@ class InsertionSort extends Component {
     window.onblur = () => {
       this.setState({paused: true})
     }
+    // Start the Algorithm
+    this.startAlgorithm();
+  }
+  
+  componentWillUnmount() {
+    this.endInterval();
+  }
+
+  startAlgorithm = () => {
     // set the dimensions and margins of the graph
     var margin = { top: 20, right: 0, bottom: 0, left: 20 },
     width = 900 - margin.left - margin.right,
@@ -81,7 +88,7 @@ class InsertionSort extends Component {
     .enter()
     .append('text')
     .attr('x', function (d) {
-      return x(d) + 50;
+      return x(d) + 35;
     })
     .attr('y', function (d) {
       return y(d) - 10;
@@ -105,14 +112,8 @@ class InsertionSort extends Component {
       return height - y(d);
     });
     
-    // Sort
-    this.insertionSort(this.state.data)
     // Calculate Speed
     this.startInterval()
-  }
-  
-  componentWillUnmount() {
-    this.endInterval();
   }
 
   insertionSort = (arr) => {
@@ -126,12 +127,13 @@ class InsertionSort extends Component {
         this.state.animation_queue.push([j, j + 1]);
       }
       arr[j + 1] = el;
-      console.log(arr);
     }
     return arr;
   };
 
   startInterval = () => {
+    // Sort
+    this.insertionSort(this.state.data)
     this.setState({speed: (1000 - ((this.state.speedFactor * 1000) - 1000))})
     this.setState({interval: this.intervalEngine()})
   }
@@ -144,6 +146,7 @@ class InsertionSort extends Component {
 
   endInterval = () => {
     clearInterval(this.state.interval);
+    this.setState({paused: true})
   }
 
   intervalEngine = () => {
@@ -225,8 +228,8 @@ class InsertionSort extends Component {
   // Stepper
   stepBack = () => {
     if (this.state.stepper_queue.length > 0) {
-      let toElement = this.state.stepper_queue[0][1]
-      let fromElement = this.state.stepper_queue[0][0]
+      let toElement = this.state.stepper_queue[0][0]
+      let fromElement = this.state.stepper_queue[0][1]
       this.swapBars(toElement, fromElement)
       this.state.stepper_queue.shift()
       this.state.animation_queue.unshift([fromElement, toElement])
@@ -245,6 +248,35 @@ class InsertionSort extends Component {
     } else {
       // Handle Button Animations
     }
+  }
+
+  restartRandom = () => {
+    let MIN = 1;
+    let MAX = 10;
+    let randomArray = [];
+
+    while (randomArray.length < 9) {
+      let randomNumber = Math.floor(Math.random() * MAX) + MIN;
+      if (randomArray.indexOf(randomNumber) < 0) randomArray.push(randomNumber);
+    }
+    
+    this.endInterval()
+    this.clearSVG()
+    this.setState({data: randomArray},
+      this.startAlgorithm());
+    // this.endInterval();
+    // this.clearSVG();
+    // this.startAlgorithm();
+  }
+
+  clearSVG = () => {
+    // Clear the document container
+    document.getElementById("sort-container").innerHTML = "";
+    // Clear the animation and stepper queues
+    this.state.animation_queue = [];
+    this.state.stepper_queue = [];
+    // this.setState({animation_queue: []});
+    // this.setState({stepper_queue: []});
   }
 
 
@@ -322,6 +354,25 @@ class InsertionSort extends Component {
           >
             <FaStepForward></FaStepForward>
           </button>
+          <OverlayTrigger
+            key="bottom"
+            placement="bottom"
+            overlay={
+              <Tooltip id="tooltip-top">
+                Restart & Randomize<br></br> Array List
+              </Tooltip>
+            }
+          >
+            <button
+              className="graph-button"
+              ref="bottom"
+              onClick={() => {
+                this.restartRandom()
+              }}
+            >
+              <FaSyncAlt></FaSyncAlt>
+            </button>
+          </OverlayTrigger>
         </Row>
         <Row>
           <div id="sort-container"></div>
