@@ -7,6 +7,7 @@ import UndirectedGraphAlgorithms from '../Components/UndirectedGraphAlgorithms';
 import DirectedGraphAlgorithms from '../Components/DirectedGraphAlgorithms';
 import ScatterPlotAlgorithms from '../Components/ScatterPlotAlgorithms';
 import Heap from '../Components/data-structures/Heap';
+import Stack from '../Components/data-structures/Stack';
 import InsertionSort from '../Components/algorithms/sorts/InsertionSort';
 import NeuralNets from '../Components/NeuralNets';
 
@@ -29,6 +30,9 @@ const NavigationBar = () => {
           <NavDropdown title="Data Structures">
             <NavDropdown.Item eventKey="1" as={Link} to="/heap">
               Heap
+            </NavDropdown.Item>
+            <NavDropdown.Item eventKey="2" as={Link} to="/stack">
+              Stack
             </NavDropdown.Item>
           </NavDropdown>
 
@@ -96,6 +100,7 @@ const NavigationBar = () => {
         component={DirectedGraphAlgorithms}
       />
       <Route path="/heap" component={Heap} />
+      <Route path="/stack" component={Stack} />
       <Route path="/insertion_sort" component={InsertionSort} />
       <Route path="/ScatterPlotAlgorithms" component={ScatterPlotAlgorithms} />
       <Route path="/neural_nets" component={NeuralNets} />
