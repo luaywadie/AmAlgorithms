@@ -1,59 +1,53 @@
-"use strict";
-
-import { cloneElement } from 'react';
 import React, { Component } from 'react';
 
 class KMeans extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  //Perform K-Means clustering on points, plot, and animate
+  
+  //runs k-means algo, adding to the animation queue at each step, lastly starting the animation
   kmeans = async () => {
     let animationQueue = [];
-    animationQueue.push({ line: 0, centroids: null, closestCentroids: null});
+    animationQueue.push({ lineNum: 0, centroids: null, closestCentroids: null, shouldInitCentroids: false});
 
     const k = this.props.k;
     //Randomly initialize cluster centroids
     const randomPoints = this.getRandomElements(this.props.points, k);
     //create a shallow copy of centroids (to make sure the assigned points don't change)
     let centroids = [...randomPoints];
-    animationQueue.push({ line: 1, centroids: [...centroids], shouldInitCentroids: true });
+    animationQueue.push({ lineNum: 1, centroids: [...centroids], closestCentroids: null, shouldInitCentroids: true });
 
     //keep track of convergence
     let hasConverged = false; 
-    animationQueue.push({ line: 2, shouldInitCentroids: false});
+    animationQueue.push({ lineNum: 2, shouldInitCentroids: false, hasConverged});
 
     //closestCentroids[8] === point 8's closest cluster centroid
     let closestCentroids = [];
 
     //highlights the "do" line, snapshots initial centroids
-    animationQueue.push({ line: 3, centroids: [...centroids], closestCentroids: [] });
+    animationQueue.push({ lineNum: 3, centroids: [...centroids], closestCentroids: [] });
 
     // Main K-Means loop
     do {
       //assign points to clusters
       closestCentroids = this.getClusterAssignments(this.props.points, centroids);
-      animationQueue.push({ line: 4, closestCentroids: [...closestCentroids] });
+      animationQueue.push({ lineNum: 4, closestCentroids: [...closestCentroids] });
 
       let prevCentroids = [...centroids];
-      animationQueue.push({ line: 5, centroids: [...centroids] });
+      animationQueue.push({ lineNum: 5, centroids: [...centroids] });
 
       this.updateCentroids(this.props.points, k, centroids, closestCentroids);
-      animationQueue.push({ line: 6, centroids: [...centroids], hasConverged});
+      animationQueue.push({ lineNum: 6, centroids: [...centroids], hasConverged});
 
       //Check convergence
       hasConverged = prevCentroids.reduce(
         (bool, currentCentroid, i) => (currentCentroid.x === centroids[i].x) && (currentCentroid.y === centroids[i].y),
         true
       );
-      animationQueue.push({ line: 7, hasConverged});
-      animationQueue.push({ line: 8, hasConverged});
+      animationQueue.push({ lineNum: 7, hasConverged});
+      animationQueue.push({ lineNum: 8, hasConverged});
 
     } while (!hasConverged);
-    animationQueue.push({ line: 9});
+    animationQueue.push({ lineNum: 9});
 
-    console.log(JSON.stringify(animationQueue, null, 2));
+    //kick off the main animation loop
     this.props.renderAnimationQueue(animationQueue);
   };
 

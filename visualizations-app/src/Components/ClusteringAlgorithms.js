@@ -1,5 +1,3 @@
-"use strict";
-
 import React, { Component } from 'react';
 import createScatterplot from '../graph-builders/scatterplot-builder';
 import * as d3 from 'd3';
@@ -10,9 +8,9 @@ class ClusteringAlgorithms extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      pause: false,
+      pause: true,
       stop: true,
-      stepMode: true,
+      isStepping: false,
       speed: 1,
       runningAlg: null,
       k: 5,
@@ -60,45 +58,66 @@ class ClusteringAlgorithms extends Component {
     this.setState({ runningAlg: alg });
   };
 
-  setAnimationQueue = async (aq) => {
-    this.setState({ animationQueue: aq });
-  }
 
-  async pause() {
-    while (!this.state.stepMode && this.state.pause) {
+  async wait() {
+    while (!this.state.isStepping && this.state.pause) {
       await new Promise((r) => setTimeout(r, 100));
     }
   }
 
   //main function for the animation
   renderAnimationQueue = async (aq) => {
-    this.setAnimationQueue(aq);
+    this.setState({ animationQueue: aq });
 
-    let shouldWait = true;
     let waitTime = 1000;
     this.setState({ stepIndex: 0 });
-    while (this.state.stepIndex < this.state.animationQueue.length) {
+    while (!this.state.stop) {
+      const currentStepIndex = this.state.stepIndex;
+      const currentLineNum = this.state.animationQueue[currentStepIndex].lineNum;
+      this.setState({ lineNum: currentLineNum });
+      this.toggleLineHighlight(currentLineNum);
+      //wait until a step button or the play button is pressed
+      await this.wait();
       //should not wait between each step if in step mode
-      waitTime = this.state.stepMode ? 1000 : 0;
-      const lineNum = this.state.animationQueue[this.state.stepIndex].line
-      this.toggleLineHighlight(lineNum);
-      //do nothing while paused and not in step mode
-      await this.pause();
+      waitTime = this.state.isStepping ? 0 : 1000;
       //wait for a moment while in play mode (dependent on the speed)
       await new Promise((r) => setTimeout(r, waitTime / this.state.speed));
-      //unhighlight and execute the line
-      this.toggleLineHighlight(lineNum);
-      this.setState({ ...this.state.animationQueue[this.state.stepIndex]});
-      if(this.state.shouldInitCentroids){
+      this.toggleLineHighlight(currentLineNum);
+      //line execution
+      //check if the user stepped backwards
+      if (this.state.stepIndex === currentStepIndex - 1) {
+        
+        if (currentStepIndex === 1) {
+          this.setState({ ...this.state.animationQueue[currentStepIndex - 1]});
+        }
+        //need to hide centroids from the plot if stepping back to line 1?
+        else {
+          //state needs to be reset to one line before the line we're stepping back to
+          this.setState({ ...this.state.animationQueue[currentStepIndex - 2]});
+        }
+      }
+      else {
+        //execute the currently highlighted line as normal
+        this.setState({ ...this.state.animationQueue[currentStepIndex]});
+      }
+      if(this.state.shouldInitCentroids) {
         this.addCentroids();
       }
-      if(this.state.centroids && this.state.closestCentroids) {
+      if (this.state.closestCentroids && this.state.closestCentroids.length) {
         this.colorPoints();
+      }
+      if (this.state.centroids && this.state.centroids.length) {
         this.moveCentroids();
       }
-      if(!this.state.stepMode) { 
-        this.setState({stepIndex: this.state.stepIndex + 1});
+      //if just executed the line before the DONE line (or somehow after the DONE line)
+      if (currentStepIndex >= this.state.animationQueue.length - 2) {
+        this.setState({ pause: true })
       }
+      this.setState(
+        (this.state.isStepping) ?
+        {isStepping: !this.state.isStepping} :
+        {stepIndex: this.state.stepIndex + 1}
+      );
     }
   }
   
@@ -106,7 +125,7 @@ class ClusteringAlgorithms extends Component {
   // Helper functions for renderAnimationQueue
   toggleLineHighlight(lineNum) {
     let el = document.getElementById(this.state.runningAlg + '-' + lineNum);
-    el.classList.toggle('active-code-line');
+    if (el) el.classList.toggle('active-code-line');
   }
 
   addCentroids() {
@@ -126,8 +145,8 @@ class ClusteringAlgorithms extends Component {
       .attr("cx", (centroid) => this.scaleX(centroid.x))
       .attr("cy", (centroid) => this.scaleY(centroid.y))
       .attr("r", 10)
-      .attr("id", (i) => `centroid${i}`)
-      .attr("class", (i) => `cluster${i} centroid`);
+      .attr("id", (d, i) => `centroid${i}`)
+      .attr("class", (d, i) => `cluster${i} centroid`);
   }
 
   colorPoints() {
@@ -152,8 +171,8 @@ class ClusteringAlgorithms extends Component {
   }
 
   moveCentroids() {
-    for (let i = 0; i < this.state.k; i++) {
-      this.moveIthCentroid(i, this.state.centroids[0]);
+    for (let i = 0; i < this.state.k; ++i) {
+      this.moveIthCentroid(i, this.state.centroids[i]);
     }
   }
 
@@ -172,8 +191,6 @@ class ClusteringAlgorithms extends Component {
     .domain([0, 7])
     .range([460, 0]);
   // -----------------------------------------
-
-  
 
   renderKMeansPseudocode() {
     function indentation(num) {
@@ -274,11 +291,7 @@ class ClusteringAlgorithms extends Component {
             <button
               onClick={() => {
                 if(this.state.stepIndex > 0) {
-                  let newStepIndex = this.state.stepIndex - 1;
-                  while (!this.state.animationQueue[newStepIndex].line) {
-                    newStepIndex -= 1;
-                  }
-                  this.setState({ stepIndex: newStepIndex, pause: true, stepMode: true });
+                  this.setState({ stepIndex: this.state.stepIndex - 1, pause: true, isStepping: true });
                 }
               }}
             >
@@ -286,19 +299,15 @@ class ClusteringAlgorithms extends Component {
             </button>
             <button
               onClick={() => {
-                this.setState({ pause: !this.state.pause, stepMode: false });
+                this.setState({ pause: !this.state.pause, isStepping: false });
               }}
             >
             {this.state.pause ? <FaPlay /> : <FaPause />}
             </button>
             <button
               onClick={() => {
-                if(this.state.stepIndex < this.state.animationQueue.length) {
-                  let newStepIndex = this.state.stepIndex + 1;
-                  while (!this.state.animationQueue[newStepIndex].line) {
-                    newStepIndex += 1;
-                  }
-                  this.setState({ stepIndex: newStepIndex, pause: true, stepMode: true });
+                if(this.state.stepIndex < this.state.animationQueue.length - 1) {
+                  this.setState({ stepIndex: this.state.stepIndex + 1, pause: true, isStepping: true });
                 }
               }}
             >
