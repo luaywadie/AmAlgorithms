@@ -8,6 +8,7 @@ $color4: #2be3f0;
 $color5: #fa3b3b;
 $color6: #ffa339;
 $color7: #9900cc;
+$color8: #85d900;
 
 // Set stroke width of points
 @mixin circle-stroke-width {
@@ -87,4 +88,10 @@ $color7: #9900cc;
   fill: $color7;
   @include circle-stroke-width;
   stroke: $color7;
+}
+
+.cluster8 {
+  fill: $color8;
+  @include circle-stroke-width;
+  stroke: $color8;
 }
