@@ -1,63 +1,59 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
 
-class Stack extends Component {
+class Queue extends Component {
   constructor(props) {
-    super(props);
+  super(props);
     this.state = {
       data: [3, 2, 7, 4, 9],
-      top: 5,
       inputNum: '',
-      performingPop: false,
-      performingPush: false
+      performingDequeue: false,
+      performingEnqueue: false
     };
   }
 
-  push(element) {
+  enqueue(element) {
     if(element !== null){
       this.state.data.push(element);
-      this.setState({top: this.state.top + 1});
-      this.createStack();
+      this.createQueue();
     }
   }
 
-  pop() {
+  dequeue() {
     if( this.isEmpty() === false ) {
-      this.state.data.pop(); 
-      this.setState({top: this.state.top - 1});
-      d3.selectAll("rect[id='" + (this.state.data.length) + "']").remove();
-      d3.selectAll("text[id='" + (this.state.data.length) + "']").remove();
-      this.createStack();
+      this.state.data.shift(); 
+      d3.selectAll("rect[id='" + 0 + "']").remove();
+      d3.selectAll("text[id='" + 0 + "']").remove();
+      this.createQueue();
     }
   }
 
   clear() {
     d3.selectAll('#svg-container').remove();
-    this.setState({top: 0});
     this.setState({data: []})
   }
 
   isEmpty() {
-    return this.state.top === 0;
+    return this.state.data.length === 0;
   }
 
   componentDidMount() {
-    this.createStack();
+    this.createQueue();
   }
   
-  createStack() {
-    // Clear Stack List
-    let clearStack = () => {
+  createQueue() {
+
+    let clearQueue = () => {
       d3.selectAll('#svg-container').remove();
     }
-    clearStack();
+    clearQueue();
 
     var margin = { top: 100, right: 0, bottom: 0, left: 30 },
       width = 500,
       height = 300;
     
     var svg = d3
-      .select('#stack-container')
+      .select('#queue-container')
       .append('svg')
       .attr('id', 'svg-container')
       .attr('width', width)
@@ -72,7 +68,7 @@ class Stack extends Component {
 
     var y = d3
       .scaleBand()
-      .range([width, 0])
+      .range([0, width])
       .domain(this.state.data);
 
     svg
@@ -123,63 +119,54 @@ class Stack extends Component {
       .attr('height', 50);
     }
 
-  renderStackClassPseudocode() {
+  renderQueueClassPseudocode() {
     const indentation = (num) => {
       return num * 20;
     };
     return (
       <div>
-        <div id={'Stack-class-1'}>
-          1<span style={{ marginLeft: indentation(1) }}>Class Stack</span>
+        <div id={'Queue-class-1'}>
+          1<span style={{ marginLeft: indentation(1) }}>Class Queue</span>
         </div>
-        <div id={'Stack-class-2'}>
-          2<span style={{ marginLeft: indentation(2) }}>let s be an array</span>
-        </div>
-        <div id={'Stack-class-3'}>
-          3<span style={{ marginLeft: indentation(2) }}>let top be equal to the length of s</span>
+        <div id={'Queue-class-2'}>
+          2<span style={{ marginLeft: indentation(2) }}>let q be an array</span>
         </div>
         <br></br>
       </div>
     );
   }
 
-  renderPopPseudocode() {
+  renderDequeuePseudocode() {
     const indentation = (num) => {
       return num * 20;
     };
     return (
       <div>
-        <div id={'Stack-pop-1'}>
-          1<span style={{ marginLeft: indentation(1) }}>pop()</span>
+        <div id={'Queue-dequeue-1'}>
+          1<span style={{ marginLeft: indentation(1) }}>dequeue()</span>
         </div>
-        <div id={'Stack-pop-2'}>
-          2<span style={{ marginLeft: indentation(2) }}>if top is not equal to 0</span>
+        <div id={'Queue-dequeue-2'}>
+          2<span style={{ marginLeft: indentation(2) }}>if q.length is not equal to 0</span>
         </div>
-        <div id={'Stack-pop-3'}>
-          3<span style={{ marginLeft: indentation(3) }}>removes last element of s</span>
-        </div>
-        <div id={'Stack-pop-4'}>
-          4<span style={{ marginLeft: indentation(3) }}>top = top - 1</span>
+        <div id={'Queue-dequeue-3'}>
+          3<span style={{ marginLeft: indentation(3) }}>removes first element of s</span>
         </div>
         <br></br>
       </div>
     );
   }
 
-  renderPushPseudocode() {
+  renderEnqueuePseudocode() {
     const indentation = (num) => {
       return num * 20;
     };
     return (
       <div>
-        <div id={'Stack-push-1'}>
+        <div id={'Queue-enqueue-1'}>
           1<span style={{ marginLeft: indentation(1) }}>push()</span>
         </div>
-        <div id={'Stack-push-2'}>
+        <div id={'Queue-enqueue-2'}>
           2<span style={{ marginLeft: indentation(2) }}>adds element to the end of s</span>
-        </div>
-        <div id={'Stack-push-3'}>
-          3<span style={{ marginLeft: indentation(2) }}>top = top + 1</span>
         </div>
         <br></br>
       </div>
@@ -211,19 +198,19 @@ class Stack extends Component {
                 className="graph-button"
                 type="submit"
                 onClick={async () => 
-                  {this.push(this.state.inputNum)}
+                  {this.enqueue(this.state.inputNum)}
                 }
               >
-                Push
+                Enqueue
               </button>
               <button
                 className="graph-button"
                 type="submit"
                 onClick={() => {
-                  this.pop();
+                  this.dequeue();
                 }}
               >
-                Pop
+                Dequeue
               </button>
               <button
                 className="graph-button"
@@ -234,12 +221,12 @@ class Stack extends Component {
               >
                 Clear
               </button>
-              <div id="stack-container"></div>
+              <div id="queue-container"></div>
           </form>
         </div>
         <div className={'col-4'} id={'graph-container'}>
           <div className={'row'}>
-            {this.renderStackClassPseudocode()}
+            
           </div>
         </div>
       </div>
@@ -248,4 +235,4 @@ class Stack extends Component {
 
 }
 
-export default Stack;
+export default Queue;
