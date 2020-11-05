@@ -6,15 +6,14 @@ class Queue extends Component {
   super(props);
     this.state = {
       data: [3, 2, 7, 4, 9],
-      inputNum: '',
-      performingDequeue: false,
-      performingEnqueue: false
+      inputNum: ''
     };
   }
 
   enqueue(element) {
-    if(element !== null){
+    if(element !== null) {
       this.state.data.push(element);
+      this.setState({data: this.state.data});
       this.createQueue();
     }
   }
@@ -22,6 +21,7 @@ class Queue extends Component {
   dequeue() {
     if( this.isEmpty() === false ) {
       this.state.data.shift(); 
+      this.setState({data: this.state.data});
       d3.selectAll("rect[id='" + 0 + "']").remove();
       d3.selectAll("text[id='" + 0 + "']").remove();
       this.createQueue();
@@ -173,6 +173,28 @@ class Queue extends Component {
     );
   } 
 
+  formatEnqueueButtonText() {
+    let linkText = '';
+    if (this.state.data.includes(this.state.inputNum)) {
+      linkText = 'No Duplicates';
+    } else if (this.state.data.length === 7) {
+      linkText = 'Full Queue'
+    } else {
+      linkText = 'Enqueue';
+    }
+    return linkText;
+  }
+
+  formatDequeueButtonText() {
+    let linkText = '';
+    if (this.state.data.length === 0) {
+      linkText = 'Empty Queue';
+    } else {
+      linkText = 'Dequeue';
+    }
+    return linkText;
+  }
+
   render() {
     return(
       <div className={'row'}>
@@ -193,24 +215,27 @@ class Queue extends Component {
                 });
               }}
             />
-
+            
               <button
                 className="graph-button"
+                disabled={this.state.data.includes(Number(this.state.inputNum)) ||
+                  this.state.data.length === 7}
                 type="submit"
                 onClick={async () => 
                   {this.enqueue(this.state.inputNum)}
                 }
               >
-                Enqueue
+                {this.formatEnqueueButtonText()}
               </button>
               <button
                 className="graph-button"
+                disabled={this.state.data.length === 0}
                 type="submit"
                 onClick={() => {
                   this.dequeue();
                 }}
               >
-                Dequeue
+                {this.formatDequeueButtonText()}
               </button>
               <button
                 className="graph-button"
@@ -226,7 +251,7 @@ class Queue extends Component {
         </div>
         <div className={'col-4'} id={'graph-container'}>
           <div className={'row'}>
-            
+
           </div>
         </div>
       </div>

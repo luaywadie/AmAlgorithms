@@ -7,15 +7,14 @@ class Stack extends Component {
     this.state = {
       data: [3, 2, 7, 4, 9],
       top: 5,
-      inputNum: '',
-      performingPop: false,
-      performingPush: false
+      inputNum: ''
     };
   }
 
   push(element) {
     if(element !== null){
       this.state.data.push(element);
+      this.setState({data: this.state.data});
       this.setState({top: this.state.top + 1});
       this.createStack();
     }
@@ -24,6 +23,7 @@ class Stack extends Component {
   pop() {
     if( this.isEmpty() === false ) {
       this.state.data.pop(); 
+      this.setState({data: this.state.data});
       this.setState({top: this.state.top - 1});
       d3.selectAll("rect[id='" + (this.state.data.length) + "']").remove();
       d3.selectAll("text[id='" + (this.state.data.length) + "']").remove();
@@ -186,6 +186,28 @@ class Stack extends Component {
     );
   } 
 
+  formatPushButtonText() {
+    let linkText = '';
+    if (this.state.data.includes(this.state.inputNum)) {
+      linkText = 'No Duplicates';
+    } else if (this.state.data.length === 7) {
+      linkText = 'Full Stack'
+    } else {
+      linkText = 'Push';
+    }
+    return linkText;
+  }
+
+  formatPopButtonText() {
+    let linkText = '';
+    if (this.state.data.length === 0) {
+      linkText = 'Empty Stack';
+    } else {
+      linkText = 'Pop';
+    }
+    return linkText;
+  }
+
   render() {
     return(
       <div className={'row'}>
@@ -209,21 +231,24 @@ class Stack extends Component {
 
               <button
                 className="graph-button"
+                disabled={this.state.data.includes(Number(this.state.inputNum)) ||
+                  this.state.data.length === 7}
                 type="submit"
                 onClick={async () => 
                   {this.push(this.state.inputNum)}
                 }
               >
-                Push
+                {this.formatPushButtonText()}
               </button>
               <button
                 className="graph-button"
+                disabled={this.state.data.length === 0}
                 type="submit"
                 onClick={() => {
                   this.pop();
                 }}
               >
-                Pop
+                {this.formatPopButtonText()}
               </button>
               <button
                 className="graph-button"
@@ -239,7 +264,7 @@ class Stack extends Component {
         </div>
         <div className={'col-4'} id={'graph-container'}>
           <div className={'row'}>
-            {this.renderStackClassPseudocode()}
+
           </div>
         </div>
       </div>
