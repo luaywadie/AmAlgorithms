@@ -10,6 +10,7 @@ import Heap from '../Components/data-structures/Heap';
 import Stack from '../Components/data-structures/Stack';
 import Queue from '../Components/data-structures/Queue';
 import InsertionSort from '../Components/algorithms/sorts/InsertionSort';
+import SelectionSort from '../Components/algorithms/sorts/SelectionSort';
 import NeuralNets from '../Components/NeuralNets';
 
 import '../styles/Navigation-bar.scss';
@@ -43,6 +44,9 @@ const NavigationBar = () => {
           <NavDropdown title="Sorting">
             <NavDropdown.Item eventKey="1" as={Link} to="/insertion_sort">
               Insertion Sort
+            </NavDropdown.Item>
+            <NavDropdown.Item eventKey="2" as={Link} to="/selection_sort">
+              Selection Sort
             </NavDropdown.Item>
           </NavDropdown>
 
@@ -107,6 +111,7 @@ const NavigationBar = () => {
       <Route path="/stack" component={Stack} />
       <Route path="/queue" component={Queue} />
       <Route path="/insertion_sort" component={InsertionSort} />
+      <Route path="/selection_sort" component={SelectionSort} />
       <Route path="/ClusteringAlgorithms" component={ClusteringAlgorithms} />
       <Route path="/neural_nets" component={NeuralNets} />
       <Route exact path="/" component={MainPage} />

@@ -9,7 +9,7 @@ import { FaStepBackward, FaStepForward, FaPause, FaPlay,
         FaPlus, FaMinus, FaSyncAlt} from 'react-icons/fa';
 
 
-class InsertionSort extends Component {
+class SelectionSort extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -47,7 +47,7 @@ class InsertionSort extends Component {
     
     // append the svg object to the body of the page
     var svg = d3
-    .select('#sort-container.insertion-sort')
+    .select('#sort-container.selection-sort')
     .append('svg')
     .attr('width', width + margin.left + margin.right)
     .attr('height', height + margin.top + margin.bottom)
@@ -119,7 +119,7 @@ class InsertionSort extends Component {
     this.startInterval()
   }
 
-  insertionSort = (arr) => {
+  selectionSort = (arr) => {
     const len = arr.length;
     for (let i = 0; i < len; i++) {
       let el = arr[i];
@@ -134,9 +134,28 @@ class InsertionSort extends Component {
     return arr;
   };
 
+    selectionSort = (arr) => {
+        let len = arr.length;
+        for (let i = 0; i < len; i++) {
+            let min = i;
+            for (let j = i + 1; j < len; j++) {
+                if (arr[min] > arr[j]) {
+                    min = j;
+                }
+            }
+            if (min !== i) {
+                let tmp = arr[i];
+                arr[i] = arr[min];
+                arr[min] = tmp;
+                this.state.animation_queue.push([i, min]);
+            }
+        }
+        return arr;
+    }
+
   startInterval = () => {
     // Sort
-    this.insertionSort(this.state.data)
+    this.selectionSort(this.state.data)
     this.setState({speed: (1000 - ((this.state.speedFactor * 1000) - 1000))})
     this.setState({interval: this.intervalEngine()})
   }
@@ -370,11 +389,11 @@ class InsertionSort extends Component {
           </OverlayTrigger>
         </Row>
         <Row>
-          <div id="sort-container" className="insertion-sort"></div>
+          <div id="sort-container" className="selection-sort"></div>
         </Row>
       </Container>
     );
   }
 }
 
-export default InsertionSort;
+export default SelectionSort;
