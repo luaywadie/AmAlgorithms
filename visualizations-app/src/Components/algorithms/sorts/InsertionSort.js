@@ -1,8 +1,10 @@
 // Core Imports
 import React, { Component } from 'react';
 import * as d3 from 'd3';
+// Styling
+import 'styles/Sorts.scss';
 // Libraries
-import {Container, Row, Col, Tooltip, OverlayTrigger } from 'react-bootstrap';
+import {Container, Row, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import { FaStepBackward, FaStepForward, FaPause, FaPlay,
         FaPlus, FaMinus, FaSyncAlt} from 'react-icons/fa';
 
@@ -13,11 +15,11 @@ class InsertionSort extends Component {
     this.state = {
       animation_queue: [],
       stepper_queue: [],
-      data: [9, 5, 3, 8, 1, 6, 2, 4, 7],
+      data: [],
       speed: 1000,
       speedFactor: 1,
       speedChanged: false,
-      paused: false,
+      paused: true,
       swapping: false,
       interval: null
     };
@@ -29,7 +31,7 @@ class InsertionSort extends Component {
       this.setState({paused: true})
     }
     // Start the Algorithm
-    this.startAlgorithm();
+    this.restartRandom();
   }
   
   componentWillUnmount() {
@@ -37,6 +39,7 @@ class InsertionSort extends Component {
   }
 
   startAlgorithm = () => {
+    console.log(this.state.data)
     // set the dimensions and margins of the graph
     var margin = { top: 20, right: 0, bottom: 0, left: 20 },
     width = 900 - margin.left - margin.right,
@@ -155,7 +158,6 @@ class InsertionSort extends Component {
       if (this.state.speedChanged) this.restartInterval();
       if (this.state.animation_queue.length > 0
           && !this.state.paused) {
-        console.log("Called Swap")
         this.swapBars(
           this.state.animation_queue[0][0],
           this.state.animation_queue[0][1],
@@ -184,27 +186,23 @@ class InsertionSort extends Component {
     fromObjTxt
       .transition()
       .duration(speed)
-      // .delay(speed - 500)
       .attr('x', toObjTxt.attr('x'));
 
     toObjTxt
       .transition()
       .duration(speed)
-      // .delay(speed - 500)
       .attr('x', fromObjTxt.attr('x'));
 
     fromObj
       .transition()
       .duration(speed)
       .attr('fill', '#9537ff')
-      // .delay(speed - 500)
       .attr('x', toObj.attr('x'));
 
     toObj
       .transition()
       .duration(speed)
       .attr('fill', '#ffa500')
-      // .delay(speed - 500)
       .attr('x', fromObj.attr('x'));
 
     // Reset Colors
@@ -228,10 +226,10 @@ class InsertionSort extends Component {
   // Stepper
   stepBack = () => {
     if (this.state.stepper_queue.length > 0) {
-      let toElement = this.state.stepper_queue[0][0]
-      let fromElement = this.state.stepper_queue[0][1]
+      let toElement = this.state.stepper_queue[this.state.stepper_queue.length - 1][0]
+      let fromElement = this.state.stepper_queue[this.state.stepper_queue.length - 1][1]
       this.swapBars(toElement, fromElement)
-      this.state.stepper_queue.shift()
+      this.state.stepper_queue.pop()
       this.state.animation_queue.unshift([fromElement, toElement])
     } else {
       // Handle Button Animations
@@ -263,10 +261,9 @@ class InsertionSort extends Component {
     this.endInterval()
     this.clearSVG()
     this.setState({data: randomArray},
-      this.startAlgorithm());
-    // this.endInterval();
-    // this.clearSVG();
-    // this.startAlgorithm();
+      () => {
+        this.startAlgorithm()
+      });
   }
 
   clearSVG = () => {
@@ -275,8 +272,6 @@ class InsertionSort extends Component {
     // Clear the animation and stepper queues
     this.state.animation_queue = [];
     this.state.stepper_queue = [];
-    // this.setState({animation_queue: []});
-    // this.setState({stepper_queue: []});
   }
 
 
