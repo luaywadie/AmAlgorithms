@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/AmAlgorithms/static/css/main.e5ab6a20.chunk.css",
-    "main.js": "/AmAlgorithms/static/js/main.40d9fee8.chunk.js",
-    "main.js.map": "/AmAlgorithms/static/js/main.40d9fee8.chunk.js.map",
-    "runtime-main.js": "/AmAlgorithms/static/js/runtime-main.64066ce1.js",
-    "runtime-main.js.map": "/AmAlgorithms/static/js/runtime-main.64066ce1.js.map",
+    "main.css": "/AmAlgorithms/static/css/main.8b1f9448.chunk.css",
+    "main.js": "/AmAlgorithms/static/js/main.b0f7a5d8.chunk.js",
+    "main.js.map": "/AmAlgorithms/static/js/main.b0f7a5d8.chunk.js.map",
+    "runtime-main.js": "/AmAlgorithms/static/js/runtime-main.e30e0052.js",
+    "runtime-main.js.map": "/AmAlgorithms/static/js/runtime-main.e30e0052.js.map",
     "static/css/2.2a86faee.chunk.css": "/AmAlgorithms/static/css/2.2a86faee.chunk.css",
-    "static/js/2.5c4c7b6c.chunk.js": "/AmAlgorithms/static/js/2.5c4c7b6c.chunk.js",
-    "static/js/2.5c4c7b6c.chunk.js.map": "/AmAlgorithms/static/js/2.5c4c7b6c.chunk.js.map",
+    "static/js/2.e82cde17.chunk.js": "/AmAlgorithms/static/js/2.e82cde17.chunk.js",
+    "static/js/2.e82cde17.chunk.js.map": "/AmAlgorithms/static/js/2.e82cde17.chunk.js.map",
     "index.html": "/AmAlgorithms/index.html",
-    "precache-manifest.a822deebb6bf6ac9200f1990cc1f1841.js": "/AmAlgorithms/precache-manifest.a822deebb6bf6ac9200f1990cc1f1841.js",
+    "precache-manifest.a500286394af9790b99da1be64a904a7.js": "/AmAlgorithms/precache-manifest.a500286394af9790b99da1be64a904a7.js",
     "service-worker.js": "/AmAlgorithms/service-worker.js",
     "static/css/2.2a86faee.chunk.css.map": "/AmAlgorithms/static/css/2.2a86faee.chunk.css.map",
-    "static/css/main.e5ab6a20.chunk.css.map": "/AmAlgorithms/static/css/main.e5ab6a20.chunk.css.map",
-    "static/js/2.5c4c7b6c.chunk.js.LICENSE.txt": "/AmAlgorithms/static/js/2.5c4c7b6c.chunk.js.LICENSE.txt"
+    "static/css/main.8b1f9448.chunk.css.map": "/AmAlgorithms/static/css/main.8b1f9448.chunk.css.map",
+    "static/js/2.e82cde17.chunk.js.LICENSE.txt": "/AmAlgorithms/static/js/2.e82cde17.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.64066ce1.js",
+    "static/js/runtime-main.e30e0052.js",
     "static/css/2.2a86faee.chunk.css",
-    "static/js/2.5c4c7b6c.chunk.js",
-    "static/css/main.e5ab6a20.chunk.css",
-    "static/js/main.40d9fee8.chunk.js"
+    "static/js/2.e82cde17.chunk.js",
+    "static/css/main.8b1f9448.chunk.css",
+    "static/js/main.b0f7a5d8.chunk.js"
   ]
 }
