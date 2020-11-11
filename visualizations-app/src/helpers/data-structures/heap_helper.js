@@ -1,4 +1,4 @@
-class Heap {
+export class Heap {
   constructor() {
     this.h = [0];
     this.size = 0;
@@ -66,4 +66,4 @@ class Heap {
     return a;
   }
 }
-module.exports = { Heap };
+// module.exports = { Heap };

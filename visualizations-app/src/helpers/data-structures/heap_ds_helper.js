@@ -1,4 +1,4 @@
-class Heap_DS_Helper {
+export class Heap_DS_Helper {
   constructor() {
     this.h = [0];
     this.size = 0;
@@ -66,4 +66,4 @@ class Heap_DS_Helper {
     return a;
   }
 }
-module.exports = { Heap_DS_Helper };
+// module.exports = { Heap_DS_Helper };

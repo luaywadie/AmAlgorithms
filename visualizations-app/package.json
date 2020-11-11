@@ -1,5 +1,6 @@
 {
-  "name": "g-search",
+  "homepage": "http://luaywadie.github.io/AmAlgorithms",
+  "name": "AmAlgorithms",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
