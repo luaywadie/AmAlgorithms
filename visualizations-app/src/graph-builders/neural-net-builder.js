@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 function buildNetwork() {
   var width = 960,
     height = 500,
-    nodeSize = 30;
+    nodeSize = 40;
 
   let nodes = [
     { label: 'i0', layer: 1 },
@@ -11,9 +11,10 @@ function buildNetwork() {
     { label: 'h0', layer: 2 },
     { label: 'i2', layer: 1 },
     { label: 'h1', layer: 2 },
-    { label: 'h2', layer: 2 },
-    { label: 'h3', layer: 2 },
+    // { label: 'h2', layer: 2 },
+    // { label: 'h3', layer: 2 },
     { label: 'o0', layer: 3 },
+    { label: 'o1', layer: 3 }
   ];
 
   var color = d3.scaleOrdinal(d3.schemeCategory10);
@@ -44,7 +45,7 @@ function buildNetwork() {
   );
 
   var xdist = width / Object.keys(netsize).length,
-    ydist = height / largestLayerSize;
+    ydist = (1.5*height) / largestLayerSize;
 
   // create node locations
   nodes.map(function (d) {
@@ -112,7 +113,7 @@ function buildNetwork() {
     .attr('dx', '-.35em')
     .attr('dy', '.35em')
     .text(function (d) {
-      return d.label;
+      return `${d.label}`;
     });
 }
 
