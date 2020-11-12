@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Link, HashRouter } from 'react-router-dom';
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 
 import TreeTraversals from '../Components/TreeTraversals';
@@ -18,7 +18,7 @@ import MainPage from './MainPage';
 
 const NavigationBar = () => {
   return (
-    <Router>
+    <HashRouter>
       <Navbar>
         <Navbar.Brand as={Link} to="/">
           <img
@@ -115,7 +115,7 @@ const NavigationBar = () => {
       <Route path="/ClusteringAlgorithms" component={ClusteringAlgorithms} />
       <Route path="/neural_nets" component={NeuralNets} />
       <Route exact path="/" component={MainPage} />
-    </Router>
+    </HashRouter>
   );
 };
 
