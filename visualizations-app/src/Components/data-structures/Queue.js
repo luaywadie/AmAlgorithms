@@ -5,14 +5,16 @@ class Queue extends Component {
   constructor(props) {
   super(props);
     this.state = {
-      data: [3, 2, 7, 4, 9],
-      inputNum: ''
+      data: [6,5,4,3,2,1],
+      inputNum: '',
+      didEnqueue: false,
+      didDequeue: false
     };
   }
 
   enqueue(element) {
     if(element !== null) {
-      this.state.data.push(element);
+      this.state.data.unshift(element);
       this.setState({data: this.state.data});
       this.createQueue();
     }
@@ -20,7 +22,7 @@ class Queue extends Component {
 
   dequeue() {
     if( this.isEmpty() === false ) {
-      this.state.data.shift(); 
+      this.state.data.pop(); 
       this.setState({data: this.state.data});
       d3.selectAll("rect[id='" + 0 + "']").remove();
       d3.selectAll("text[id='" + 0 + "']").remove();
@@ -39,6 +41,9 @@ class Queue extends Component {
 
   componentDidMount() {
     this.createQueue();
+    let headElement = document.getElementById('0');
+    let textNode = document.createTextNode('Head')
+    headElement.appendChild(textNode);
   }
   
   createQueue() {
@@ -47,10 +52,11 @@ class Queue extends Component {
       d3.selectAll('#svg-container').remove();
     }
     clearQueue();
-
+    let blockHeight = 50;
     var margin = { top: 100, right: 0, bottom: 0, left: 30 },
       width = 500,
       height = 300;
+      
     
     var svg = d3
       .select('#queue-container')
@@ -64,12 +70,14 @@ class Queue extends Component {
     var x = d3
       .scaleLinear()
       .domain([0, 0])
-      .range([height, 0]);
+      .range([width, 0]);
 
-    var y = d3
-      .scaleBand()
-      .range([0, width])
-      .domain(this.state.data);
+      // var y = d3
+      // .scaleLinear()
+      // .range([0, blockHeight])
+      // .domain(this.state.data);
+    let y = height + blockHeight
+    let yText = height + blockHeight
 
     svg
       .selectAll('mybar')
@@ -79,19 +87,22 @@ class Queue extends Component {
       .attr('x', function (d) {
         return x(d);
       })
+      .attr('stroke-width', 3)
+      .attr('stroke', 'black')
       .attr('y', function (d) {
-        return y(d);
+        y -= blockHeight
+        return y;
       })
       .attr('width', width - 350)
       .attr('fill', '#39a4ff')
-      .attr('height', function (d) {
-        return d;
-      }) 
+      .attr('height', 50) 
       .attr('value', function (index) {
         return index;
       })
       .attr('id', (d, index) => (index));
 
+ 
+      
     svg
       .selectAll('mybar')
       .data(this.state.data)
@@ -101,7 +112,8 @@ class Queue extends Component {
         return x(d) + 65;
       })
       .attr('y', function (d) {
-        return y(d) + 30;
+        yText -= blockHeight
+        return yText + 30;
       })
       .attr('value', function (d, index) {
         return index;
@@ -111,12 +123,13 @@ class Queue extends Component {
       })
       .attr('id', (d, index) => (index));
 
-    svg
-      .selectAll('rect')
-      .attr('y', function (d) {
-        return y(d);
-      })
-      .attr('height', 50);
+
+    // svg
+    //   .selectAll('rect')
+    //   .attr('y', function (d) {
+    //     return y(d);
+    //   })
+    //   .attr('height', 50);
     }
 
   renderQueueClassPseudocode() {
@@ -129,7 +142,13 @@ class Queue extends Component {
           1<span style={{ marginLeft: indentation(1) }}>Class Queue</span>
         </div>
         <div id={'Queue-class-2'}>
-          2<span style={{ marginLeft: indentation(2) }}>let q be an array</span>
+          2<span style={{ marginLeft: indentation(2) }}>capacity: 6</span>
+        </div>
+        <div id={'Queue-class-3'}>
+          3<span style={{ marginLeft: indentation(2) }}>size: 0</span>
+        </div>
+        <div id={'Queue-class-4'}>
+          4<span style={{ marginLeft: indentation(2) }}>qArray = [Null, Null, Null, Null, Null, Null]</span>
         </div>
         <br></br>
       </div>
@@ -146,10 +165,16 @@ class Queue extends Component {
           1<span style={{ marginLeft: indentation(1) }}>dequeue()</span>
         </div>
         <div id={'Queue-dequeue-2'}>
-          2<span style={{ marginLeft: indentation(2) }}>if q.length is not equal to 0</span>
+          2<span style={{ marginLeft: indentation(2) }}>size -= 1</span>
         </div>
         <div id={'Queue-dequeue-3'}>
-          3<span style={{ marginLeft: indentation(3) }}>removes first element of s</span>
+          3<span style={{ marginLeft: indentation(3) }}>data = queue[front]</span>
+        </div>
+        <div id={'Queue-dequeue-3'}>
+          4<span style={{ marginLeft: indentation(3) }}>front = (front + 1) % capacity</span>
+        </div>
+        <div id={'Queue-dequeue-3'}>
+          5<span style={{ marginLeft: indentation(3) }}>return data</span>
         </div>
         <br></br>
       </div>
@@ -163,10 +188,16 @@ class Queue extends Component {
     return (
       <div>
         <div id={'Queue-enqueue-1'}>
-          1<span style={{ marginLeft: indentation(1) }}>push()</span>
+          1<span style={{ marginLeft: indentation(1) }}>enqueue(data)</span>
         </div>
         <div id={'Queue-enqueue-2'}>
-          2<span style={{ marginLeft: indentation(2) }}>adds element to the end of s</span>
+          2<span style={{ marginLeft: indentation(2) }}>size += 1</span>
+        </div>
+        <div id={'Queue-enqueue-3'}>
+          3<span style={{ marginLeft: indentation(2) }}>rear = (rear + 1) % capacity</span>
+        </div>
+        <div id={'Queue-enqueue-4'}>
+          4<span style={{ marginLeft: indentation(2) }}>queue[rear] = data</span>
         </div>
         <br></br>
       </div>
@@ -177,7 +208,7 @@ class Queue extends Component {
     let linkText = '';
     if (this.state.data.includes(this.state.inputNum)) {
       linkText = 'No Duplicates';
-    } else if (this.state.data.length === 7) {
+    } else if (this.state.data.length === 6) {
       linkText = 'Full Queue'
     } else {
       linkText = 'Enqueue';
@@ -196,6 +227,7 @@ class Queue extends Component {
   }
 
   render() {
+
     return(
       <div className={'row'}>
         <div className={'col-4'} id={'graph-container'}>
@@ -219,10 +251,14 @@ class Queue extends Component {
               <button
                 className="graph-button"
                 disabled={this.state.data.includes(Number(this.state.inputNum)) ||
-                  this.state.data.length === 7}
+                  this.state.data.length === 6}
                 type="submit"
-                onClick={async () => 
-                  {this.enqueue(this.state.inputNum)}
+                onClick={async () => {
+                  this.setState({
+                    didEnqueue: true,
+                    didDequeue: false
+                  });
+                  this.enqueue(this.state.inputNum)}
                 }
               >
                 {this.formatEnqueueButtonText()}
@@ -232,6 +268,10 @@ class Queue extends Component {
                 disabled={this.state.data.length === 0}
                 type="submit"
                 onClick={() => {
+                  this.setState({
+                    didEnqueue: false,
+                    didDequeue: true
+                  });
                   this.dequeue();
                 }}
               >
@@ -241,6 +281,10 @@ class Queue extends Component {
                 className="graph-button"
                 type="submit"
                 onClick={() => {
+                  this.setState({
+                    didEnqueue: false,
+                    didDequeue: false
+                  });
                   this.clear();
                 }}
               >
@@ -251,7 +295,11 @@ class Queue extends Component {
         </div>
         <div className={'col-4'} id={'graph-container'}>
           <div className={'row'}>
-
+            {this.renderQueueClassPseudocode()}
+          </div>
+          <div className={'row'}>
+            {this.state.didEnqueue ? this.renderEnqueuePseudocode() : ''}
+            {this.state.didDequeue ? this.renderDequeuePseudocode() : ''}
           </div>
         </div>
       </div>
