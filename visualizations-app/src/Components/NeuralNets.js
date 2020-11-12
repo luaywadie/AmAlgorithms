@@ -102,8 +102,30 @@ class NeuralNets extends Component {
                   <div className={'col-7'} id={'graph-container'}>
                   </div>
                   <div className={'col-5'} style={{zIndex: '-1'}} >
-                    math
-                    <MathComponent tex={String.raw`\int_0^1 x^2\ dx`} />
+                    Matrix Math
+
+                    <MathComponent tex={String.raw`\begin{array}{ccc}
+                    & & \textit{layer 0}\\
+                    & & \begin{array}{ccc} i0 & \quad i1 \quad & i2 \end{array}\\
+                   \textit{layer 1} & \begin{array}{c} h0\\ h1\\ h2\end{array} &
+                     \left(\begin{array}{ccc}
+                       0.22 & 0.44 & 0.51\\
+                       0.11 & 0.37 & 0.78\\
+                       0.66 & 0.94 & 0.43
+                     \end{array}\right)
+                   \end{array}`} />
+
+                   <br></br>
+
+                   <MathComponent tex={String.raw`\begin{array}{ccc}
+                    & & \textit{layer 1}\\
+                    & & \begin{array}{ccc} h0 & \quad h1 \quad & h2 \end{array}\\
+                   \textit{layer 2} & \begin{array}{c} o0\\ o1 \end{array} &
+                     \left(\begin{array}{cc}
+                       0.41 & 0.32 & 0.52\\
+                       0.77 & 0.43 & 0.21
+                     \end{array}\right)
+                   \end{array}`} />
                   </div>
                 </div>
             
