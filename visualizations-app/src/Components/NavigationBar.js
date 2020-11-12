@@ -9,6 +9,7 @@ import ClusteringAlgorithms from '../Components/ClusteringAlgorithms';
 import Heap from '../Components/data-structures/Heap';
 import Stack from '../Components/data-structures/Stack';
 import Queue from '../Components/data-structures/Queue';
+import LinkedList from '../Components/data-structures/LinkedList';
 import InsertionSort from '../Components/algorithms/sorts/InsertionSort';
 import SelectionSort from '../Components/algorithms/sorts/SelectionSort';
 import NeuralNets from '../Components/NeuralNets';
@@ -38,6 +39,9 @@ const NavigationBar = () => {
             </NavDropdown.Item>
             <NavDropdown.Item eventKey="3" as={Link} to="/queue">
               Queue
+            </NavDropdown.Item>
+            <NavDropdown.Item eventKey="4" as={Link} to="/linkedlist">
+              LinkedList
             </NavDropdown.Item>
           </NavDropdown>
 
@@ -110,6 +114,7 @@ const NavigationBar = () => {
       <Route path="/heap" component={Heap} />
       <Route path="/stack" component={Stack} />
       <Route path="/queue" component={Queue} />
+      <Route path="/linkedlist" component={LinkedList} />
       <Route path="/insertion_sort" component={InsertionSort} />
       <Route path="/selection_sort" component={SelectionSort} />
       <Route path="/ClusteringAlgorithms" component={ClusteringAlgorithms} />
