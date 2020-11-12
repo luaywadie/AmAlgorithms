@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import {dot, transpose, exp} from 'mathjs';
+import { MathComponent } from 'mathjax-react'
 import buildNetwork from '../graph-builders/neural-net-builder';
+
 
 
 class NeuralNets extends Component {
@@ -97,17 +99,14 @@ class NeuralNets extends Component {
         render() {
             return (
                 <div className={'row'}>
-                  <div className={'col-4'} id={'graph-container'}>
+                  <div className={'col-7'} id={'graph-container'}>
                   </div>
-                  <div className={'col-4'} >
-                    pseduocode
-                  </div>
-                  <div className={'col-4'} >
-                    sidebar
+                  <div className={'col-5'} style={{zIndex: '-1'}} >
+                    math
+                    <MathComponent tex={String.raw`\int_0^1 x^2\ dx`} />
                   </div>
                 </div>
             
-
             );
         }
     
