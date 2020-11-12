@@ -2,16 +2,16 @@ import * as d3 from 'd3';
 
 function buildNetwork() {
   var width = 960,
-    height = 500,
-    nodeSize = 40;
+    height = 700,
+    nodeSize = 60;
 
   let nodes = [
     { label: 'i0', layer: 1 },
     { label: 'i1', layer: 1 },
     { label: 'h0', layer: 2 },
-    { label: 'i2', layer: 1 },
+    { label: 'b0', layer: 1 },
     { label: 'h1', layer: 2 },
-    // { label: 'h2', layer: 2 },
+    { label: 'b1', layer: 2 },
     // { label: 'h3', layer: 2 },
     { label: 'o0', layer: 3 },
     { label: 'o1', layer: 3 }
@@ -45,7 +45,7 @@ function buildNetwork() {
   );
 
   var xdist = width / Object.keys(netsize).length,
-    ydist = (1.5*height) / largestLayerSize;
+    ydist = (height) / largestLayerSize;
 
   // create node locations
   nodes.map(function (d) {
@@ -69,7 +69,7 @@ function buildNetwork() {
 
   // draw links
   var link = svg
-    .selectAll('.link')
+    .selectAll('.link-nn')
     .data(links)
     .enter()
     .append('line')
@@ -85,10 +85,8 @@ function buildNetwork() {
     })
     .attr('y2', function (d) {
       return nodes[d.target].y;
-    })
-    .style('stroke-width', function (d) {
-      return Math.sqrt(d.value);
     });
+
 
   // draw nodes
   var node = svg
@@ -102,7 +100,7 @@ function buildNetwork() {
 
   var circle = node
     .append('circle')
-    .attr('class', 'node')
+    .attr('class', 'node-nn')
     .attr('r', nodeSize)
     .style('fill', function (d) {
       return color(d.layer);
@@ -111,10 +109,19 @@ function buildNetwork() {
   node
     .append('text')
     .attr('dx', '-.35em')
-    .attr('dy', '.35em')
+    .attr('dy', '-1.15em')
+    .attr("id", d => `${d.label}`)
     .text(function (d) {
       return `${d.label}`;
+    })
+    .append('svg:tspan')
+    .attr('dx', '-2.5em')
+    .attr('dy', '1.85em')
+    .text(function(d) { 
+      return 'b1 = 0.234'; 
     });
 }
+
+// https://react-bootstrap.github.io/components/overlays/
 
 export default buildNetwork;
