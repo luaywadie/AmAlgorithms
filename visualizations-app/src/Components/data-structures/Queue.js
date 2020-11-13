@@ -12,6 +12,7 @@ class Queue extends Component {
       capacity: 6,
       tail: 0,
       head: 5,
+      dequeuedVal: null,
     };
   }
 
@@ -25,8 +26,12 @@ class Queue extends Component {
 
   dequeue() {
     if (this.isEmpty() === false) {
-      this.state.data.pop();
-      this.setState({ data: this.state.data, head: this.state.head - 1 });
+      let val = this.state.data.pop();
+      this.setState({
+        data: this.state.data,
+        head: this.state.head - 1,
+        dequeuedVal: val,
+      });
       d3.selectAll("rect[id='" + 0 + "']").remove();
       d3.selectAll("text[id='" + 0 + "']").remove();
       this.createQueue();
@@ -35,7 +40,7 @@ class Queue extends Component {
 
   clear() {
     d3.selectAll('#svg-container').remove();
-    this.setState({ data: [] });
+    this.setState({ data: [], head: -1, tail: 0 });
   }
 
   isEmpty() {
@@ -249,6 +254,7 @@ class Queue extends Component {
           7<span style={{ marginLeft: indentation(2) }}>return data</span>
         </div>
         <br></br>
+        <h1>return value = {this.state.dequeuedVal}</h1>
       </div>
     );
   }
@@ -315,7 +321,7 @@ class Queue extends Component {
     this.size = this.state.data.length;
     return (
       <div className={'row'}>
-        <div className={'col-4'} id={'graph-container'}>
+        <div className={'col-6'} id={'graph-container'}>
           <form
             onSubmit={(event) => {
               event.preventDefault();
@@ -380,7 +386,7 @@ class Queue extends Component {
             <div id="queue-container"></div>
           </form>
         </div>
-        <div className={'col-4'} id={'graph-container'}>
+        <div className={'col-6'} id={'graph-container'}>
           <div className={'row'}>{this.renderQueueClassPseudocode()}</div>
           <div className={'row'}>
             {this.state.didEnqueue ? this.renderEnqueuePseudocode() : ''}
