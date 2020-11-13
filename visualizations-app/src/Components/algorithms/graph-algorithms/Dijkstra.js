@@ -138,30 +138,6 @@ class Dijkstra extends Component {
     this.animationQueue = [];
   };
 
-  // activateCurrentNode(currentNode) {
-  //   let currentNodeElement = document.getElementById(currentNode);
-  //   currentNodeElement.classList.add('current-node-of-interest');
-
-  //   return currentNodeElement;
-  // }
-
-  // removeActiveLinks(activeLinks) {
-  //   activeLinks.forEach((e) => {
-  //     if (e) {
-  //       e.classList.remove('fade-out-link', 'link-traversed');
-  //     }
-  //   });
-  //   return [];
-  // }
-
-  // highlightLine(lineNum) {
-  //   let el = document.getElementById('dijkstra-' + lineNum);
-  //   if (el) el.classList.add('active-code-line');
-  // }
-  // removeHighlightedLine(lineNum) {
-  //   let el = document.getElementById('dijkstra-' + lineNum);
-  //   if (el) el.classList.remove('active-code-line');
-  // }
 
   generateLinkString(currentNode, neighborNode) {
     return currentNode < neighborNode
@@ -169,53 +145,7 @@ class Dijkstra extends Component {
       : neighborNode + '-' + currentNode;
   }
 
-  // activateLink(currentNode, neighborNode) {
-  //   let linkString =
-  //     currentNode < neighborNode
-  //       ? currentNode + '-' + neighborNode
-  //       : neighborNode + '-' + currentNode;
-  //   let linkOfInterestElement = document.getElementById(linkString);
-  //   if (linkOfInterestElement)
-  //     linkOfInterestElement.classList.add('link-traversed');
-  //   return linkOfInterestElement;
-  // }
 
-  // updateCurrentNodeToBeVisited(currentNodeElement) {
-  //   currentNodeElement.classList.remove('current-node-of-interest');
-  //   currentNodeElement.classList.add('node-complete-tree');
-  // }
-
-  // fadeOutLinks(activeLinks) {
-  //   activeLinks.forEach((e) => {
-  //     if (e) {
-  //       e.classList.add('fade-out-link');
-  //     }
-  //   });
-  // }
-
-  // async checkPauseStatus() {
-  //   while (this.props.pause) {
-  //     await new Promise((r) => setTimeout(r, 1000));
-  //     continue;
-  //   }
-  // }
-  // cleanUpActiveLinksAndCurrentNode(activeLinks, currentNode) {
-  //   let currentNodeElement = document.getElementById(currentNode);
-  //   if (currentNodeElement) {
-  //     currentNodeElement.classList.remove('current-node-of-interest');
-  //   }
-  //   if (activeLinks.length > 0) {
-  //     this.removeActiveLinks(activeLinks);
-  //   }
-  // }
-
-  // highlightShortestPath(shortestPath) {
-  //   for (let i = 1; i < shortestPath.length; i++) {
-  //     let prev = shortestPath[i - 1];
-  //     let current = shortestPath[i];
-  //     this.activateLink(prev, current);
-  //   }
-  // }
 
   render() {
     return (

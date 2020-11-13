@@ -18,3 +18,24 @@ text {
   stroke-width: 10px;
   stroke: red;
 }
+
+.nn-matrix {
+  border: none;
+  border-collapse: collapse;
+}
+
+.nn-matrix td {
+  padding: 0 20px;
+  border: none;
+  // border-collapse: separate;
+  // border-radius: 20px;
+  font-family: Computer Modern;
+}
+
+.left {
+  border-left: 1px solid black !important;
+}
+
+.right {
+  border-right: 1px solid black !important;
+}
