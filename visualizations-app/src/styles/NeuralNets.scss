@@ -3,9 +3,15 @@ text {
 }
 
 .node-nn:hover {
-  stroke: #999;
-  stroke-opacity: 0.6;
-  stroke-width: 4px;
+  stroke: #e76dff;
+  stroke-opacity: 0.8;
+  stroke-width: 8px;
+}
+
+.active-node-nn {
+  stroke: #e76dff;
+  stroke-opacity: 0.8;
+  stroke-width: 8px;
 }
 
 .link-nn {
@@ -16,7 +22,12 @@ text {
 
 .link-nn:hover {
   stroke-width: 10px;
-  stroke: red;
+  stroke: #e76dff;
+}
+
+.active-link-nn {
+  stroke-width: 10px;
+  stroke: #e76dff;
 }
 
 .nn-matrix {
@@ -31,11 +42,39 @@ text {
   // border-radius: 20px;
   font-family: Computer Modern;
 }
+.nn-matrix td {
+  z-index: 5;
+}
+
+// .nn-matrix td:hover {
+//   background-color: #fffc60;
+// }
+
+.active-nn-matrix {
+  background-color: #e76dffdc;
+}
 
 .left {
   border-left: 1px solid black !important;
 }
 
+.left:hover {
+  background-color: #fffc60;
+}
+
 .right {
   border-right: 1px solid black !important;
+}
+
+.right:hover {
+  background-color: #fffc60;
+}
+
+.left-and-right {
+  border-right: 1px solid black !important;
+  border-left: 1px solid black !important;
+}
+
+.left-and-right:hover {
+  background-color: #fffc60;
 }
