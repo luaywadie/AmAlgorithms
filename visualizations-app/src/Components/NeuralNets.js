@@ -33,6 +33,14 @@ class NeuralNets extends Component {
       h0_out: null,
       h1_net: null,
       h1_out: null,
+      o0_net: null,
+      o0_out: null,
+      error: null,
+      dE: null,
+      dZ_out: null,
+      dZ_h: null,
+      dW1: null,
+      dW0: null,
     };
   }
   animationQueue = [];
@@ -121,6 +129,20 @@ class NeuralNets extends Component {
       b1.innerHTML = 'b = ' + round(this.state.b1, 3);
     }
   }
+
+  highlightEquation(id) {
+    let el = document.getElementById(id);
+    if (el) {
+      el.classList.add('active-equation');
+    }
+  }
+
+  deHighlightEquation(id) {
+    let el = document.getElementById(id);
+    if (el) {
+      el.classList.remove('active-equation');
+    }
+  }
   async nNLearn() {
     let w0 = [
       [3, 4],
@@ -142,7 +164,7 @@ class NeuralNets extends Component {
 
     const sigmoid = (x) => 1 / (1 + exp(-x));
     // const relu = (x) => max(x, 0);
-    const error = (pred, actual) => (1 / 2) * (actual - pred) ** 2;
+    const errorFunction = (pred, actual) => (1 / 2) * (actual - pred) ** 2;
     const dZ = (x) => x * (1 - x); // sigmoid derivative
     // const dZ = (x) => Number(x > 0); // relu derivative
 
@@ -158,6 +180,7 @@ class NeuralNets extends Component {
       this.activateNode('h0');
       this.activateLinks(this.linkNames['h0']);
       this.activateNodeMatricies(['w0-00', 'w0-01', 'b0-0']);
+      this.highlightEquation('h0-net-eq');
       // highlight matrix w0, row 0 && matrix b0 row 0
 
       // compute sum
@@ -165,10 +188,16 @@ class NeuralNets extends Component {
       document.getElementById('h0-net').innerHTML =
         'net = ' + round(h_net[0], 3);
       await new Promise((r) => setTimeout(r, 3000));
+      this.deHighlightEquation('h0-net-eq');
       // compute sigma of sum
+      this.highlightEquation('h0-out-eq');
+      await new Promise((r) => setTimeout(r, 2000));
+
       this.setState({ h0_out: h_out[0] });
       document.getElementById('h0-out').innerHTML =
         'out = ' + round(h_out[0], 3);
+
+      this.deHighlightEquation('h0-out-eq');
 
       // Remove active links and nodes
       this.deActivateNode('h0');
@@ -181,6 +210,7 @@ class NeuralNets extends Component {
       this.activateLinks(this.linkNames['h1']);
       this.activateNodeMatricies(['w0-10', 'w0-11', 'b0-1']);
       // highlight matrix w0, row 1 && matrix b0 row 1
+      this.highlightEquation('h1-net-eq');
 
       // compute sum
       this.setState({ h1_net: h_net[1] });
@@ -188,10 +218,16 @@ class NeuralNets extends Component {
         'net = ' + round(h_net[1], 3);
 
       await new Promise((r) => setTimeout(r, 3000));
+      this.deHighlightEquation('h1-net-eq');
+
+      this.highlightEquation('h1-out-eq');
+      await new Promise((r) => setTimeout(r, 2000));
+
       // compute sigma of sum
       await this.setState({ h1_out: h_out[1] });
       document.getElementById('h1-out').innerHTML =
         'out = ' + round(h_out[1], 3);
+      this.deHighlightEquation('h1-out-eq');
 
       // Remove active links and nodes
       this.deActivateNode('h1');
@@ -210,13 +246,13 @@ class NeuralNets extends Component {
       // highlight matrix w1, row 0 b1
 
       // compute sum
-      this.setState({ out_net: out_net });
+      this.setState({ o0_net: out_net });
       document.getElementById('o0-net').innerHTML =
         'net = ' + round(out_net, 3);
 
       await new Promise((r) => setTimeout(r, 3000));
       // compute sigma of sum
-      await this.setState({ out_out: out_out });
+      await this.setState({ o0_out: out_out });
       document.getElementById('o0-out').innerHTML =
         'out = ' + round(out_out, 3);
 
@@ -225,18 +261,31 @@ class NeuralNets extends Component {
       this.deActivateLink(this.linkNames['o0']);
       this.deActivateNodeMatricies(['w1-0', 'w1-1', 'b1-0']);
       // un-highlight matrix w1, row 0 b1
+      await new Promise((r) => setTimeout(r, 3000));
 
+      let error = errorFunction(out_out, actual);
       console.log(`Output: ${out_out}`);
-      console.log(`error: ${error(out_out, actual)}`);
+      console.log(`error: ${error}`);
+      this.setState({ error: round(error, 3) });
       document.getElementById('o0-error').innerHTML =
-        'error = ' + round(error(out_out, actual), 3);
+        'error = ' + round(error, 3);
       document.getElementById('o0-output').innerHTML =
         'output = ' + round(out_out, 3);
+      await new Promise((r) => setTimeout(r, 3000));
 
       // Backprop
       let dE = -(actual - out_out);
+      await this.setState({ dE: dE });
+      let dZ_out = dZ(out_out); // d_out_out_wrt_d_out_net
+      await this.setState({ dZ_out: dZ_out });
+
+      let dZ_h = h_out.map((e) => dZ(e)); // d_h_out_wrt_d_h_net
+      await this.setState({ dZ_h: dZ_h });
+
       let dOut_wrt_w1 = h_out;
-      let dw1 = multiply(dE, multiply(dZ(out_out), dOut_wrt_w1));
+      let dw1 = multiply(dE, multiply(dZ_out, dOut_wrt_w1));
+      await this.setState({ dW1: dw1 });
+
       let db1 = multiply(dE, dZ(out_out));
 
       let dOut_wrt_h = w1;
@@ -244,22 +293,12 @@ class NeuralNets extends Component {
 
       let dw0 = multiply(
         dotMultiply(dE, dZ(out_out)),
-        dotMultiply(
-          dOut_wrt_h,
-          dotMultiply(
-            h_out.map((e) => dZ(e)),
-            dh_wrt_w0
-          )
-        )
+        dotMultiply(dOut_wrt_h, dotMultiply(dZ_h, dh_wrt_w0))
       );
 
-      let db0 = dotMultiply(
-        dE * dZ(out_out),
-        dotMultiply(
-          dOut_wrt_h,
-          h_out.map((e) => dZ(e))
-        )
-      );
+      await this.setState({ dW0: dw0 });
+
+      let db0 = dotMultiply(dE * dZ(out_out), dotMultiply(dOut_wrt_h, dZ_h));
 
       w0 = subtract(w0, [dotMultiply(alpha, dw0), dotMultiply(alpha, dw0)]);
       b0 = subtract(b0, dotMultiply(alpha, db0));
@@ -276,7 +315,24 @@ class NeuralNets extends Component {
         output: round(out_out, 3),
         iteration: i,
       });
-      await new Promise((r) => setTimeout(r, 1000));
+
+      await new Promise((r) => setTimeout(r, 5000));
+      this.setState({
+        h0_net: null,
+        h0_out: null,
+        h1_net: null,
+        h1_out: null,
+        o0_net: null,
+        o0_out: null,
+        error: null,
+        dE: null,
+        dZ_out: null,
+        dZ_h: null,
+        dW1: null,
+        dW0: null,
+      });
+
+      await new Promise((r) => setTimeout(r, 3000));
     }
   }
 
@@ -444,7 +500,7 @@ class NeuralNets extends Component {
   render() {
     return (
       <div className={'row'}>
-        <div className={'col-7'} id={'graph-container'}>
+        <div className={'col-6'} id={'graph-container'}>
           <div className={'row'}>
             <form
               style={{ zIndex: 4 }}
@@ -463,20 +519,73 @@ class NeuralNets extends Component {
             <h1>Iteration {this.state.iteration}</h1>
           </div>
         </div>
-        <div className={'col-5'} style={{ zIndex: '-1' }}>
+        <div className={'col-6'} style={{ zIndex: '-1' }}>
           <div className={'row'}>
             <h1>FORWARD Matrix Math</h1> <br></br>
           </div>
           <div className={'row'}>
+            <div id={'h0-net-eq'}>
+              <MathComponent
+                display={true}
+                tex={String.raw`h_0 net = w_{00}^0 * x_0 + w_{01}^0 * x_1 + b_0^0 = ${round(
+                  this.state.w0[0][0],
+                  3
+                )} *${this.state.x[0]} + ${round(this.state.w0[0][1], 3)} * ${
+                  this.state.x[1]
+                } + ${round(this.state.b0[0], 3)} = 
+              ${this.state.h0_net ? round(this.state.h0_net, 3) : '?'}
+              
+              `}
+              />{' '}
+            </div>
+          </div>
+          <div className={'row'} style={{ marginTop: '-20px' }}>
+            <div id={'h0-out-eq'}>
+              <MathComponent
+                display={true}
+                tex={String.raw`h_0 out = \sigma (h_0 net) =  
+              ${this.state.h0_out ? round(this.state.h0_out, 3) : '?'}
+              `}
+              />
+            </div>
+          </div>
+          <div className={'row'}>
+            <div id={'h1-net-eq'}>
+              <MathComponent
+                display={true}
+                tex={String.raw`h_1 net = w_{10}^0 * x_0 + w_{11}^0 * x_1 + b_1^0 = ${round(
+                  this.state.w0[1][0],
+                  3
+                )} *${this.state.x[0]} + ${round(this.state.w0[1][1], 3)} * ${
+                  this.state.x[1]
+                } + ${round(this.state.b0[1], 3)} = 
+              ${this.state.h1_net !== null ? round(this.state.h1_net, 3) : '?'}
+              
+              `}
+              />{' '}
+            </div>
+          </div>
+          <div className={'row'} style={{ marginTop: '-20px' }}>
+            <div id={'h1-out-eq'}>
+              <MathComponent
+                display={true}
+                tex={String.raw`h_1 out = \sigma (h_1 net) =  
+              ${this.state.h1_out ? round(this.state.h1_out, 3) : '?'}
+              `}
+              />
+            </div>
+          </div>
+
+          <div className={'row'}>
             <MathComponent
               display={true}
-              tex={String.raw`h_0 net = w_{00}^0 * x_0 + w_{01}^0 * x_1 + b_0^0 = ${round(
-                this.state.w0[0][0],
+              tex={String.raw`o_0 net = w_{0}^1 * x_0 + w_{1}^1 * x_1 + b^1 = ${round(
+                this.state.w1[0],
                 3
-              )} *${this.state.x[0]} + ${this.state.w0[0][1]} * ${
+              )} *${this.state.x[0]} + ${round(this.state.w1[1], 3)} * ${
                 this.state.x[1]
-              } + ${round(this.state.b0[0], 3)} = 
-              ${this.state.h0_net ? round(this.state.h0_net, 3) : '?'}
+              } + ${round(this.state.b1, 3)} = 
+              ${this.state.o0_net ? round(this.state.o0_net, 3) : '?'}
               
               `}
             />{' '}
@@ -484,32 +593,157 @@ class NeuralNets extends Component {
           <div className={'row'} style={{ marginTop: '-20px' }}>
             <MathComponent
               display={true}
-              tex={String.raw`h_0 out = \sigma (h_0 net) =  
-              ${this.state.h0_out ? round(this.state.h0_out, 3) : '?'}
-              
+              tex={String.raw`o_0 out = \sigma (o_0 net) =  
+              ${this.state.o0_out ? round(this.state.o0_out, 3) : '?'}
               `}
             />
           </div>
-          <div className={'row'}>
-            h1_net: {this.state.h1_net} <br></br>
-            sigma(h_out) = h_out <br></br>
-            h0_out: {this.state.h0_out} <br></br>
-            h1_out: {this.state.h1_out} <br></br>
+
+          <div className={'row'} style={{ marginTop: '-20px' }}>
+            <MathComponent
+              display={true}
+              tex={String.raw`error =  _2^1 * (o_0 net - target)^2 =  
+              _2^1 * (${this.state.o0_out ? round(this.state.o0_out, 3) : '?'}
+               - 1)^2 = ${this.state.error ? round(this.state.error, 3) : '?'}
+              `}
+            />
           </div>
-          <div className={'row'} style={{ marginTop: '150px' }}>
+
+          <div className={'row'} style={{ marginTop: '10px' }}>
             <h1>BACKPROP Matrix Math</h1> <br></br>
           </div>
+
           <div className={'row'}>
-            Summation i_sub_i * w_i = h1_net <br></br>
-            h0_net: {this.state.h0_net} <br></br>
-            h1_net: {this.state.h1_net} <br></br>
-            sigma(h_out) = h_out <br></br>
-            h0_out: {this.state.h0_out} <br></br>
-            h1_out: {this.state.h1_out} <br></br>
+            <MathComponent
+              display={true}
+              tex={String.raw` \frac{\partial E}{ \partial output} = - (target - output) = 
+              - (1 - ${
+                this.state.o0_out ? round(this.state.o0_out, 3) : '?'
+              }) = 
+              ${this.state.dE ? round(this.state.dE, 3) : '?'}`}
+            />
+          </div>
+          <div className={'row'} style={{ marginTop: '-20px' }}>
+            <MathComponent
+              display={true}
+              tex={String.raw` \frac{\partial output}{ \partial o_0 net} = output * (1 - output) = 
+              ${this.state.o0_out ? round(this.state.o0_out, 3) : '?'} * (1 - ${
+                this.state.o0_out ? round(this.state.o0_out, 3) : '?'
+              }) = 
+              ${this.state.dZ_out ? round(this.state.dZ_out, 3) : '?'}`}
+            />
+          </div>
+
+          <div className={'row'} style={{ marginTop: '-20px' }}>
+            <MathComponent
+              display={true}
+              tex={String.raw` \frac{\partial o_0 net}{ \partial w1} = \pmatrix{h_0 out \\ h_1 out} = 
+              \pmatrix{${
+                this.state.h0_out ? round(this.state.h0_out, 3) : '?'
+              } \\ ${this.state.h1_out ? round(this.state.h1_out, 3) : '?'}}
+               `}
+            />
+          </div>
+
+          <div className={'row'} style={{ marginTop: '-20px' }}>
+            <MathComponent
+              display={true}
+              tex={String.raw` \frac{\partial E}{ \partial w1} = \frac{\partial E}{ \partial output} * \frac{\partial output}{ \partial o_0 net} * \frac{\partial o_0 net}{ \partial w1} 
+              = ${this.state.dE ? round(this.state.dE, 3) : '?'} *  ${
+                this.state.dZ_out ? round(this.state.dZ_out, 3) : '?'
+              } *   \pmatrix{${
+                this.state.h0_out ? round(this.state.h0_out, 3) : '?'
+              } \\ ${this.state.h1_out ? round(this.state.h1_out, 3) : '?'}}
+               = 
+               \pmatrix{
+                ${this.state.dW1 ? round(this.state.dW1[0], 3) : '?'}
+                 \\
+                 ${this.state.dW1 ? round(this.state.dW1[1], 3) : '?'}}
+  
+               `}
+            />
+          </div>
+
+          <div className={'row'} style={{ marginTop: '-20px' }}>
+            <MathComponent
+              display={true}
+              tex={String.raw` \frac{\partial o_0 net}{ \partial h out} = W1 = \pmatrix{${
+                this.state.w1[0] ? round(this.state.w1[0], 3) : '?'
+              } \\ ${this.state.w1[1] ? round(this.state.w1[1], 3) : '?'}}`}
+            />
+          </div>
+
+          <div className={'row'} style={{ marginTop: '-20px' }}>
+            <MathComponent
+              display={true}
+              tex={String.raw` \frac{\partial h out}{ \partial h_{net}} = h_{out} * (1 - h_{out}) = 
+              \pmatrix{${
+                this.state.h0_out ? round(this.state.h0_out, 3) : '?'
+              } \\ ${this.state.h1_out ? round(this.state.h1_out, 3) : '?'}}
+               * (1 - 
+                \pmatrix{${
+                  this.state.h0_out ? round(this.state.h0_out, 3) : '?'
+                } \\ ${this.state.h1_out ? round(this.state.h1_out, 3) : '?'}}
+                 = 
+                 \pmatrix{${
+                   this.state.dZ_h ? round(this.state.dZ_h[0], 3) : '?'
+                 } \\ ${this.state.dZ_h ? round(this.state.dZ_h[1], 3) : '?'}}
+                 `}
+            />
+          </div>
+
+          <div className={'row'} style={{ marginTop: '-20px' }}>
+            <MathComponent
+              display={true}
+              tex={String.raw` \frac{\partial h_{net}}{ \partial w0} = X = 
+              \pmatrix{${
+                this.state.x[0] ? round(this.state.x[0], 3) : '?'
+              } \\ ${
+                this.state.x[1] !== null ? round(this.state.x[1], 3) : '?'
+              }}
+               `}
+            />
+          </div>
+
+          <div className={'row'} style={{ marginTop: '-20px' }}>
+            <MathComponent
+              display={true}
+              tex={String.raw` \frac{\partial E}{ \partial w0} = \frac{\partial E}{ \partial output} * \frac{\partial output}{ \partial o_0 net} * \frac{\partial o_0 net}{ \partial h_{out}} *  \frac{\partial h_{out}}{ \partial h_{net}} *  \frac{\partial h_{net}}{ \partial W0} 
+              = ${this.state.dE ? round(this.state.dE, 3) : '?'} 
+              *  
+              ${this.state.dZ_out ? round(this.state.dZ_out, 3) : '?'} 
+              *   
+              \pmatrix{${this.state.h0_out ? round(this.state.h0_out, 3) : '?'} 
+              \\ ${this.state.h1_out ? round(this.state.h1_out, 3) : '?'}}
+              * 
+              \pmatrix{${
+                this.state.w1[0] ? round(this.state.w1[0], 3) : '?'
+              } \\ ${this.state.w1[1] ? round(this.state.w1[1], 3) : '?'}}
+              *
+              \pmatrix{${
+                this.state.dZ_h ? round(this.state.dZ_h[0], 3) : '?'
+              } \\ ${this.state.dZ_h ? round(this.state.dZ_h[1], 3) : '?'}}
+              *
+              \pmatrix{${
+                this.state.x[0] ? round(this.state.x[0], 3) : '?'
+              } \\ ${
+                this.state.x[1] !== null ? round(this.state.x[1], 3) : '?'
+              }}
+               = 
+               \pmatrix{
+                ${this.state.dW0 ? round(this.state.dW0[0], 3) : '?'}
+                 \\
+                 ${this.state.dW0 ? round(this.state.dW0[1], 3) : '?'}}
+  
+               `}
+            />
           </div>
         </div>
         <div className={'col-12'}>
-          <div className={'row'} style={{ marginTop: '-100px' }}>
+          <div
+            className={'row'}
+            style={{ marginTop: '-350px', marginLeft: '-120px' }}
+          >
             <span style={{ marginLeft: '160px' }}></span>
             {this.render2x2Matrix(this.state.w0, 'layer 1', 'layer 0')}
             {this.render2x1Matrix(this.state.b0, 'layer 1', 'h', 'bias 0', 'b')}

@@ -25,7 +25,7 @@ function buildNetwork() {
     .attr('width', width)
     .attr('height', height)
     .attr('z-index', -1)
-    .attr('transform', 'translate(' + 0 + ',' + -50 + ')');
+    .attr('transform', 'translate(' + -100 + ',' + -50 + ')');
 
   // get network size
   var netsize = {};
@@ -159,8 +159,8 @@ function buildNetwork() {
 
   node
     .append('text')
-    .attr('dx', '4.5em')
-    .attr('dy', '1em')
+    .attr('dx', '-1.6em')
+    .attr('dy', '8.5em')
     .attr('id', (d) => `${d.label}-error`)
     .text(function (d, i) {
       if (i == 4) {
@@ -169,8 +169,8 @@ function buildNetwork() {
     });
   node
     .append('text')
-    .attr('dx', '4.5em')
-    .attr('dy', '-2em')
+    .attr('dx', '-1.7em')
+    .attr('dy', '5em')
     .attr('id', (d) => `${d.label}-target`)
     .text(function (d, i) {
       if (i == 4) {
@@ -179,8 +179,8 @@ function buildNetwork() {
     });
   node
     .append('text')
-    .attr('dx', '4.5em')
-    .attr('dy', '-.5em')
+    .attr('dx', '-1.7em')
+    .attr('dy', '6.6em')
     .attr('id', (d) => `${d.label}-output`)
     .text(function (d, i) {
       if (i == 4) {
