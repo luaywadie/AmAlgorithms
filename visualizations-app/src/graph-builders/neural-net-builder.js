@@ -9,15 +9,11 @@ function buildNetwork() {
     { label: 'i0', layer: 1, bias: 1, color: '#73a0f3' },
     { label: 'i1', layer: 1, bias: 0, color: '#73a0f3' },
     { label: 'h0', layer: 2, bias: 1, color: 'turquoise' },
-    // { label: 'b0', layer: 1 },
     { label: 'h1', layer: 2, bias: -6, color: 'turquoise' },
-    // { label: 'b1', layer: 2 },
-    // { label: 'h3', layer: 2 },
     { label: 'o0', layer: 3, bias: -3.93, color: '#2dea2d' },
-    // { label: 'o1', layer: 3 }
   ];
 
-  var color = d3.scaleOrdinal(d3.schemeCategory10);
+  // var color = d3.scaleOrdinal(d3.schemeCategory10);
   let linkNames = ['i0-h0', 'i0-h1', 'i1-h0', 'i1-h1', 'h0-o0', 'h1-o0'];
   var svg = d3
     .select('#graph-container')
@@ -55,6 +51,15 @@ function buildNetwork() {
     d['y'] = (d.lidx - 0.5) * ydist;
   });
 
+  let wIndex = {
+    '0-2': 'W\u208000',
+    '0-3': 'W\u208001',
+    '1-2': 'W\u208010',
+    '1-3': 'W\u208011',
+    '2-4': 'W\u20810',
+    '3-4': 'W\u20811',
+  };
+
   // autogenerate links
   var links = [];
   nodes
@@ -65,6 +70,7 @@ function buildNetwork() {
             source: parseInt(i),
             target: parseInt(n),
             value: 1,
+            label: wIndex[i + '-' + n],
           });
         }
       }
@@ -92,6 +98,48 @@ function buildNetwork() {
     })
     .attr('y2', function (d) {
       return nodes[d.target].y;
+    });
+
+  var linkTextElements = svg
+    .append('g')
+    .attr('class', 'link_texts')
+    .selectAll('text')
+    .data(links)
+    .enter()
+    .append('text')
+    .text(function (link) {
+      return link.label;
+    })
+    .attr('font-size', 15)
+    .attr('dx', 0)
+    .attr('dy', (d, i) => {
+      if (i === 1 || i === 2) {
+        return 105;
+      }
+      return 20;
+    })
+    .attr('x', (d, i) => {
+      if (i === 1 || i === 2) {
+        return (0.5 * nodes[d.source].x + nodes[d.target].x) / 2;
+      }
+      return (nodes[d.source].x + nodes[d.target].x) / 2;
+    })
+    .attr('y', (d, i) => {
+      if (i === 1 || i === 2) {
+        return (0.35 * nodes[d.source].y + nodes[d.target].y) / 2;
+      }
+      return (nodes[d.source].y + nodes[d.target].y) / 2;
+    });
+
+  linkTextElements
+    .data(nodes)
+    .enter()
+    .attr('x', function (link) {
+      console.log(link);
+      return (link.x1 + link.x2) / 2;
+    })
+    .attr('y', function (link) {
+      return (link.source.y + link.target.y) / 2;
     });
 
   // draw nodes
@@ -127,7 +175,13 @@ function buildNetwork() {
   node
     .append('text')
     .attr('dx', '-1.7em')
-    .attr('dy', '-1.55em')
+    //.attr('dy', '-1.55em')
+    .attr('dy', function (d, i) {
+      if (i <= 1) {
+        return '0em';
+      }
+      return '-1.55em';
+    })
     .attr('id', (d) => `${d.label}-bias`)
     .text(function (d, i) {
       if (i <= 1) {

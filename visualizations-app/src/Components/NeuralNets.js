@@ -55,10 +55,27 @@ class NeuralNets extends Component {
       activeKey: 'forward',
     };
   }
+
+  linkToMatrixMapping = {
+    'i0-h0': 'w0-00',
+    'i0-h1': 'w0-10',
+    'i1-h0': 'w0-01',
+    'i1-h1': 'w0-11',
+    'h0-o0': 'w1-0',
+    'h1-o0': 'w1-1',
+  };
+
+  nodeToMatrixMapping = {
+    h0: 'b0-0',
+    h1: 'b0-1',
+    o0: 'b1',
+  };
+
   animationQueue = [];
   componentDidMount() {
     buildNetwork();
     this.neuralNetwork = document.getElementById('graph-container');
+    this.addHoverEventListeners();
   }
   componentWillUnmount() {}
 
@@ -70,6 +87,39 @@ class NeuralNets extends Component {
       continue;
     }
   }
+
+  addHoverEventListeners() {
+    //Attaches hover effects for biases and nodes
+    for (const [key, val] of Object.entries(this.nodeToMatrixMapping)) {
+      let biasEl = document.getElementById(val);
+      biasEl.addEventListener('mouseover', () =>
+        this.activateNode(key, 'forward')
+      );
+      biasEl.addEventListener('mouseout', () =>
+        this.deActivateNode(key, 'forward')
+      );
+    }
+
+    //Attaches hover effects for weights and node links
+    for (const [key, val] of Object.entries(this.linkToMatrixMapping)) {
+      let linkToMatrixEl = document.getElementById(key);
+      linkToMatrixEl.addEventListener('mouseover', () =>
+        this.activateNodeMatricies([val])
+      );
+      linkToMatrixEl.addEventListener('mouseout', () =>
+        this.deActivateNodeMatricies([val])
+      );
+
+      let matrixToLinkEl = document.getElementById(val);
+      matrixToLinkEl.addEventListener('mouseover', () =>
+        this.activateLinks([key], 'forward')
+      );
+      matrixToLinkEl.addEventListener('mouseout', () =>
+        this.deActivateLink([key], 'forward')
+      );
+    }
+  }
+
   linkNames = {
     h0: ['i0-h0', 'i1-h0'],
     h1: ['i0-h1', 'i1-h1'],
@@ -268,7 +318,7 @@ class NeuralNets extends Component {
       // activate o0 node and its links
       this.activateNode('o0', 'forward');
       this.activateLinks(this.linkNames['o0'], 'forward');
-      this.activateNodeMatricies(['w1-0', 'w1-1', 'b1-0']);
+      this.activateNodeMatricies(['w1-0', 'w1-1', 'b1']);
       // highlight matrix w1, row 0 b1
 
       let out_net = add(multiply(h_out, transpose(w1)), b1);
@@ -300,7 +350,7 @@ class NeuralNets extends Component {
       // Remove active links and nodes
       this.deActivateNode('o0', 'forward');
       this.deActivateLink(this.linkNames['o0'], 'forward');
-      this.deActivateNodeMatricies(['w1-0', 'w1-1', 'b1-0']);
+      this.deActivateNodeMatricies(['w1-0', 'w1-1', 'b1']);
       // un-highlight matrix w1, row 0 b1
       this.highlightEquation('error-eq');
       await new Promise((r) => setTimeout(r, 1500));
@@ -425,15 +475,18 @@ class NeuralNets extends Component {
       await this.setState({ activeKey: 'update' });
 
       this.highlightEquation('w0-update-eq');
+      this.activateNodeMatricies(['w0-00', 'w0-01', 'w0-10', 'w0-11']);
       await new Promise((r) => setTimeout(r, 1500));
 
       w0 = subtract(w0, [dotMultiply(alpha, dw0), dotMultiply(alpha, dw0)]);
       await this.setState({ newW0: w0, w0: w0 });
 
       await new Promise((r) => setTimeout(r, 1500));
+      this.deActivateNodeMatricies(['w0-00', 'w0-01', 'w0-10', 'w0-11']);
       this.deHighlightEquation('w0-update-eq');
 
       this.highlightEquation('b0-update-eq');
+      this.activateNodeMatricies(['b0-0', 'b0-1']);
       await new Promise((r) => setTimeout(r, 1500));
 
       b0 = subtract(b0, dotMultiply(alpha, db0));
@@ -441,24 +494,29 @@ class NeuralNets extends Component {
       await this.setState({ newB0: b0, b0: b0 });
 
       await new Promise((r) => setTimeout(r, 1500));
+      this.deActivateNodeMatricies(['b0-0', 'b0-1']);
       this.deHighlightEquation('b0-update-eq');
 
       this.highlightEquation('w1-update-eq');
+      this.activateNodeMatricies(['w1-0', 'w1-1']);
       await new Promise((r) => setTimeout(r, 1500));
 
       w1 = subtract(w1, dotMultiply(alpha, dw1));
       await this.setState({ newW1: w1, w1: w1 });
 
       await new Promise((r) => setTimeout(r, 1500));
+      this.deActivateNodeMatricies(['w1-0', 'w1-1']);
       this.deHighlightEquation('w1-update-eq');
 
       this.highlightEquation('b1-update-eq');
+      this.activateNodeMatricies(['b1']);
       await new Promise((r) => setTimeout(r, 1500));
 
       b1 = subtract(b1, dotMultiply(alpha, db1));
       await this.setState({ newB1: b1, b1: b1 });
 
       await new Promise((r) => setTimeout(r, 1500));
+      this.deActivateNodeMatricies(['b1']);
       this.deHighlightEquation('b1-update-eq');
 
       this.updateBias();
@@ -651,7 +709,7 @@ class NeuralNets extends Component {
             <td>
               <i>{yNode}0</i>
             </td>
-            <td id={'b1-0'} className={'left-and-right'}>
+            <td id={'b1'} className={'left-and-right'}>
               {round(a[0], 3)}
             </td>
           </tr>
@@ -751,10 +809,8 @@ class NeuralNets extends Component {
                       this.state.w0[0][1],
                       3
                     )} * ${this.state.x[1]} + ${round(this.state.b0[0], 3)} = 
-              ${this.state.h0_net ? round(this.state.h0_net, 3) : '?'}
-              
-              `}
-                  />{' '}
+              ${this.state.h0_net ? round(this.state.h0_net, 3) : '?'}`}
+                  />
                 </div>
               </div>
               <div className={'row'} style={{ marginTop: '-20px' }}>
@@ -847,11 +903,12 @@ class NeuralNets extends Component {
                 <div id={'dE-eq'} className={'nn-equation'}>
                   <MathComponent
                     display={false}
-                    tex={String.raw` \frac{\partial E}{ \partial output} = - (target - output) = 
-              - (1 - ${
-                this.state.o0_out ? round(this.state.o0_out, 3) : '?'
-              }) = 
-              ${this.state.dE ? round(this.state.dE, 3) : '?'}`}
+                    tex={String.raw` \frac{\partial E}{ \partial output} 
+                    = - (target - output) 
+                    = - (1 - 
+                    ${this.state.o0_out ? round(this.state.o0_out, 3) : '?'}) 
+                    = 
+                    ${this.state.dE ? round(this.state.dE, 3) : '?'}`}
                   />
                 </div>
               </div>
@@ -859,11 +916,13 @@ class NeuralNets extends Component {
                 <div id={'dZ-out-eq'} className={'nn-equation'}>
                   <MathComponent
                     display={false}
-                    tex={String.raw` \frac{\partial output}{ \partial o_0 net} = output * (1 - output) = 
-              ${this.state.o0_out ? round(this.state.o0_out, 3) : '?'} * (1 - ${
-                      this.state.o0_out ? round(this.state.o0_out, 3) : '?'
-                    }) = 
-              ${this.state.dZ_out ? round(this.state.dZ_out, 3) : '?'}`}
+                    tex={String.raw` \frac{\partial output}{ \partial o_0 net} 
+                    = output * (1 - output) = 
+                    ${this.state.o0_out ? round(this.state.o0_out, 3) : '?'} 
+                    * (1 - 
+                    ${this.state.o0_out ? round(this.state.o0_out, 3) : '?'}) 
+                    = 
+                    ${this.state.dZ_out ? round(this.state.dZ_out, 3) : '?'}`}
                   />
                 </div>
               </div>
@@ -872,11 +931,13 @@ class NeuralNets extends Component {
                 <div id={'dOut-wrt-w1-eq'} className={'nn-equation'}>
                   <MathComponent
                     display={false}
-                    tex={String.raw` \frac{\partial o_0 net}{ \partial w1} = \pmatrix{h_0 out \\ h_1 out} = 
-              \pmatrix{${
-                this.state.h0_out ? round(this.state.h0_out, 3) : '?'
-              } \\ ${this.state.h1_out ? round(this.state.h1_out, 3) : '?'}}
-               `}
+                    tex={String.raw` \frac{\partial o_0 net}{ \partial w1} 
+                    = \pmatrix{h_0 out \\ h_1 out} = 
+                    \pmatrix{
+                      ${this.state.h0_out ? round(this.state.h0_out, 3) : '?'} 
+                      \\ 
+                      ${this.state.h1_out ? round(this.state.h1_out, 3) : '?'}
+                    }`}
                   />
                 </div>
               </div>
@@ -885,21 +946,25 @@ class NeuralNets extends Component {
                 <div id={'dW1-eq'} className={'nn-equation'}>
                   <MathComponent
                     display={false}
-                    tex={String.raw` \frac{\partial E}{ \partial w1} = \frac{\partial E}{ \partial output} * \frac{\partial output}{ \partial o_0 net} * \frac{\partial o_0 net}{ \partial w1} 
-              = ${this.state.dE ? round(this.state.dE, 3) : '?'} *  ${
-                      this.state.dZ_out ? round(this.state.dZ_out, 3) : '?'
-                    } *   \pmatrix{${
-                      this.state.h0_out ? round(this.state.h0_out, 3) : '?'
-                    } \\ ${
-                      this.state.h1_out ? round(this.state.h1_out, 3) : '?'
-                    }}
-               = 
-               \pmatrix{
-                ${this.state.dW1 ? round(this.state.dW1[0], 3) : '?'}
-                 \\
-                 ${this.state.dW1 ? round(this.state.dW1[1], 3) : '?'}}
-  
-               `}
+                    tex={String.raw` 
+                    \frac{\partial E}{ \partial w1} 
+                    = \frac{\partial E}{ \partial output} 
+                    * \frac{\partial output}{ \partial o_0 net} 
+                    * \frac{\partial o_0 net}{ \partial w1} 
+                    = ${this.state.dE ? round(this.state.dE, 3) : '?'} 
+                    *  ${this.state.dZ_out ? round(this.state.dZ_out, 3) : '?'}
+                    *   \pmatrix{
+                        ${
+                          this.state.h0_out ? round(this.state.h0_out, 3) : '?'
+                        } 
+                        \\ 
+                        ${this.state.h1_out ? round(this.state.h1_out, 3) : '?'}
+                        }
+                    = \pmatrix{
+                        ${this.state.dW1 ? round(this.state.dW1[0], 3) : '?'}
+                        \\
+                        ${this.state.dW1 ? round(this.state.dW1[1], 3) : '?'}
+                      }`}
                   />
                 </div>
               </div>
@@ -908,13 +973,13 @@ class NeuralNets extends Component {
                 <div id={'dB1-eq'} className={'nn-equation'}>
                   <MathComponent
                     display={false}
-                    tex={String.raw` \frac{\partial Error}{ \partial b_1} = 
-              \frac{\partial E}{ \partial output} * \frac{\partial output}{ \partial b_1}  
-              = ${this.state.dE ? round(this.state.dE, 3) : '?'} *  ${
-                      this.state.dZ_out ? round(this.state.dZ_out, 3) : '?'
-                    }
-               = ${this.state.dB1 ? round(this.state.dB1, 3) : '?'}
-               `}
+                    tex={String.raw` 
+                    \frac{\partial Error}{ \partial b_1} 
+                    = \frac{\partial E}{ \partial output} 
+                    * \frac{\partial output}{ \partial b_1}  
+                    = ${this.state.dE ? round(this.state.dE, 3) : '?'} 
+                    *  ${this.state.dZ_out ? round(this.state.dZ_out, 3) : '?'}
+                    = ${this.state.dB1 ? round(this.state.dB1, 3) : '?'}`}
                   />
                 </div>
               </div>
@@ -923,11 +988,14 @@ class NeuralNets extends Component {
                 <div id={'dOut-wrt-h-eq'} className={'nn-equation'}>
                   <MathComponent
                     display={false}
-                    tex={String.raw` \frac{\partial o_0 net}{ \partial h out} = W1 = \pmatrix{${
-                      this.state.w1[0] ? round(this.state.w1[0], 3) : '?'
-                    } \\ ${
-                      this.state.w1[1] ? round(this.state.w1[1], 3) : '?'
-                    }}`}
+                    tex={String.raw` 
+                    \frac{\partial o_0 net}{ \partial h out} 
+                    = W1 
+                    = \pmatrix{
+                      ${this.state.w1[0] ? round(this.state.w1[0], 3) : '?'}
+                      \\ 
+                      ${this.state.w1[1] ? round(this.state.w1[1], 3) : '?'}
+                    }`}
                   />
                 </div>
               </div>
@@ -936,10 +1004,13 @@ class NeuralNets extends Component {
                 <div id={'dZ-h-eq'} className={'nn-equation'}>
                   <MathComponent
                     display={false}
-                    tex={String.raw` \frac{\partial h out}{ \partial h_{net}} = h_{out} * (1 - h_{out}) = 
-              \pmatrix{${
-                this.state.h0_out ? round(this.state.h0_out, 3) : '?'
-              } \\ ${this.state.h1_out ? round(this.state.h1_out, 3) : '?'}}
+                    tex={String.raw` 
+                    \frac{\partial h out}{ \partial h_{net}} = h_{out} * (1 - h_{out}) 
+                    = \pmatrix{${
+                      this.state.h0_out ? round(this.state.h0_out, 3) : '?'
+                    } \\ ${
+                      this.state.h1_out ? round(this.state.h1_out, 3) : '?'
+                    }}
                * (1 - 
                 \pmatrix{${
                   this.state.h0_out ? round(this.state.h0_out, 3) : '?'
@@ -957,12 +1028,18 @@ class NeuralNets extends Component {
                 <div id={'dH-wrt-w-eq'} className={'nn-equation'}>
                   <MathComponent
                     display={false}
-                    tex={String.raw` \frac{\partial h_{net}}{ \partial w0} = X = 
-              \pmatrix{${
-                this.state.x[0] ? round(this.state.x[0], 3) : '?'
-              } \\ ${
-                      this.state.x[1] !== null ? round(this.state.x[1], 3) : '?'
-                    }}
+                    tex={String.raw` 
+                    \frac{\partial h_{net}}{ \partial w0} 
+                    = X 
+                    = \pmatrix{
+                      ${this.state.x[0] ? round(this.state.x[0], 3) : '?'} 
+                      \\ 
+                      ${
+                        this.state.x[1] !== null
+                          ? round(this.state.x[1], 3)
+                          : '?'
+                      }
+                    }
                `}
                   />
                 </div>
@@ -1157,7 +1234,7 @@ class NeuralNets extends Component {
         >
           <div
             className={'row'}
-            style={{ marginTop: '-120px', marginLeft: '-120px' }}
+            style={{ marginTop: '-100px', marginLeft: '-120px' }}
           >
             <span style={{ marginLeft: '160px' }}></span>
             {this.render2x2Matrix(this.state.w0, 'layer 1', 'layer 0')}
@@ -1179,178 +1256,3 @@ class NeuralNets extends Component {
 } //End NeuralNet Component
 
 export default NeuralNets;
-
-// render2x3Matrix(a) {
-//   return (
-//     <table className={'nn-matrix'}>
-//       <tbody>
-//         <tr>
-//           <td></td>
-//           <td></td>
-//           <td></td>
-//           <td>
-//             <i>layer 1</i>
-//           </td>
-//         </tr>
-//         <tr>
-//           <td></td>
-//           <td></td>
-//           <td>
-//             <i>h0</i>
-//           </td>
-//           <td>
-//             <i>h1</i>
-//           </td>
-//           <td>
-//             <i>h2</i>
-//           </td>
-//         </tr>
-//         <tr>
-//           <td style={{ padding: 0 }} rowSpan="2">
-//             <i>layer 2</i>
-//           </td>
-//           <td>
-//             <i>o</i>0
-//           </td>
-//           <td id={'matrix2-00'} className={'left'}>
-//             {a[0][0]}
-//           </td>
-//           <td id={'matrix2-01'}>{a[0][1]}</td>
-//           <td id={'matrix2-02'} className={'right'}>
-//             {a[0][2]}
-//           </td>
-//         </tr>
-
-//         <tr>
-//           <td>
-//             <i>o</i>1
-//           </td>
-//           <td id={'matrix2-10'} className={'left'}>
-//             {a[1][0]}
-//           </td>
-//           <td id={'matrix2-11'}>{a[1][1]}</td>
-//           <td id={'matrix2-12'} className={'right'}>
-//             {a[1][2]}
-//           </td>
-//         </tr>
-//       </tbody>
-//     </table>
-//   );
-// }
-
-// render3x3Matrix(a, yLabel, xLabel) {
-//   return (
-//     <table className={'nn-matrix'}>
-//       <tbody>
-//         <tr>
-//           <td></td>
-//           <td></td>
-//           <td></td>
-//           <td>
-//             <i>{xLabel}</i>
-//           </td>
-//         </tr>
-//         <tr>
-//           <td></td>
-//           <td></td>
-//           <td>
-//             <i>i0</i>
-//           </td>
-//           <td>
-//             <i>i1</i>
-//           </td>
-//           <td>
-//             <i>i2</i>
-//           </td>
-//         </tr>
-//         <tr>
-//           <td></td>
-//           <td>
-//             <i>h0</i>
-//           </td>
-//           <td id={'matrix1-00'} className={'left'}>
-//             {a[0][0]}
-//           </td>
-//           <td id={'matrix1-01'}>{a[0][1]}</td>
-//           <td id={'matrix1-02'} className={'right'}>
-//             {a[0][2]}
-//           </td>
-//         </tr>
-
-//         <tr>
-//           <td style={{ padding: 0 }}>
-//             <i>{yLabel}</i>
-//           </td>
-//           <td>
-//             <i>h1</i>
-//           </td>
-//           <td id={'matrix1-10'} className={'left'}>
-//             {a[1][0]}
-//           </td>
-//           <td id={'matrix1-11'}>{a[1][1]}</td>
-//           <td id={'matrix1-12'} className={'right'}>
-//             {a[1][2]}
-//           </td>
-//         </tr>
-//         <tr>
-//           <td></td>
-//           <td>
-//             <i>h2</i>
-//           </td>
-//           <td id={'matrix1-20'} className={'left'}>
-//             {a[2][0]}
-//           </td>
-//           <td id={'matrix1-21'}>{a[2][1]}</td>
-//           <td id={'matrix1-22'} className={'right'}>
-//             {a[2][2]}
-//           </td>
-//         </tr>
-//       </tbody>
-//     </table>
-//   );
-// }
-
-// render1x3Matrix(a, yLabel, yNode, xLabel, xNode) {
-//   return (
-//     <table className={'nn-matrix'}>
-//       <tbody>
-//         <tr>
-//           <td></td>
-//           <td></td>
-//           <td></td>
-//           <td>
-//             <i>{xLabel}</i>
-//           </td>
-//         </tr>
-//         <tr>
-//           <td></td>
-//           <td></td>
-//           <td>
-//             <i>{xNode}0</i>
-//           </td>
-//           <td>
-//             <i>{xNode}1</i>
-//           </td>
-//           <td>
-//             <i>{xNode}2</i>
-//           </td>
-//         </tr>
-//         <tr>
-//           <td style={{ padding: 0 }}>
-//             <i>{yLabel}</i>
-//           </td>
-//           <td>
-//             <i>{yNode}0</i>
-//           </td>
-//           <td id={'bias0-0'} className={'left'}>
-//             {a[0]}
-//           </td>
-//           <td id={'bias0-1'}>{a[1]}</td>
-//           <td id={'bias0-2'} className={'right'}>
-//             {a[2]}
-//           </td>
-//         </tr>
-//       </tbody>
-//     </table>
-//   );
-// }
