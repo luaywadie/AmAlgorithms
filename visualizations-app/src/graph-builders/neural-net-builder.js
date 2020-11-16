@@ -6,14 +6,14 @@ function buildNetwork() {
     nodeSize = 60;
 
   let nodes = [
-    { label: 'i0', layer: 1, bias: 1 },
-    { label: 'i1', layer: 1, bias: 0 },
-    { label: 'h0', layer: 2, bias: 1 },
+    { label: 'i0', layer: 1, bias: 1, color: '#73a0f3' },
+    { label: 'i1', layer: 1, bias: 0, color: '#73a0f3' },
+    { label: 'h0', layer: 2, bias: 1, color: 'turquoise' },
     // { label: 'b0', layer: 1 },
-    { label: 'h1', layer: 2, bias: -6 },
+    { label: 'h1', layer: 2, bias: -6, color: 'turquoise' },
     // { label: 'b1', layer: 2 },
     // { label: 'h3', layer: 2 },
-    { label: 'o0', layer: 3, bias: -3.93 },
+    { label: 'o0', layer: 3, bias: -3.93, color: '#2dea2d' },
     // { label: 'o1', layer: 3 }
   ];
 
@@ -109,8 +109,10 @@ function buildNetwork() {
     .attr('class', 'node-nn')
     .attr('id', (d) => `${d.label}-node`)
     .attr('r', nodeSize)
+    .attr('stroke', 'black')
+    .attr('stroke-width', '3px')
     .style('fill', function (d) {
-      return color(d.layer);
+      return d.color;
     });
 
   node
@@ -157,21 +159,23 @@ function buildNetwork() {
       return 'out = ?';
     });
 
-  node
-    .append('text')
-    .attr('dx', '-1.6em')
-    .attr('dy', '8.5em')
-    .attr('id', (d) => `${d.label}-error`)
-    .text(function (d, i) {
-      if (i == 4) {
-        return 'error = ?';
-      }
-    });
+  // node
+  //   .append('text')
+  //   .attr('dx', '-1.6em')
+  //   .attr('dy', '8.5em')
+  //   .attr('id', (d) => `${d.label}-error`)
+  //   .attr('font-size', '24px')
+  //   .text(function (d, i) {
+  //     if (i == 4) {
+  //       return 'error = ?';
+  //     }
+  //   });
   node
     .append('text')
     .attr('dx', '-1.7em')
     .attr('dy', '5em')
     .attr('id', (d) => `${d.label}-target`)
+    .attr('font-size', '24px')
     .text(function (d, i) {
       if (i == 4) {
         return 'target = 1';
@@ -182,6 +186,7 @@ function buildNetwork() {
     .attr('dx', '-1.7em')
     .attr('dy', '6.6em')
     .attr('id', (d) => `${d.label}-output`)
+    .attr('font-size', '24px')
     .text(function (d, i) {
       if (i == 4) {
         return 'output = ?';

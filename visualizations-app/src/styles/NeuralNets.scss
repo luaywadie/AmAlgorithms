@@ -8,8 +8,13 @@ text {
   stroke-width: 8px;
 }
 
-.active-node-nn {
+.active-node-nn-forward {
   stroke: #e76dff;
+  stroke-opacity: 0.8;
+  stroke-width: 8px;
+}
+.active-node-nn-backward {
+  stroke: red;
   stroke-opacity: 0.8;
   stroke-width: 8px;
 }
@@ -25,9 +30,14 @@ text {
   stroke: #e76dff;
 }
 
-.active-link-nn {
+.active-link-nn-forward {
   stroke-width: 10px;
   stroke: #e76dff;
+}
+
+.active-link-nn-backward {
+  stroke-width: 10px;
+  stroke: red;
 }
 
 .nn-matrix {
@@ -82,4 +92,9 @@ text {
 
 .left-and-right:hover {
   background-color: #fffc60;
+}
+
+.nn-equation {
+  margin: 10px 0px 10px 0px;
+  padding: 2px 5px;
 }
