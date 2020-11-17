@@ -429,7 +429,7 @@ class NeuralNets extends Component {
     const sigmoid = (v) => 1 / (1 + exp(-v));
     // const relu = (x) => max(x, 0);
     const errorFunction = (pred, targ) => (1 / 2) * (targ - pred) ** 2;
-    const dZ = (v) => x * (1 - v); // sigmoid derivative
+    const dZ = (v) => v * (1 - v); // sigmoid derivative
     // const dZ = (x) => Number(x > 0); // relu derivative
 
     for (let i = 1; i < n_iterations; i++) {
