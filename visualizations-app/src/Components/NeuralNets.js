@@ -53,7 +53,10 @@ class NeuralNets extends Component {
       dB0: null,
       dB1: null,
       activeKey: 'forward',
+      animationQueue: [],
+      stepIndex: 0,
     };
+    this.localAQ = [];
   }
 
   linkToMatrixMapping = {
@@ -177,21 +180,6 @@ class NeuralNets extends Component {
     }
   }
 
-  updateBias() {
-    let h0 = document.getElementById('h0-bias');
-    if (h0) {
-      h0.innerHTML = 'b = ' + round(this.state.b0[0], 3);
-    }
-    let h1 = document.getElementById('h1-bias');
-    if (h1) {
-      h1.innerHTML = 'b = ' + round(this.state.b0[1], 3);
-    }
-    let b1 = document.getElementById('o0-bias');
-    if (b1) {
-      b1.innerHTML = 'b = ' + round(this.state.b1, 3);
-    }
-  }
-
   highlightEquation(id) {
     let el = document.getElementById(id);
     if (el) {
@@ -205,6 +193,156 @@ class NeuralNets extends Component {
       el.classList.remove('active-equation');
     }
   }
+
+  async renderAnimationQueue() {
+    await this.setState({ stepIndex: 0 });
+    let shouldWait = true;
+    while (this.state.stepIndex < this.state.animationQueue.length) {
+      let currentState = this.state.animationQueue[this.state.stepIndex];
+
+      if (currentState.highlightEq) {
+        this.highlightEquation(currentState.highlightEq);
+      }
+
+      if (currentState.activeMatrix) {
+        this.activateNodeMatricies(currentState.activeMatrix);
+      }
+
+      if (currentState.activeNode) {
+        for (let [id, direction] of currentState.activeNode) {
+          this.activateNode(id, direction);
+        }
+      }
+
+      if (currentState.activeLinks) {
+        for (let [id, direction] of currentState.activeLinks) {
+          this.activateLinks(id, direction);
+        }
+      }
+
+      let waitTime =
+        currentState.waitTime !== undefined ? currentState.waitTime : 1500;
+
+      if (!shouldWait) {
+        waitTime = 0;
+      }
+
+      await new Promise((r) => setTimeout(r, waitTime / this.state.speed));
+      await this.checkPauseStatus();
+
+      await this.setState({ ...currentState });
+
+      if (currentState.nodeTextToUpdate) {
+        for (let obj of currentState.nodeTextToUpdate) {
+          document.getElementById(obj.id).innerHTML = obj.outputStr;
+        }
+      }
+
+      if (currentState.deHighlightEq) {
+        this.deHighlightEquation(currentState.deHighlightEq);
+      }
+      if (currentState.deActivateLink) {
+        for (let [id, direction] of currentState.deActivateLink) {
+          this.deActivateLink(id, direction);
+        }
+      }
+      if (currentState.deActiveNode) {
+        for (let [id, direction] of currentState.deActiveNode) {
+          this.deActivateNode(id, direction);
+        }
+      }
+      if (currentState.deActiveMatrix) {
+        this.deActivateNodeMatricies(currentState.deActiveMatrix);
+      }
+      if (!this.state.stepMode) {
+        this.setState({ stepIndex: this.state.stepIndex + 1 });
+        shouldWait = true;
+      }
+
+      //   if (currentState.activateChildAndParent) {
+      //     this.activateChildAndParent(
+      //       currentState.activateChildAndParent[0],
+      //       currentState.activateChildAndParent[1]
+      //     );
+      //   }
+
+      //   this.activateParent(currentState.activateParent);
+      //   this.deActivateParent(currentState.deActivateParent);
+
+      //   if (currentState.activateLeftAndRightChildren) {
+      //     this.activateLeftAndRightChildren(
+      //       currentState.activateLeftAndRightChildren[0],
+      //       currentState.activateLeftAndRightChildren[1]
+      //     );
+      //   }
+
+      //   if (currentState.deActivateLeftAndRightChildren) {
+      //     this.deActivateLeftAndRightChildren(
+      //       currentState.deActivateLeftAndRightChildren[0],
+      //       currentState.deActivateLeftAndRightChildren[1]
+      //     );
+      //   }
+
+      //   if (currentState.swap) {
+      //     swap(currentState.swap[0], currentState.swap[1]);
+      //   }
+
+      //   if (currentState.removeActiveChildParent) {
+      //     this.removeActiveChildParent(
+      //       currentState.removeActiveChildParent[0],
+      //       currentState.removeActiveChildParent[1]
+      //     );
+      //   }
+      //   this.activateLink(currentState.activatedLink);
+      //   this.deActivateLink(currentState.deActivateLink);
+
+      //   if (!this.state.stepMode) {
+      //     this.setState({ stepIndex: this.state.stepIndex + 1 });
+      //     shouldWait = true;
+      //   } else {
+      //     // need to reset everything up to the previous state starting from beggining since we only update what is neccessary at each element of the animation queue
+
+      //     this.setState({
+      //       stepMode: false,
+      //       pause: true,
+      //     });
+      //     this.convertHeapArrayToAdjList(this.state.heapA);
+      //     insertIntoDynamicTree(this.state.heapA[1], this.adjList);
+      //     for (let i = 0; i < this.state.stepIndex; i++) {
+      //       let prevState = this.state.animationQueue[i];
+      //       this.setState({ ...prevState });
+
+      //       if (prevState.activateChildAndParent) {
+      //         this.activateChildAndParent(
+      //           prevState.activateChildAndParent[0],
+      //           prevState.activateChildAndParent[1]
+      //         );
+      //       }
+
+      //       if (prevState.removeActiveChildParent) {
+      //         this.removeActiveChildParent(
+      //           prevState.removeActiveChildParent[0],
+      //           prevState.removeActiveChildParent[1]
+      //         );
+      //       }
+
+      //       this.activateLink(prevState.activatedLink);
+      //       this.deActivateLink(prevState.deActivateLink);
+
+      //       if (prevState.keepLineHighlighted) {
+      //         this.highlightLine(prevState.highlightedLine);
+      //       }
+      //       if (prevState.removeKeptHighlightedLine) {
+      //         this.removeHighlightedLine(prevState.removeKeptHighlightedLine);
+      //       }
+      //     }
+      //     shouldWait = false;
+      //   }
+      // }
+      // this.setState({ animationQueue: [], pause: false, executing: false });
+    }
+  }
+
   async nNLearn() {
     let w0 = [
       [3, 4],
@@ -221,7 +359,7 @@ class NeuralNets extends Component {
     // SIGMOID SETTINGS
     let actual = 1;
     let alpha = 0.5;
-    let n_iterations = 1000;
+    let n_iterations = 10;
     let x = [1, 0];
 
     const sigmoid = (x) => 1 / (1 + exp(-x));
@@ -233,7 +371,8 @@ class NeuralNets extends Component {
     for (let i = 1; i < n_iterations; i++) {
       console.log(`Iteration: ${i}`);
 
-      this.setState({
+      this.localAQ.push({
+        waitTime: 0,
         prevW0: this.state.w0,
         prevW1: this.state.w1,
         prevB0: this.state.b0,
@@ -245,283 +384,388 @@ class NeuralNets extends Component {
         iteration: i,
         activeKey: 'forward',
       });
+
       // Forward
       let h_net = add(multiply(x, transpose(w0)), b0);
+
+      this.localAQ.push({
+        highlightEq: 'h0-net-eq',
+        activeNode: [['h0', 'forward']],
+        activeLinks: [[this.linkNames['h0'], 'forward']],
+        activeMatrix: ['w0-00', 'w0-01', 'b0-0'],
+      });
+
+      this.localAQ.push({
+        h0_net: h_net[0],
+        nodeTextToUpdate: [
+          {
+            id: 'h0-net',
+            outputStr: 'net = ' + round(h_net[0], 3),
+          },
+        ],
+      });
+
+      this.localAQ.push({
+        deHighlightEq: 'h0-net-eq',
+      });
+      this.localAQ.push({
+        highlightEq: 'h0-out-eq',
+      });
+
       let h_out = h_net.map((e) => sigmoid(e));
       // let h_out = h_net.map((e) => relu(e));
 
-      // First, highlight links and active node
-      this.activateNode('h0', 'forward');
-      this.activateLinks(this.linkNames['h0'], 'forward');
-      this.activateNodeMatricies(['w0-00', 'w0-01', 'b0-0']);
-      this.highlightEquation('h0-net-eq');
-      // highlight matrix w0, row 0 && matrix b0 row 0
-      await new Promise((r) => setTimeout(r, 1500));
+      this.localAQ.push({
+        h0_out: h_out[0],
+        nodeTextToUpdate: [
+          {
+            id: 'h0-out',
+            outputStr: 'out = ' + round(h_out[0], 3),
+          },
+        ],
+      });
 
-      // compute sum
-      this.setState({ h0_net: h_net[0] });
-      document.getElementById('h0-net').innerHTML =
-        'net = ' + round(h_net[0], 3);
-      await new Promise((r) => setTimeout(r, 300));
-      this.deHighlightEquation('h0-net-eq');
-      // compute sigma of sum
-      this.highlightEquation('h0-out-eq');
-      await new Promise((r) => setTimeout(r, 1500));
+      this.localAQ.push({
+        deHighlightEq: 'h0-out-eq',
+        deActiveNode: [['h0', 'forward']],
+        deActivateLink: [[this.linkNames['h0'], 'forward']],
+        deActiveMatrix: ['w0-00', 'w0-01', 'b0-0'],
+      });
 
-      this.setState({ h0_out: h_out[0] });
-      document.getElementById('h0-out').innerHTML =
-        'out = ' + round(h_out[0], 3);
-      await new Promise((r) => setTimeout(r, 1500));
+      this.localAQ.push({
+        highlightEq: 'h1-net-eq',
+        activeNode: [['h1', 'forward']],
+        activeLinks: [[this.linkNames['h1'], 'forward']],
+        activeMatrix: ['w0-10', 'w0-11', 'b0-1'],
+      });
 
-      this.deHighlightEquation('h0-out-eq');
+      this.localAQ.push({
+        h1_net: h_net[1],
+        nodeTextToUpdate: [
+          {
+            id: 'h1-net',
+            outputStr: 'net = ' + round(h_net[1], 3),
+          },
+        ],
+      });
 
-      // Remove active links and nodes
-      this.deActivateNode('h0', 'forward');
-      this.deActivateLink(this.linkNames['h0'], 'forward');
-      this.deActivateNodeMatricies(['w0-00', 'w0-01', 'b0-0']);
-      // un-highlight matrix w0, row 0 && matrix b0 row 0
+      this.localAQ.push({
+        deHighlightEq: 'h1-net-eq',
+      });
 
-      // activate h1 node and its links
+      this.localAQ.push({
+        highlightEq: 'h1-out-eq',
+      });
 
-      this.activateNode('h1', 'forward');
-      this.activateLinks(this.linkNames['h1'], 'forward');
-      this.activateNodeMatricies(['w0-10', 'w0-11', 'b0-1']);
-      // highlight matrix w0, row 1 && matrix b0 row 1
-      this.highlightEquation('h1-net-eq');
-      await new Promise((r) => setTimeout(r, 1500));
+      this.localAQ.push({
+        h1_out: h_out[1],
+        nodeTextToUpdate: [
+          {
+            id: 'h1-out',
+            outputStr: 'out = ' + round(h_out[1], 3),
+          },
+        ],
+      });
 
-      // compute sum
-      this.setState({ h1_net: h_net[1] });
-      document.getElementById('h1-net').innerHTML =
-        'net = ' + round(h_net[1], 3);
+      this.localAQ.push({
+        deHighlightEq: 'h1-out-eq',
+        deActiveNode: [['h1', 'forward']],
+        deActivateLink: [[this.linkNames['h1'], 'forward']],
+        deActiveMatrix: ['w0-10', 'w0-11', 'b0-1'],
+      });
 
-      await new Promise((r) => setTimeout(r, 1500));
-      this.deHighlightEquation('h1-net-eq');
-
-      this.highlightEquation('h1-out-eq');
-      await new Promise((r) => setTimeout(r, 1500));
-
-      // compute sigma of sum
-      await this.setState({ h1_out: h_out[1] });
-      document.getElementById('h1-out').innerHTML =
-        'out = ' + round(h_out[1], 3);
-      await new Promise((r) => setTimeout(r, 1500));
-
-      this.deHighlightEquation('h1-out-eq');
-
-      // Remove active links and nodes
-      this.deActivateNode('h1', 'forward');
-      this.deActivateLink(this.linkNames['h1'], 'forward');
-      this.deActivateNodeMatricies(['w0-10', 'w0-11', 'b0-1']);
-      // un-highlight matrix w0, row 1 && matrix b0 row 1
-
-      // activate o0 node and its links
-      this.activateNode('o0', 'forward');
-      this.activateLinks(this.linkNames['o0'], 'forward');
-      this.activateNodeMatricies(['w1-0', 'w1-1', 'b1']);
-      // highlight matrix w1, row 0 b1
+      this.localAQ.push({
+        highlightEq: 'out-net-eq',
+        activeNode: [['o0', 'forward']],
+        activeLinks: [[this.linkNames['o0'], 'forward']],
+        activeMatrix: ['w1-0', 'w1-1', 'b1'],
+      });
 
       let out_net = add(multiply(h_out, transpose(w1)), b1);
-      this.highlightEquation('out-net-eq');
-      await new Promise((r) => setTimeout(r, 1500));
 
-      this.setState({ o0_net: out_net });
-      document.getElementById('o0-net').innerHTML =
-        'net = ' + round(out_net, 3);
+      this.localAQ.push({
+        o0_net: out_net,
+        nodeTextToUpdate: [
+          {
+            id: 'o0-net',
+            outputStr: 'net = ' + round(out_net, 3),
+          },
+        ],
+      });
 
-      await new Promise((r) => setTimeout(r, 1500));
-      this.deHighlightEquation('out-net-eq');
+      this.localAQ.push({
+        deHighlightEq: 'out-net-eq',
+      });
+
+      this.localAQ.push({
+        highlightEq: 'out-out-eq',
+      });
 
       let out_out = sigmoid(out_net);
 
-      this.highlightEquation('out-out-eq');
-      await new Promise((r) => setTimeout(r, 1500));
+      this.localAQ.push({
+        o0_out: out_out,
+        nodeTextToUpdate: [
+          {
+            id: 'o0-output',
+            outputStr: 'output = ' + round(out_out, 3),
+          },
+        ],
+      });
 
-      this.setState({ o0_out: out_out });
+      this.localAQ.push({
+        deHighlightEq: 'out-out-eq',
+        deActivateLink: [[this.linkNames['o0'], 'forward']],
+        deActiveMatrix: ['w1-0', 'w1-1', 'b1'],
+      });
 
-      document.getElementById('o0-output').innerHTML =
-        'output = ' + round(out_out, 3);
-      document.getElementById('o0-out').innerHTML =
-        'out = ' + round(out_out, 3);
-      await new Promise((r) => setTimeout(r, 1500));
-      this.deHighlightEquation('out-out-eq');
-      // let out_out = relu(out_net);
-
-      // Remove active links and nodes
-      this.deActivateNode('o0', 'forward');
-      this.deActivateLink(this.linkNames['o0'], 'forward');
-      this.deActivateNodeMatricies(['w1-0', 'w1-1', 'b1']);
-      // un-highlight matrix w1, row 0 b1
-      this.highlightEquation('error-eq');
-      await new Promise((r) => setTimeout(r, 1500));
+      this.localAQ.push({
+        highlightEq: 'error-eq',
+      });
 
       let error = errorFunction(out_out, actual);
-      this.setState({ error: round(error, 3) });
 
-      await new Promise((r) => setTimeout(r, 1500));
-      this.deHighlightEquation('error-eq');
+      this.localAQ.push({
+        error: round(error, 3),
+      });
 
-      await new Promise((r) => setTimeout(r, 1000));
+      this.localAQ.push({
+        deHighlightEq: 'error-eq',
+        deActiveNode: [['o0', 'forward']],
+      });
 
       // Backprop
-      await this.setState({ activeKey: 'backprop' });
+      this.localAQ.push({
+        activeKey: 'backprop',
+      });
 
-      this.activateNode('o0', 'backward');
-      this.highlightEquation('dE-eq');
-      await new Promise((r) => setTimeout(r, 1500));
+      this.localAQ.push({
+        highlightEq: 'dE-eq',
+        activeNode: [['o0', 'backward']],
+      });
 
       let dE = -(actual - out_out);
-      await this.setState({ dE: dE });
-      await new Promise((r) => setTimeout(r, 1500));
-      this.deHighlightEquation('dE-eq');
 
-      this.highlightEquation('dZ-out-eq');
-      await new Promise((r) => setTimeout(r, 1500));
+      this.localAQ.push({
+        dE: dE,
+      });
+
+      this.localAQ.push({
+        deHighlightEq: 'dE-eq',
+      });
+      this.localAQ.push({
+        highlightEq: 'dZ-out-eq',
+      });
 
       let dZ_out = dZ(out_out); // d_out_out_wrt_d_out_net
-      await this.setState({ dZ_out: dZ_out });
 
-      await new Promise((r) => setTimeout(r, 1500));
-      this.deHighlightEquation('dZ-out-eq');
+      this.localAQ.push({
+        dZ_out: dZ_out,
+      });
 
-      this.highlightEquation('dOut-wrt-w1-eq');
-      this.activateLinks(this.linkNames['o0'], 'backward');
+      this.localAQ.push({
+        deHighlightEq: 'dZ-out-eq',
+      });
 
-      await new Promise((r) => setTimeout(r, 1500));
+      this.localAQ.push({
+        highlightEq: 'dOut-wrt-w1-eq',
+        activeLinks: [[this.linkNames['o0'], 'backward']],
+      });
 
       let dOut_wrt_w1 = h_out;
 
-      await new Promise((r) => setTimeout(r, 1500));
-      this.deHighlightEquation('dOut-wrt-w1-eq');
+      this.localAQ.push({
+        deHighlightEq: 'dOut-wrt-w1-eq',
+      });
 
-      this.highlightEquation('dW1-eq');
-
-      await new Promise((r) => setTimeout(r, 1500));
+      this.localAQ.push({
+        highlightEq: 'dW1-eq',
+      });
 
       let dw1 = multiply(dE, multiply(dZ_out, dOut_wrt_w1));
-      await this.setState({ dW1: dw1 });
 
-      await new Promise((r) => setTimeout(r, 1500));
-      this.deHighlightEquation('dW1-eq');
+      this.localAQ.push({
+        dW1: dw1,
+      });
 
-      this.highlightEquation('dB1-eq');
-      await new Promise((r) => setTimeout(r, 1500));
+      this.localAQ.push({
+        deHighlightEq: 'dW1-eq',
+      });
+
+      this.localAQ.push({
+        highlightEq: 'dB1-eq',
+      });
 
       let db1 = multiply(dE, dZ(out_out));
-      this.setState({ dB1: db1 });
 
-      await new Promise((r) => setTimeout(r, 1500));
-      this.deHighlightEquation('dB1-eq');
+      this.localAQ.push({
+        dB1: db1,
+      });
 
-      this.highlightEquation('dOut-wrt-h-eq');
-      this.activateNode('h0', 'backward');
-      this.activateNode('h1', 'backward');
-      await new Promise((r) => setTimeout(r, 1500));
+      this.localAQ.push({
+        deHighlightEq: 'dB1-eq',
+      });
+
+      this.localAQ.push({
+        highlightEq: 'dOut-wrt-h-eq',
+        activeNode: [
+          ['h0', 'backward'],
+          ['h1', 'backward'],
+        ],
+      });
 
       let dOut_wrt_h = w1;
 
-      await new Promise((r) => setTimeout(r, 1500));
-      this.deHighlightEquation('dOut-wrt-h-eq');
+      this.localAQ.push({
+        deHighlightEq: 'dOut-wrt-h-eq',
+      });
 
-      this.highlightEquation('dZ-h-eq');
-      await new Promise((r) => setTimeout(r, 1500));
+      this.localAQ.push({
+        highlightEq: 'dZ-h-eq',
+      });
 
       let dZ_h = h_out.map((e) => dZ(e)); // d_h_out_wrt_d_h_net
-      await this.setState({ dZ_h: dZ_h });
 
-      await new Promise((r) => setTimeout(r, 1500));
-      this.deHighlightEquation('dZ-h-eq');
+      this.localAQ.push({
+        dZ_h: dZ_h,
+      });
 
-      this.highlightEquation('dH-wrt-w-eq');
-      this.activateLinks(this.linkNames['h0'], 'backward');
-      this.activateLinks(this.linkNames['h1'], 'backward');
-      await new Promise((r) => setTimeout(r, 1500));
+      this.localAQ.push({
+        deHighlightEq: 'dZ-h-eq',
+      });
+
+      this.localAQ.push({
+        highlightEq: 'dH-wrt-w-eq',
+        activeLinks: [
+          [this.linkNames['h0'], 'backward'],
+          [this.linkNames['h1'], 'backward'],
+        ],
+      });
 
       let dh_wrt_w0 = x;
 
-      await new Promise((r) => setTimeout(r, 1500));
-      this.deHighlightEquation('dH-wrt-w-eq');
+      this.localAQ.push({
+        deHighlightEq: 'dH-wrt-w-eq',
+      });
 
-      this.highlightEquation('dW0-eq');
-      await new Promise((r) => setTimeout(r, 1500));
+      this.localAQ.push({
+        highlightEq: 'dW0-eq',
+      });
 
       let dw0 = multiply(
         dotMultiply(dE, dZ(out_out)),
         dotMultiply(dOut_wrt_h, dotMultiply(dZ_h, dh_wrt_w0))
       );
 
-      await this.setState({ dW0: dw0 });
+      this.localAQ.push({
+        dW0: dw0,
+      });
 
-      await new Promise((r) => setTimeout(r, 1500));
-      this.deHighlightEquation('dW0-eq');
-
-      this.highlightEquation('dB0-eq');
-      await new Promise((r) => setTimeout(r, 1500));
+      this.localAQ.push({
+        deHighlightEq: 'dW0-eq',
+      });
+      this.localAQ.push({
+        highlightEq: 'dB0-eq',
+      });
 
       let db0 = dotMultiply(dE * dZ(out_out), dotMultiply(dOut_wrt_h, dZ_h));
-      this.setState({ dB0: db0 });
 
-      await new Promise((r) => setTimeout(r, 1500));
-      this.deHighlightEquation('dB0-eq');
+      this.localAQ.push({
+        dB0: db0,
+      });
 
-      this.deActivateNode('o0', 'backward');
-      this.deActivateNode('h0', 'backward');
-      this.deActivateNode('h1', 'backward');
-      this.deActivateLink(this.linkNames['h0'], 'backward');
-      this.deActivateLink(this.linkNames['h1'], 'backward');
-      this.deActivateLink(this.linkNames['o0'], 'backward');
+      this.localAQ.push({
+        deHighlightEq: 'dB0-eq',
+        deActiveNode: [
+          ['o0', 'backward'],
+          ['h0', 'backward'],
+          ['h1', 'backward'],
+        ],
+        deActivateLink: [
+          [this.linkNames['h0'], 'backward'],
+          [this.linkNames['h1'], 'backward'],
+          [this.linkNames['o0'], 'backward'],
+        ],
+        deActiveMatrix: ['w1-0', 'w1-1', 'b1'],
+      });
 
       // UPDATES
-      await this.setState({ activeKey: 'update' });
+      this.localAQ.push({
+        activeKey: 'update',
+      });
 
-      this.highlightEquation('w0-update-eq');
-      this.activateNodeMatricies(['w0-00', 'w0-01', 'w0-10', 'w0-11']);
-      await new Promise((r) => setTimeout(r, 1500));
+      this.localAQ.push({
+        highlightEq: 'w0-update-eq',
+        activeMatrix: ['w0-00', 'w0-01', 'w0-10', 'w0-11'],
+      });
 
       w0 = subtract(w0, [dotMultiply(alpha, dw0), dotMultiply(alpha, dw0)]);
-      await this.setState({ newW0: w0, w0: w0 });
+      this.localAQ.push({
+        newW0: w0,
+        w0: w0,
+      });
 
-      await new Promise((r) => setTimeout(r, 1500));
-      this.deActivateNodeMatricies(['w0-00', 'w0-01', 'w0-10', 'w0-11']);
-      this.deHighlightEquation('w0-update-eq');
+      this.localAQ.push({
+        deHighlightEq: 'w0-update-eq',
+        deActiveMatrix: ['w0-00', 'w0-01', 'w0-10', 'w0-11'],
+      });
 
-      this.highlightEquation('b0-update-eq');
-      this.activateNodeMatricies(['b0-0', 'b0-1']);
-      await new Promise((r) => setTimeout(r, 1500));
+      this.localAQ.push({
+        highlightEq: 'b0-update-eq',
+        activeMatrix: ['b0-0', 'b0-1'],
+      });
 
       b0 = subtract(b0, dotMultiply(alpha, db0));
 
-      await this.setState({ newB0: b0, b0: b0 });
+      this.localAQ.push({
+        newB0: b0,
+        b0: b0,
+        nodeTextToUpdate: [
+          { id: 'o0-bias', outputStr: 'b = ' + round(this.state.b1, 3) },
+        ],
+      });
 
-      await new Promise((r) => setTimeout(r, 1500));
-      this.deActivateNodeMatricies(['b0-0', 'b0-1']);
-      this.deHighlightEquation('b0-update-eq');
+      this.localAQ.push({
+        deHighlightEq: 'b0-update-eq',
+        deActiveMatrix: ['b0-0', 'b0-1'],
+      });
 
-      this.highlightEquation('w1-update-eq');
-      this.activateNodeMatricies(['w1-0', 'w1-1']);
-      await new Promise((r) => setTimeout(r, 1500));
+      this.localAQ.push({
+        highlightEq: 'w1-update-eq',
+        activeMatrix: ['w1-0', 'w1-1'],
+      });
 
       w1 = subtract(w1, dotMultiply(alpha, dw1));
-      await this.setState({ newW1: w1, w1: w1 });
+      this.localAQ.push({
+        newW1: w1,
+        w1: w1,
+      });
 
-      await new Promise((r) => setTimeout(r, 1500));
-      this.deActivateNodeMatricies(['w1-0', 'w1-1']);
-      this.deHighlightEquation('w1-update-eq');
+      this.localAQ.push({
+        deHighlightEq: 'w1-update-eq',
+        deActiveMatrix: ['w1-0', 'w1-1'],
+      });
 
-      this.highlightEquation('b1-update-eq');
-      this.activateNodeMatricies(['b1']);
-      await new Promise((r) => setTimeout(r, 1500));
+      this.localAQ.push({
+        highlightEq: 'b1-update-eq',
+        activeMatrix: ['b1'],
+      });
 
       b1 = subtract(b1, dotMultiply(alpha, db1));
-      await this.setState({ newB1: b1, b1: b1 });
 
-      await new Promise((r) => setTimeout(r, 1500));
-      this.deActivateNodeMatricies(['b1']);
-      this.deHighlightEquation('b1-update-eq');
+      this.localAQ.push({
+        newB1: b1,
+        b1: b1,
+        nodeTextToUpdate: [
+          { id: 'h0-bias', outputStr: 'b = ' + round(this.state.b0[0], 3) },
+          { id: 'h1-bias', outputStr: 'b = ' + round(this.state.b0[1], 3) },
+        ],
+      });
 
-      this.updateBias();
-
-      await this.setState({
+      this.localAQ.push({
+        waitTime: 0,
+        deHighlightEq: 'b1-update-eq',
+        deActiveMatrix: ['b1'],
         output: round(out_out, 3),
         w0: w0,
         w1: w1,
@@ -543,6 +787,10 @@ class NeuralNets extends Component {
         dB1: null,
       });
     }
+    this.setState({
+      animationQueue: this.localAQ,
+    });
+    this.renderAnimationQueue();
   }
 
   render2x2Matrix(a, yLabel, xLabel) {
@@ -774,14 +1022,6 @@ class NeuralNets extends Component {
                 </tr>
               </tbody>
             </table>
-            {/* <h1 style={{ margin: '0px 15px' }}>
-              {' '}
-              Iteration: {this.state.iteration}
-            </h1>
-            <h1 style={{ margin: '0px 15px' }}>
-              {' '}
-              Iteration: {this.state.iteration}
-            </h1> */}
           </div>
         </div>
         <div className={'col-6'}>

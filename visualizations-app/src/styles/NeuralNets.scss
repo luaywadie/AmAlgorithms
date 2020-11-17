@@ -11,33 +11,84 @@ text {
 .active-node-nn-forward {
   stroke: #e76dff;
   stroke-opacity: 0.8;
-  stroke-width: 8px;
+  stroke-width: 5px;
+  animation: fade-in-active-node-nn-forward 1s;
 }
+
+@keyframes fade-in-active-node-nn-forward {
+  from {
+    stroke: #999;
+    stroke-width: 3px;
+  }
+  to {
+    stroke: #e76dff;
+    stroke-width: 5px;
+  }
+}
+
 .active-node-nn-backward {
   stroke: red;
   stroke-opacity: 0.8;
-  stroke-width: 8px;
+  stroke-width: 5px;
+  animation: fade-in-active-node-nn-backward 1s;
+}
+
+@keyframes fade-in-active-node-nn-backward {
+  from {
+    stroke: #999;
+    stroke-width: 3px;
+  }
+  to {
+    stroke: red;
+    stroke-width: 5px;
+  }
 }
 
 .link-nn {
   stroke: #999;
   stroke-opacity: 0.6;
-  stroke-width: 5px;
+  stroke-width: 3px;
 }
 
 .link-nn:hover {
-  stroke-width: 10px;
+  stroke-width: 8px;
   stroke: #e76dff;
 }
 
 .active-link-nn-forward {
-  stroke-width: 10px;
+  stroke-width: 8px;
   stroke: #e76dff;
+  animation: fade-in-active-link-nn-forward 1s;
+}
+
+@keyframes fade-in-active-link-nn-forward {
+  from {
+    stroke: #999;
+    stroke-opacity: 0.6;
+    stroke-width: 3px;
+  }
+  to {
+    stroke: #e76dff;
+    stroke-width: 8px;
+  }
 }
 
 .active-link-nn-backward {
-  stroke-width: 10px;
+  stroke-width: 8px;
   stroke: red;
+  animation: fade-in-active-link-nn-backward 1s;
+}
+
+@keyframes fade-in-active-link-nn-backward {
+  from {
+    stroke: #999;
+    stroke-opacity: 0.6;
+    stroke-width: 3px;
+  }
+  to {
+    stroke: red;
+    stroke-width: 8px;
+  }
 }
 
 .nn-matrix {

@@ -46,9 +46,14 @@ function buildNetwork() {
     ydist = height / largestLayerSize;
 
   // create node locations
-  nodes.map(function (d) {
-    d['x'] = (d.layer - 0.5) * xdist;
-    d['y'] = (d.lidx - 0.5) * ydist;
+  nodes.map(function (d, i) {
+    if (i === 4) {
+      d['x'] = (d.layer - 0.5) * xdist * 0.9;
+      d['y'] = (d.lidx - 0.5) * ydist * 2;
+    } else {
+      d['x'] = (d.layer - 0.5) * xdist;
+      d['y'] = (d.lidx - 0.5) * ydist;
+    }
   });
 
   let wIndex = {
