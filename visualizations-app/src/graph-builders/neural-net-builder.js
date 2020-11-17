@@ -1,13 +1,13 @@
 import * as d3 from 'd3';
 
-function buildNetwork() {
+function buildNetwork(x) {
   var width = 960,
     height = 600,
     nodeSize = 60;
 
   let nodes = [
-    { label: 'i0', layer: 1, bias: 1, color: '#73a0f3' },
-    { label: 'i1', layer: 1, bias: 0, color: '#73a0f3' },
+    { label: 'i0', layer: 1, bias: x[0], color: '#73a0f3' },
+    { label: 'i1', layer: 1, bias: x[1], color: '#73a0f3' },
     { label: 'h0', layer: 2, bias: 1, color: 'turquoise' },
     { label: 'h1', layer: 2, bias: -6, color: 'turquoise' },
     { label: 'o0', layer: 3, bias: -3.93, color: '#2dea2d' },
@@ -20,7 +20,6 @@ function buildNetwork() {
     .append('svg')
     .attr('width', width)
     .attr('height', height)
-    .attr('z-index', -1)
     .attr('transform', 'translate(' + -100 + ',' + -50 + ')');
 
   // get network size
@@ -218,37 +217,37 @@ function buildNetwork() {
       return 'out = ?';
     });
 
-  // node
-  //   .append('text')
-  //   .attr('dx', '-1.6em')
-  //   .attr('dy', '8.5em')
-  //   .attr('id', (d) => `${d.label}-error`)
-  //   .attr('font-size', '24px')
-  //   .text(function (d, i) {
-  //     if (i == 4) {
-  //       return 'error = ?';
-  //     }
-  //   });
   node
     .append('text')
-    .attr('dx', '-1.7em')
-    .attr('dy', '5em')
-    .attr('id', (d) => `${d.label}-target`)
-    .attr('font-size', '24px')
+    .attr('dx', '-2.7em')
+    .attr('dy', '-4.5em')
+    .attr('id', (d) => `${d.label}-error`)
+    .attr('font-size', '36px')
     .text(function (d, i) {
-      if (i == 4) {
-        return 'target = 1';
+      if (i === 4) {
+        return 'Error = ?';
       }
     });
   node
     .append('text')
-    .attr('dx', '-1.7em')
-    .attr('dy', '6.6em')
-    .attr('id', (d) => `${d.label}-output`)
-    .attr('font-size', '24px')
+    .attr('dx', '-2.7em')
+    .attr('dy', '-7.5em')
+    .attr('id', (d) => `${d.label}-target`)
+    .attr('font-size', '36px')
     .text(function (d, i) {
-      if (i == 4) {
-        return 'output = ?';
+      if (i === 4) {
+        return 'Target = 1';
+      }
+    });
+  node
+    .append('text')
+    .attr('dx', '-2.7em')
+    .attr('dy', '-6em')
+    .attr('id', (d) => `${d.label}-output`)
+    .attr('font-size', '36px')
+    .text(function (d, i) {
+      if (i === 4) {
+        return 'Output = ?';
       }
     });
 }

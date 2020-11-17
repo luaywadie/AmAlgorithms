@@ -6,9 +6,10 @@ import {
   subtract,
   transpose,
   exp,
-  max,
   round,
 } from 'mathjs';
+import { FaStepBackward, FaStepForward, FaPause, FaPlay } from 'react-icons/fa';
+
 import { MathComponent } from 'mathjax-react';
 import buildNetwork from '../graph-builders/neural-net-builder';
 import { Tabs, Tab } from 'react-bootstrap';
@@ -27,7 +28,8 @@ class NeuralNets extends Component {
       w1: [2, 4],
       b0: [1, -6],
       b1: [-3.93],
-      x: [1, 0],
+      x: [1, 0.2],
+      learningRate: 0.75,
       prevW0: null,
       prevW1: null,
       prevB0: null,
@@ -55,6 +57,7 @@ class NeuralNets extends Component {
       activeKey: 'forward',
       animationQueue: [],
       stepIndex: 0,
+      stepMode: false,
     };
     this.localAQ = [];
   }
@@ -76,7 +79,7 @@ class NeuralNets extends Component {
 
   animationQueue = [];
   componentDidMount() {
-    buildNetwork();
+    buildNetwork(this.state.x);
     this.neuralNetwork = document.getElementById('graph-container');
     this.addHoverEventListeners();
   }
@@ -85,10 +88,99 @@ class NeuralNets extends Component {
   componentDidUpdate(prevProps) {}
 
   async checkPauseStatus() {
-    while (this.props.pause) {
-      await new Promise((r) => setTimeout(r, 1000));
+    while (this.state.pause && !this.state.stepMode) {
+      await new Promise((r) => setTimeout(r, 100));
       continue;
     }
+  }
+
+  linkNames = {
+    h0: ['i0-h0', 'i1-h0'],
+    h1: ['i0-h1', 'i1-h1'],
+    o0: ['h0-o0', 'h1-o0'],
+  };
+
+  reset() {
+    Object.entries(this.linkNames).forEach(([node, activeLinks]) => {
+      this.deActivateNode(node, 'forward');
+      this.deActivateNode(node, 'backward');
+      this.deActivateLink(activeLinks, 'forward');
+      this.deActivateLink(activeLinks, 'backward');
+    });
+
+    document.getElementById('h0-net').innerHTML = 'net = ?';
+    document.getElementById('h0-out').innerHTML = 'out = ?';
+    document.getElementById('h1-net').innerHTML = 'net = ?';
+    document.getElementById('h1-out').innerHTML = 'out = ?';
+    document.getElementById('o0-net').innerHTML = 'net = ?';
+    document.getElementById('o0-out').innerHTML = 'out = ?';
+    document.getElementById('o0-output').innerHTML = 'Output = ?';
+    document.getElementById('o0-error').innerHTML = 'Error = ?';
+
+    this.deActivateNodeMatricies([
+      'w0-00',
+      'w0-01',
+      'w0-10',
+      'w0-11',
+      'b0-0',
+      'b0-1',
+      'w1-0',
+      'w1-1',
+      'b1',
+    ]);
+
+    let equations = [
+      'h0-net-eq',
+      'h0-out-eq',
+      'h1-net-eq',
+      'h1-out-eq',
+      'out-net-eq',
+      'out-out-eq',
+      'error-eq',
+      'dE-eq',
+      'dZ-out-eq',
+      'dOut-wrt-w1-eq',
+      'dW1-eq',
+      'dB1-eq',
+      'dOut-wrt-h-eq',
+      'dZ-h-eq',
+      'dH-wrt-w-eq',
+      'dW0-eq',
+      'dB0-eq',
+      'w0-update-eq',
+      'b0-update-eq',
+      'w1-update-eq',
+      'b1-update-eq',
+    ];
+    equations.forEach(this.deHighlightEquation);
+    // Remove all highlighted matrices
+    this.setState({
+      h0_net: null,
+      h0_out: null,
+      h1_net: null,
+      h1_out: null,
+      o0_net: null,
+      o0_out: null,
+      error: null,
+      dE: null,
+      dZ_out: null,
+      dZ_h: null,
+      dW1: null,
+      dW0: null,
+      dB0: null,
+      dB1: null,
+      activeKey: 'forward',
+      w0: [
+        [3, 4],
+        [6, 5],
+      ],
+      w1: [2, 4],
+      b0: [1, -6],
+      b1: [-3.93],
+      iteration: null,
+      learningRate: 0.75,
+    });
+    this.localAQ = [];
   }
 
   addHoverEventListeners() {
@@ -122,12 +214,6 @@ class NeuralNets extends Component {
       );
     }
   }
-
-  linkNames = {
-    h0: ['i0-h0', 'i1-h0'],
-    h1: ['i0-h1', 'i1-h1'],
-    o0: ['h0-o0', 'h1-o0'],
-  };
 
   async activateNode(node, direction) {
     let el = document.getElementById(node + '-node');
@@ -257,90 +343,69 @@ class NeuralNets extends Component {
       if (!this.state.stepMode) {
         this.setState({ stepIndex: this.state.stepIndex + 1 });
         shouldWait = true;
+      } else {
+        //     // need to reset everything up to the previous state starting from beggining since we only update what is neccessary at each element of the animation queue
+
+        this.setState({
+          stepMode: false,
+          pause: true,
+        });
+
+        this.reset();
+        this.neuralNetwork = document.getElementById('graph-container');
+        this.addHoverEventListeners();
+
+        for (let i = 0; i < this.state.stepIndex; i++) {
+          let prevState = this.state.animationQueue[i];
+          this.setState({ ...prevState });
+
+          if (prevState.highlightEq) {
+            this.highlightEquation(prevState.highlightEq);
+          }
+
+          if (prevState.activeMatrix) {
+            this.activateNodeMatricies(prevState.activeMatrix);
+          }
+
+          if (prevState.activeNode) {
+            for (let [id, direction] of prevState.activeNode) {
+              this.activateNode(id, direction);
+            }
+          }
+
+          if (prevState.activeLinks) {
+            for (let [id, direction] of prevState.activeLinks) {
+              this.activateLinks(id, direction);
+            }
+          }
+
+          if (prevState.nodeTextToUpdate) {
+            for (let obj of prevState.nodeTextToUpdate) {
+              document.getElementById(obj.id).innerHTML = obj.outputStr;
+            }
+          }
+
+          if (prevState.deHighlightEq) {
+            this.deHighlightEquation(prevState.deHighlightEq);
+          }
+          if (prevState.deActivateLink) {
+            for (let [id, direction] of prevState.deActivateLink) {
+              this.deActivateLink(id, direction);
+            }
+          }
+          if (prevState.deActiveNode) {
+            for (let [id, direction] of prevState.deActiveNode) {
+              this.deActivateNode(id, direction);
+            }
+          }
+          if (prevState.deActiveMatrix) {
+            this.deActivateNodeMatricies(prevState.deActiveMatrix);
+          }
+        }
+        shouldWait = false;
       }
-
-      //   if (currentState.activateChildAndParent) {
-      //     this.activateChildAndParent(
-      //       currentState.activateChildAndParent[0],
-      //       currentState.activateChildAndParent[1]
-      //     );
-      //   }
-
-      //   this.activateParent(currentState.activateParent);
-      //   this.deActivateParent(currentState.deActivateParent);
-
-      //   if (currentState.activateLeftAndRightChildren) {
-      //     this.activateLeftAndRightChildren(
-      //       currentState.activateLeftAndRightChildren[0],
-      //       currentState.activateLeftAndRightChildren[1]
-      //     );
-      //   }
-
-      //   if (currentState.deActivateLeftAndRightChildren) {
-      //     this.deActivateLeftAndRightChildren(
-      //       currentState.deActivateLeftAndRightChildren[0],
-      //       currentState.deActivateLeftAndRightChildren[1]
-      //     );
-      //   }
-
-      //   if (currentState.swap) {
-      //     swap(currentState.swap[0], currentState.swap[1]);
-      //   }
-
-      //   if (currentState.removeActiveChildParent) {
-      //     this.removeActiveChildParent(
-      //       currentState.removeActiveChildParent[0],
-      //       currentState.removeActiveChildParent[1]
-      //     );
-      //   }
-      //   this.activateLink(currentState.activatedLink);
-      //   this.deActivateLink(currentState.deActivateLink);
-
-      //   if (!this.state.stepMode) {
-      //     this.setState({ stepIndex: this.state.stepIndex + 1 });
-      //     shouldWait = true;
-      //   } else {
-      //     // need to reset everything up to the previous state starting from beggining since we only update what is neccessary at each element of the animation queue
-
-      //     this.setState({
-      //       stepMode: false,
-      //       pause: true,
-      //     });
-      //     this.convertHeapArrayToAdjList(this.state.heapA);
-      //     insertIntoDynamicTree(this.state.heapA[1], this.adjList);
-      //     for (let i = 0; i < this.state.stepIndex; i++) {
-      //       let prevState = this.state.animationQueue[i];
-      //       this.setState({ ...prevState });
-
-      //       if (prevState.activateChildAndParent) {
-      //         this.activateChildAndParent(
-      //           prevState.activateChildAndParent[0],
-      //           prevState.activateChildAndParent[1]
-      //         );
-      //       }
-
-      //       if (prevState.removeActiveChildParent) {
-      //         this.removeActiveChildParent(
-      //           prevState.removeActiveChildParent[0],
-      //           prevState.removeActiveChildParent[1]
-      //         );
-      //       }
-
-      //       this.activateLink(prevState.activatedLink);
-      //       this.deActivateLink(prevState.deActivateLink);
-
-      //       if (prevState.keepLineHighlighted) {
-      //         this.highlightLine(prevState.highlightedLine);
-      //       }
-      //       if (prevState.removeKeptHighlightedLine) {
-      //         this.removeHighlightedLine(prevState.removeKeptHighlightedLine);
-      //       }
-      //     }
-      //     shouldWait = false;
-      //   }
-      // }
-      // this.setState({ animationQueue: [], pause: false, executing: false });
     }
+    this.setState({ animationQueue: [], pause: false, executing: false });
   }
 
   async nNLearn() {
@@ -358,14 +423,13 @@ class NeuralNets extends Component {
 
     // SIGMOID SETTINGS
     let actual = 1;
-    let alpha = 0.5;
-    let n_iterations = 10;
-    let x = [1, 0];
+    let n_iterations = 16;
+    let x = this.state.x;
 
-    const sigmoid = (x) => 1 / (1 + exp(-x));
+    const sigmoid = (v) => 1 / (1 + exp(-v));
     // const relu = (x) => max(x, 0);
-    const errorFunction = (pred, actual) => (1 / 2) * (actual - pred) ** 2;
-    const dZ = (x) => x * (1 - x); // sigmoid derivative
+    const errorFunction = (pred, targ) => (1 / 2) * (targ - pred) ** 2;
+    const dZ = (v) => x * (1 - v); // sigmoid derivative
     // const dZ = (x) => Number(x > 0); // relu derivative
 
     for (let i = 1; i < n_iterations; i++) {
@@ -508,7 +572,7 @@ class NeuralNets extends Component {
         nodeTextToUpdate: [
           {
             id: 'o0-output',
-            outputStr: 'output = ' + round(out_out, 3),
+            outputStr: 'Output = ' + round(out_out, 3),
           },
         ],
       });
@@ -532,6 +596,12 @@ class NeuralNets extends Component {
       this.localAQ.push({
         deHighlightEq: 'error-eq',
         deActiveNode: [['o0', 'forward']],
+        nodeTextToUpdate: [
+          {
+            id: 'o0-error',
+            outputStr: 'Error = ' + round(error, 3),
+          },
+        ],
       });
 
       // Backprop
@@ -699,7 +769,10 @@ class NeuralNets extends Component {
         activeMatrix: ['w0-00', 'w0-01', 'w0-10', 'w0-11'],
       });
 
-      w0 = subtract(w0, [dotMultiply(alpha, dw0), dotMultiply(alpha, dw0)]);
+      w0 = subtract(w0, [
+        dotMultiply(this.state.learningRate, dw0),
+        dotMultiply(this.state.learningRate, dw0),
+      ]);
       this.localAQ.push({
         newW0: w0,
         w0: w0,
@@ -715,14 +788,12 @@ class NeuralNets extends Component {
         activeMatrix: ['b0-0', 'b0-1'],
       });
 
-      b0 = subtract(b0, dotMultiply(alpha, db0));
+      b0 = subtract(b0, dotMultiply(this.state.learningRate, db0));
 
       this.localAQ.push({
         newB0: b0,
         b0: b0,
-        nodeTextToUpdate: [
-          { id: 'o0-bias', outputStr: 'b = ' + round(this.state.b1, 3) },
-        ],
+        nodeTextToUpdate: [{ id: 'o0-bias', outputStr: 'b = ' + round(b1, 3) }],
       });
 
       this.localAQ.push({
@@ -735,7 +806,7 @@ class NeuralNets extends Component {
         activeMatrix: ['w1-0', 'w1-1'],
       });
 
-      w1 = subtract(w1, dotMultiply(alpha, dw1));
+      w1 = subtract(w1, dotMultiply(this.state.learningRate, dw1));
       this.localAQ.push({
         newW1: w1,
         w1: w1,
@@ -751,14 +822,14 @@ class NeuralNets extends Component {
         activeMatrix: ['b1'],
       });
 
-      b1 = subtract(b1, dotMultiply(alpha, db1));
+      b1 = subtract(b1, dotMultiply(this.state.learningRate, db1));
 
       this.localAQ.push({
         newB1: b1,
         b1: b1,
         nodeTextToUpdate: [
-          { id: 'h0-bias', outputStr: 'b = ' + round(this.state.b0[0], 3) },
-          { id: 'h1-bias', outputStr: 'b = ' + round(this.state.b0[1], 3) },
+          { id: 'h0-bias', outputStr: 'b = ' + round(b0[0], 3) },
+          { id: 'h1-bias', outputStr: 'b = ' + round(b0[1], 3) },
         ],
       });
 
@@ -975,27 +1046,106 @@ class NeuralNets extends Component {
     return (
       <div className={'row'}>
         <div className={'col-6'} id={'graph-container'}>
-          <div className={'row'}>
-            <form
-              style={{ zIndex: 4 }}
-              onSubmit={(event) => {
-                event.preventDefault();
+          <div className={'row'} style={{ zIndex: 5 }}>
+            <button
+              onClick={async () => {
+                await this.nNLearn();
               }}
             >
-              <button
-                onClick={async () => {
-                  await this.nNLearn();
-                }}
-              >
-                execute
-              </button>
-            </form>{' '}
+              Learn
+            </button>
+            <button
+              id={'reset-button'}
+              onClick={async () => {
+                await this.setState({
+                  pause: false,
+                  stop: true,
+                  animationQueue: [],
+                  runningAlg: null,
+                });
+
+                this.reset();
+              }}
+            >
+              Reset
+            </button>
+            <div className={'divider'}></div>
+            <button
+              onClick={() => {
+                let newStepIndex = this.state.stepIndex - 1;
+                while (!this.state.animationQueue[newStepIndex].highlightEq) {
+                  newStepIndex -= 1;
+                }
+                this.setState({
+                  stepIndex: newStepIndex,
+                  pause: true,
+                  stepMode: true,
+                });
+              }}
+            >
+              <FaStepBackward />
+            </button>
+            <button
+              onClick={() => {
+                this.setState({ pause: !this.state.pause, stepMode: false });
+              }}
+            >
+              {this.state.pause ? <FaPlay /> : <FaPause />}
+            </button>
+            <button
+              onClick={() => {
+                let newStepIndex = this.state.stepIndex + 1;
+                while (!this.state.animationQueue[newStepIndex].highlightEq) {
+                  newStepIndex += 1;
+                }
+                this.setState({
+                  stepIndex: newStepIndex,
+                  pause: true,
+                  stepMode: true,
+                });
+              }}
+            >
+              <FaStepForward />
+            </button>
+            <form onSubmit={(event) => event.preventDefault()}>
+              <label>
+                Speed:
+                <input
+                  style={{ width: '50px' }}
+                  type="number"
+                  value={this.state.speed}
+                  onChange={(event) =>
+                    this.setState({
+                      speed: event.target.value,
+                    })
+                  }
+                />
+              </label>
+              <label>
+                Learning Rate:
+                <input
+                  style={{ width: '65px' }}
+                  type="number"
+                  value={this.state.learningRate}
+                  onChange={(event) =>
+                    this.setState({
+                      learningRate: event.target.value,
+                    })
+                  }
+                  max="1"
+                  min="0"
+                  step="0.05"
+                />
+              </label>
+            </form>
+
+            <br></br>
             <table
               style={{
                 border: 'none',
                 borderCollapse: 'collapse',
                 fontSize: '36px',
-                marginLeft: '200px',
+                marginLeft: '100px',
               }}
             >
               <tbody>
@@ -1008,16 +1158,6 @@ class NeuralNets extends Component {
                     }}
                   >
                     Iteration: {this.state.iteration}
-                  </td>
-                  <td
-                    style={{
-                      border: 'none',
-                      width: '300px',
-                      textAlign: 'left',
-                      paddingLeft: '100px',
-                    }}
-                  >
-                    Error: {this.state.error}
                   </td>
                 </tr>
               </tbody>
@@ -1033,7 +1173,7 @@ class NeuralNets extends Component {
             <Tab
               eventKey="forward"
               title="Forward"
-              style={{ fontSize: '26px', marginLeft: '-10px' }}
+              style={{ fontSize: '22px', marginLeft: '-10px' }}
             >
               <div className={'row'}>
                 <h1>FORWARD Matrix Math</h1> <br></br>
@@ -1122,8 +1262,10 @@ class NeuralNets extends Component {
                 <div id={'error-eq'} className={'nn-equation'}>
                   <MathComponent
                     display={false}
-                    tex={String.raw`error =  _2^1 * (o_0 net - target)^2 =  
-              _2^1 * (${this.state.o0_out ? round(this.state.o0_out, 3) : '?'}
+                    tex={String.raw`error =  \frac{1}{2} * (o_0 net - target)^2 =  
+                    \frac{1}{2} * (${
+                      this.state.o0_out ? round(this.state.o0_out, 3) : '?'
+                    }
                - 1)^2 = ${this.state.error ? round(this.state.error, 3) : '?'}
               `}
                   />
@@ -1133,7 +1275,7 @@ class NeuralNets extends Component {
             <Tab
               eventKey="backprop"
               title="Backprop"
-              style={{ fontSize: '18px', marginLeft: '-40px' }}
+              style={{ fontSize: '17px', marginLeft: '-60px' }}
             >
               <div className={'row'} style={{ marginTop: '10px' }}>
                 <h1>BACKPROP Matrix Math</h1> <br></br>
@@ -1294,9 +1436,6 @@ class NeuralNets extends Component {
               *  
               ${this.state.dZ_out ? round(this.state.dZ_out, 3) : '?'} 
               *   
-              \pmatrix{${this.state.h0_out ? round(this.state.h0_out, 3) : '?'} 
-              \\ ${this.state.h1_out ? round(this.state.h1_out, 3) : '?'}}
-              * 
               \pmatrix{${
                 this.state.w1[0] ? round(this.state.w1[0], 3) : '?'
               } \\ ${this.state.w1[1] ? round(this.state.w1[1], 3) : '?'}}
@@ -1366,7 +1505,7 @@ class NeuralNets extends Component {
                  ${this.state.prevW0 ? round(this.state.prevW0[1][0], 3) : '?'}
                  &
                  ${this.state.prevW0 ? round(this.state.prevW0[1][1], 3) : '?'}}
-                 - .5  * 
+                 - ${this.state.learningRate}  * 
                  \pmatrix{
                   ${this.state.dW0 ? round(this.state.dW0[0], 3) : '?'}
                    \\
@@ -1410,7 +1549,7 @@ class NeuralNets extends Component {
                  \\
                  ${this.state.prevB0 ? round(this.state.prevB0[1], 3) : '?'}
                  }
-                 - .5  * 
+                 - ${this.state.learningRate}  * 
                  \pmatrix{
                   ${this.state.dB0 ? round(this.state.dB0[0], 3) : '?'}
                    \\
@@ -1434,7 +1573,7 @@ class NeuralNets extends Component {
                  \\
                  ${this.state.prevW1 ? round(this.state.prevW1[1], 3) : '?'}
                  }
-                 - .5  * 
+                 - ${this.state.learningRate}  * 
                   ${this.state.dW1 ? round(this.state.dW1[0], 3) : '?'}
                   = 
                   \pmatrix{
@@ -1456,7 +1595,7 @@ class NeuralNets extends Component {
               
                 ${this.state.prevB1 ? round(this.state.prevB1, 3) : '?'}
                  
-                 - .5  * 
+                 - ${this.state.learningRate}  * 
                   ${this.state.dB1 ? round(this.state.dB1, 3) : '?'}
                   = 
                   ${this.state.newB1 ? round(this.state.newB1, 3) : '?'}
@@ -1470,16 +1609,17 @@ class NeuralNets extends Component {
         </div>
         <div
           className={'col-12'}
-          style={{ position: 'absolute', top: '800px', left: '-20px' }}
+          style={{ position: 'absolute', top: '800px', left: '-40px' }}
         >
           <div
             className={'row'}
-            style={{ marginTop: '-100px', marginLeft: '-120px' }}
+            style={{ marginTop: '-70px', marginLeft: '-120px' }}
           >
             <span style={{ marginLeft: '160px' }}></span>
             {this.render2x2Matrix(this.state.w0, 'layer 1', 'layer 0')}
+            <span style={{ marginLeft: '-20px' }}></span>
             {this.render2x1Matrix(this.state.b0, 'layer 1', 'h', 'bias 0', 'b')}
-            <span style={{ marginLeft: '50px' }}></span>
+            <span style={{ marginLeft: '20px' }}></span>
             {this.render1x2Matrix(
               this.state.w1,
               'layer 2',
@@ -1487,6 +1627,7 @@ class NeuralNets extends Component {
               'layer 1',
               'h'
             )}
+            <span style={{ marginLeft: '-35px' }}></span>
             {this.render1x1Matrix(this.state.b1, 'layer 2', 'o', 'bias 1', 'b')}
           </div>
         </div>
