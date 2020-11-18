@@ -183,10 +183,8 @@ class TreeTraversals extends Component {
       if (!this.state.stepMode) {
         this.setState({ stepIndex: this.state.stepIndex + 1 });
         shouldWait = true;
-      } 
-      
-      else {
-        // need to reset everything up to the previous state starting from beginning 
+      } else {
+        // need to reset everything up to the previous state starting from beginning
         // since we only update what is necessary at each element of the animation queue
         this.reset();
         this.setState({
@@ -194,7 +192,7 @@ class TreeTraversals extends Component {
           pause: true,
           stepMode: false,
         });
-        
+
         for (let i = 0; i < this.state.stepIndex; i++) {
           let prevState = this.state.animationQueue[i];
           this.setState({ ...prevState });
@@ -285,51 +283,48 @@ class TreeTraversals extends Component {
     return (
       <div>
         <div id={'dfs-0'}>
-          0 
-          <span style={{ marginLeft: indentation(1) }}>DFS(G, root)</span>
+          0<span style={{ marginLeft: indentation(1) }}>DFS(G, root)</span>
         </div>
         <div id={'dfs-1'}>
-          1 
-          <span style={{ marginLeft: indentation(2) }}>let S be a stack</span>
+          1<span style={{ marginLeft: indentation(2) }}>let S be a stack</span>
         </div>
         <div id={'dfs-2'}>
-          2 
+          2
           <span style={{ marginLeft: indentation(2) }}>
             let V be a map with all nodes as keys and values of false
           </span>
         </div>
         <div id={'dfs-3'}>
-          3 
+          3
           <span style={{ marginLeft: indentation(2) }}>set V[root] = true</span>
         </div>
         <div id={'dfs-4'}>
-          4 
-          <span style={{ marginLeft: indentation(2) }}>S.push(root)</span>
+          4<span style={{ marginLeft: indentation(2) }}>S.push(root)</span>
         </div>
         <div id={'dfs-5'}>
-          5 
+          5
           <span style={{ marginLeft: indentation(2) }}>
             while S is not empty
           </span>
         </div>
         <div id={'dfs-6'}>
-          6 
+          6
           <span style={{ marginLeft: indentation(3) }}>current := S.pop()</span>
         </div>
         <div id={'dfs-7'}>
-          7 
+          7
           <span style={{ marginLeft: indentation(3) }}>
             for child of current
           </span>
         </div>
         <div id={'dfs-8'}>
-          8 
+          8
           <span style={{ marginLeft: indentation(4) }}>
             if child is not labeled as discovered then
           </span>
         </div>
         <div id={'dfs-9'}>
-          9 
+          9
           <span style={{ marginLeft: indentation(5) }}>
             set V[child] = true
           </span>
@@ -377,21 +372,22 @@ class TreeTraversals extends Component {
             Reset
           </button>
           <div className={'divider'}></div>
+          <br></br>
           <button
-              onClick={() => {
-                let newStepIndex = this.state.stepIndex - 1;
-                while (!this.state.animationQueue[newStepIndex].highlightedLine) {
-                  newStepIndex -= 1;
-                }
-                this.setState({
-                  stepIndex: newStepIndex,
-                  pause: true,
-                  stepMode: true,
-                });
-              }}
-            >
-              <FaStepBackward/>
-            </button>
+            onClick={() => {
+              let newStepIndex = this.state.stepIndex - 1;
+              while (!this.state.animationQueue[newStepIndex].highlightedLine) {
+                newStepIndex -= 1;
+              }
+              this.setState({
+                stepIndex: newStepIndex,
+                pause: true,
+                stepMode: true,
+              });
+            }}
+          >
+            <FaStepBackward />
+          </button>
           <button
             onClick={() => {
               this.setState({ pause: !this.state.pause, stepMode: false });
@@ -400,20 +396,20 @@ class TreeTraversals extends Component {
             {this.state.pause ? <FaPlay /> : <FaPause />}
           </button>
           <button
-              onClick={() => {
-                let newStepIndex = this.state.stepIndex + 1;
-                while (!this.state.animationQueue[newStepIndex].highlightedLine) {
-                  newStepIndex += 1;
-                }
-                this.setState({
-                  stepIndex: newStepIndex,
-                  pause: true,
-                  stepMode: true,
-                });
-              }}
-            >
-              <FaStepForward/>
-            </button>
+            onClick={() => {
+              let newStepIndex = this.state.stepIndex + 1;
+              while (!this.state.animationQueue[newStepIndex].highlightedLine) {
+                newStepIndex += 1;
+              }
+              this.setState({
+                stepIndex: newStepIndex,
+                pause: true,
+                stepMode: true,
+              });
+            }}
+          >
+            <FaStepForward />
+          </button>
 
           <form onSubmit={(event) => event.preventDefault()}>
             <label>
