@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 
-function buildNetwork(x) {
+export function buildNetwork(x) {
   var width = 960,
     height = 600,
     nodeSize = 60;
@@ -252,7 +252,125 @@ function buildNetwork(x) {
       }
     });
 }
+export function plotLoss(data) {
+  var outerWidth = 700,
+    outerHeight = 500; // includes margins
 
+  var margin = { top: 100, right: 20, bottom: 80, left: 80 }; // clockwise as in CSS
+
+  var width = outerWidth - margin.left - margin.right, // width of plot inside margins
+    height = outerHeight - margin.top - margin.bottom; // height   "     "
+
+  document.body.style.margin = '0px'; // Eliminate default margin from <body> element
+
+  // var data = [
+  //   { x: 0, y: 0 },
+  //   { x: 1, y: 30 },
+  //   { x: 2, y: 40 },
+  //   { x: 3, y: 20 },
+  //   { x: 4, y: 90 },
+  //   { x: 5, y: 70 },
+  // ];
+
+  function xValue(d) {
+    return d.x;
+  } // accessors
+  function yValue(d) {
+    return d.y;
+  }
+
+  var x = d3
+    .scaleLinear() // interpolator for X axis -- inner plot region
+    .domain(d3.extent(data, xValue))
+    .range([0, width]);
+
+  var y = d3
+    .scaleLinear() // interpolator for Y axis -- inner plot region
+    .domain(d3.extent(data, yValue))
+    .range([height, 0]); // remember, (0,0) is upper left -- this reverses "y"
+
+  var line = d3
+    .line() // SVG line generator
+    .x(function (d) {
+      return x(d.x);
+    })
+    .y(function (d) {
+      return y(d.y);
+    });
+
+  var xAxis = d3.axisBottom(x).ticks(5); // request 5 ticks on the x axis
+
+  var yAxis = d3
+    .axisLeft(y) // y Axis
+    .ticks(4);
+
+  var svg = d3
+    .select('#loss-plot')
+    .append('svg')
+    .attr('width', outerWidth)
+    .attr('height', outerHeight); // Note: ok to leave this without units, implied "px"
+
+  var g = svg
+    .append('g') // <g> element is the inner plot area (i.e., inside the margins)
+    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+  g.append('g') // render the Y axis in the inner plot area
+    .attr('class', 'y axis')
+    .call(yAxis);
+
+  g.append('g') // render the X axis in the inner plot area
+    .attr('class', 'x axis')
+    .attr('transform', 'translate(0,' + height + ')') // axis runs along lower part of graph
+    .call(xAxis);
+
+  g.append('text') // outer x-axis label
+    .attr('class', 'x label')
+    .attr('text-anchor', 'end')
+    .attr('x', width / 2)
+    .attr('y', height + (2 * margin.bottom) / 3 + 6)
+    .text('Iterations');
+
+  g.append('text') // plot title
+    .attr('class', 'x label')
+    .attr('text-anchor', 'middle')
+    .attr('x', width / 2)
+    .attr('y', -margin.top / 2)
+    .attr('dy', '+.75em')
+    .text('Loss vs Iterations');
+
+  g.append('text') // outer y-axis label
+    .attr('class', 'x label')
+    .attr('text-anchor', 'middle')
+    .attr('x', -height / 2)
+    .attr('y', -6 - margin.left / 3)
+    .attr('dy', '-.75em')
+    .attr('transform', 'rotate(-90)')
+    .text('Loss');
+
+  g.append('path') // plot the data as a line
+    .datum(data)
+    .attr('class', 'line')
+    .attr('d', line)
+    .style('fill', 'none')
+    .style('stroke', '#fff')
+    .transition()
+    .delay(500)
+    .duration(1000)
+    .style('stroke', '#000');
+
+  g.selectAll('.dot') // plot a circle at each data location
+    .data(data)
+    .enter()
+    .append('circle')
+    .attr('class', 'dot')
+    .attr('cx', function (d) {
+      return x(d.x);
+    })
+    .attr('cy', function (d) {
+      return y(d.y);
+    })
+    .attr('r', 3);
+}
 // https://react-bootstrap.github.io/components/overlays/
 
 export default buildNetwork;

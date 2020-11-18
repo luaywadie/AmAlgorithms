@@ -11,7 +11,7 @@ import {
 import { FaStepBackward, FaStepForward, FaPause, FaPlay } from 'react-icons/fa';
 
 import { MathComponent } from 'mathjax-react';
-import buildNetwork from '../graph-builders/neural-net-builder';
+import { buildNetwork, plotLoss } from '../graph-builders/neural-net-builder';
 import { Tabs, Tab } from 'react-bootstrap';
 
 class NeuralNets extends Component {
@@ -58,8 +58,10 @@ class NeuralNets extends Component {
       animationQueue: [],
       stepIndex: 0,
       stepMode: false,
+      losses: [],
     };
     this.localAQ = [];
+    this.losses = [];
   }
 
   linkToMatrixMapping = {
@@ -364,6 +366,20 @@ class NeuralNets extends Component {
             el.classList.add('flash-updated-node');
           }
         }
+      }
+
+      if (currentState.error) {
+        let svg = document.getElementById('loss-plot');
+        let lossTab = document.getElementById('loss-container');
+
+        if (lossTab.hasChildNodes() && svg) {
+          lossTab.removeChild(svg);
+          let div = document.createElement('div');
+          div.setAttribute('id', 'loss-plot');
+          lossTab.appendChild(div);
+        }
+        this.losses.push({ x: currentState.iteration, y: currentState.error });
+        plotLoss(this.losses);
       }
 
       let waitTime =
@@ -686,6 +702,7 @@ class NeuralNets extends Component {
 
       this.localAQ.push({
         error: round(error, 3),
+        iteration: i,
       });
 
       this.localAQ.push({
@@ -969,6 +986,7 @@ class NeuralNets extends Component {
     this.setState({
       animationQueue: this.localAQ,
     });
+    // plotLoss(this.losses);
     this.renderAnimationQueue();
   }
 
@@ -1285,7 +1303,7 @@ class NeuralNets extends Component {
               style={{ fontSize: '22px', marginLeft: '-10px' }}
             >
               <div className={'row'}>
-                <h1>FORWARD Matrix Math</h1> <br></br>
+                <h1>FORWARD Propogation</h1> <br></br>
               </div>
               <div className={'row'}>
                 <div id={'h0-net-eq'} className={'nn-equation'}>
@@ -1387,7 +1405,7 @@ class NeuralNets extends Component {
               style={{ fontSize: '17px', marginLeft: '-60px' }}
             >
               <div className={'row'} style={{ marginTop: '10px' }}>
-                <h1>BACKPROP Matrix Math</h1> <br></br>
+                <h1>BACKPROP </h1> <br></br>
               </div>
 
               <div className={'row'}>
@@ -1712,6 +1730,11 @@ class NeuralNets extends Component {
                `}
                   />
                 </div>
+              </div>
+            </Tab>
+            <Tab eventKey="loss" title="Loss" style={{ fontSize: '22px' }}>
+              <div id="loss-container">
+                <div id="loss-plot"></div>
               </div>
             </Tab>
           </Tabs>
