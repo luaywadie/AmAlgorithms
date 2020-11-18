@@ -207,31 +207,36 @@ class NeuralNets extends Component {
     //Attaches hover effects for biases and nodes
     for (const [key, val] of Object.entries(this.nodeToMatrixMapping)) {
       let biasEl = document.getElementById(val);
-      biasEl.addEventListener('mouseover', () =>
-        this.activateNode(key, 'forward')
-      );
-      biasEl.addEventListener('mouseout', () =>
-        this.deActivateNode(key, 'forward')
-      );
+      if (biasEl) {
+        biasEl.addEventListener('mouseover', () =>
+          this.activateNode(key, 'forward')
+        );
+        biasEl.addEventListener('mouseout', () =>
+          this.deActivateNode(key, 'forward')
+        );
+      }
     }
 
     //Attaches hover effects for weights and node links
     for (const [key, val] of Object.entries(this.linkToMatrixMapping)) {
       let linkToMatrixEl = document.getElementById(key);
-      linkToMatrixEl.addEventListener('mouseover', () =>
-        this.activateNodeMatricies([val])
-      );
-      linkToMatrixEl.addEventListener('mouseout', () =>
-        this.deActivateNodeMatricies([val])
-      );
-
+      if (linkToMatrixEl) {
+        linkToMatrixEl.addEventListener('mouseover', () =>
+          this.activateNodeMatricies([val])
+        );
+        linkToMatrixEl.addEventListener('mouseout', () =>
+          this.deActivateNodeMatricies([val])
+        );
+      }
       let matrixToLinkEl = document.getElementById(val);
-      matrixToLinkEl.addEventListener('mouseover', () =>
-        this.activateLinks([key], 'forward')
-      );
-      matrixToLinkEl.addEventListener('mouseout', () =>
-        this.deActivateLink([key], 'forward')
-      );
+      if (matrixToLinkEl) {
+        matrixToLinkEl.addEventListener('mouseover', () =>
+          this.activateLinks([key], 'forward')
+        );
+        matrixToLinkEl.addEventListener('mouseout', () =>
+          this.deActivateLink([key], 'forward')
+        );
+      }
     }
   }
 
