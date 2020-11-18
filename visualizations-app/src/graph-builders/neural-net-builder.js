@@ -18,6 +18,7 @@ function buildNetwork(x) {
   var svg = d3
     .select('#graph-container')
     .append('svg')
+    .attr('id', 'nn-svg')
     .attr('width', width)
     .attr('height', height)
     .attr('transform', 'translate(' + -100 + ',' + -50 + ')');

@@ -53,6 +53,7 @@ class Heap extends Component {
 
   componentWillUnmount() {
     this.unMounting = true;
+    this.setState({ animationQueue: [] });
     let svg = document.getElementById('heap-tree-svg');
     if (this.dataStructure.hasChildNodes() && svg)
       this.dataStructure.removeChild(svg);

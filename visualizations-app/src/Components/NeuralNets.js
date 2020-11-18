@@ -83,7 +83,16 @@ class NeuralNets extends Component {
     this.neuralNetwork = document.getElementById('graph-container');
     this.addHoverEventListeners();
   }
-  componentWillUnmount() {}
+  componentWillUnmount() {
+    this.deleteNetwork();
+    this.reset();
+  }
+  deleteNetwork() {
+    this.unMounting = true;
+    let svg = document.getElementById('nn-svg');
+    if (this.neuralNetwork.hasChildNodes() && svg)
+      this.neuralNetwork.removeChild(svg);
+  }
 
   componentDidUpdate(prevProps) {}
 
@@ -108,14 +117,22 @@ class NeuralNets extends Component {
       this.deActivateLink(activeLinks, 'backward');
     });
 
-    document.getElementById('h0-net').innerHTML = 'net = ?';
-    document.getElementById('h0-out').innerHTML = 'out = ?';
-    document.getElementById('h1-net').innerHTML = 'net = ?';
-    document.getElementById('h1-out').innerHTML = 'out = ?';
-    document.getElementById('o0-net').innerHTML = 'net = ?';
-    document.getElementById('o0-out').innerHTML = 'out = ?';
-    document.getElementById('o0-output').innerHTML = 'Output = ?';
-    document.getElementById('o0-error').innerHTML = 'Error = ?';
+    let nodeText = [
+      { id: 'h0-net', str: 'net = ?' },
+      { id: 'h0-out', str: 'out = ?' },
+      { id: 'h1-net', str: 'net = ?' },
+      { id: 'h1-out', str: 'out = ?' },
+      { id: 'o0-net', str: 'net = ?' },
+      { id: 'o0-out', str: 'out = ?' },
+      { id: 'o0-output', str: 'Output = ?' },
+      { id: 'o0-error', str: 'Error = ?' },
+    ];
+    Object.entries(nodeText).forEach(([id, str]) => {
+      let el = document.getElementById(id);
+      if (el) {
+        el.innerHTML = str;
+      }
+    });
 
     this.deActivateNodeMatricies([
       'w0-00',
@@ -240,6 +257,9 @@ class NeuralNets extends Component {
       let el = document.getElementById(link);
       if (el) {
         el.classList.remove('active-link-nn-' + direction);
+        if (el.classList.contains('fade-out-link-nn-' + direction)) {
+          el.classList.remove('fade-out-link-nn-' + direction);
+        }
       }
     }
   }
@@ -306,6 +326,45 @@ class NeuralNets extends Component {
         }
       }
 
+      if (currentState.fadeOutLinks) {
+        for (let [ids, direction] of currentState.fadeOutLinks) {
+          for (let id of ids) {
+            let el = document.getElementById(id);
+            if (el) {
+              el.classList.add('fade-out-link-nn-' + direction);
+            }
+          }
+        }
+      }
+
+      if (currentState.fadeOutNodes) {
+        for (let [id, direction] of currentState.fadeOutNodes) {
+          let el = document.getElementById(id + '-node');
+          if (el) {
+            el.classList.add('fade-out-node-nn-' + direction);
+          }
+        }
+      }
+
+      if (currentState.updatedWeights) {
+        for (let nodeLink of currentState.updatedWeights) {
+          for (let link of nodeLink) {
+            let el = document.getElementById(link);
+            if (el) {
+              el.classList.add('flash-updates-parameters');
+            }
+          }
+        }
+      }
+      if (currentState.updatedBias) {
+        for (let id of currentState.updatedBias) {
+          let el = document.getElementById(id);
+          if (el) {
+            el.classList.add('flash-updated-node');
+          }
+        }
+      }
+
       let waitTime =
         currentState.waitTime !== undefined ? currentState.waitTime : 1500;
 
@@ -320,7 +379,10 @@ class NeuralNets extends Component {
 
       if (currentState.nodeTextToUpdate) {
         for (let obj of currentState.nodeTextToUpdate) {
-          document.getElementById(obj.id).innerHTML = obj.outputStr;
+          let el = document.getElementById(obj.id);
+          if (el) {
+            el.innerHTML = obj.outputStr;
+          }
         }
       }
 
@@ -340,6 +402,33 @@ class NeuralNets extends Component {
       if (currentState.deActiveMatrix) {
         this.deActivateNodeMatricies(currentState.deActiveMatrix);
       }
+      if (currentState.updatedWeights) {
+        for (let nodeLink of currentState.updatedWeights) {
+          for (let link of nodeLink) {
+            let el = document.getElementById(link);
+            if (el) {
+              el.classList.remove('flash-updates-parameters');
+            }
+          }
+        }
+      }
+      if (currentState.updatedBias) {
+        for (let id of currentState.updatedBias) {
+          let el = document.getElementById(id);
+          if (el) {
+            el.classList.remove('flash-updated-node');
+          }
+        }
+      }
+      if (currentState.fadeOutNodes) {
+        for (let [id, direction] of currentState.fadeOutNodes) {
+          let el = document.getElementById(id + '-node');
+          if (el) {
+            el.classList.remove('fade-out-node-nn-' + direction);
+          }
+        }
+      }
+
       if (!this.state.stepMode) {
         this.setState({ stepIndex: this.state.stepIndex + 1 });
         shouldWait = true;
@@ -490,6 +579,8 @@ class NeuralNets extends Component {
       });
 
       this.localAQ.push({
+        fadeOutNodes: [['h0', 'forward']],
+        fadeOutLinks: [[this.linkNames['h0'], 'forward']],
         deHighlightEq: 'h0-out-eq',
         deActiveNode: [['h0', 'forward']],
         deActivateLink: [[this.linkNames['h0'], 'forward']],
@@ -532,6 +623,8 @@ class NeuralNets extends Component {
       });
 
       this.localAQ.push({
+        fadeOutNodes: [['h1', 'forward']],
+        fadeOutLinks: [[this.linkNames['h1'], 'forward']],
         deHighlightEq: 'h1-out-eq',
         deActiveNode: [['h1', 'forward']],
         deActivateLink: [[this.linkNames['h1'], 'forward']],
@@ -578,6 +671,7 @@ class NeuralNets extends Component {
       });
 
       this.localAQ.push({
+        fadeOutLinks: [[this.linkNames['o0'], 'forward']],
         deHighlightEq: 'out-out-eq',
         deActivateLink: [[this.linkNames['o0'], 'forward']],
         deActiveMatrix: ['w1-0', 'w1-1', 'b1'],
@@ -594,6 +688,7 @@ class NeuralNets extends Component {
       });
 
       this.localAQ.push({
+        fadeOutNodes: [['o0', 'forward']],
         deHighlightEq: 'error-eq',
         deActiveNode: [['o0', 'forward']],
         nodeTextToUpdate: [
@@ -605,11 +700,9 @@ class NeuralNets extends Component {
       });
 
       // Backprop
-      this.localAQ.push({
-        activeKey: 'backprop',
-      });
 
       this.localAQ.push({
+        activeKey: 'backprop',
         highlightEq: 'dE-eq',
         activeNode: [['o0', 'backward']],
       });
@@ -745,6 +838,16 @@ class NeuralNets extends Component {
       });
 
       this.localAQ.push({
+        fadeOutNodes: [
+          ['o0', 'backward'],
+          ['h0', 'backward'],
+          ['h1', 'backward'],
+        ],
+        fadeOutLinks: [
+          [this.linkNames['h0'], 'backward'],
+          [this.linkNames['h1'], 'backward'],
+          [this.linkNames['o0'], 'backward'],
+        ],
         deHighlightEq: 'dB0-eq',
         deActiveNode: [
           ['o0', 'backward'],
@@ -767,6 +870,7 @@ class NeuralNets extends Component {
       this.localAQ.push({
         highlightEq: 'w0-update-eq',
         activeMatrix: ['w0-00', 'w0-01', 'w0-10', 'w0-11'],
+        updatedWeights: [this.linkNames['h0'], this.linkNames['h1']],
       });
 
       w0 = subtract(w0, [
@@ -786,6 +890,7 @@ class NeuralNets extends Component {
       this.localAQ.push({
         highlightEq: 'b0-update-eq',
         activeMatrix: ['b0-0', 'b0-1'],
+        updatedBias: ['h0-node', 'h1-node'],
       });
 
       b0 = subtract(b0, dotMultiply(this.state.learningRate, db0));
@@ -804,6 +909,7 @@ class NeuralNets extends Component {
       this.localAQ.push({
         highlightEq: 'w1-update-eq',
         activeMatrix: ['w1-0', 'w1-1'],
+        updatedWeights: [this.linkNames['o0']],
       });
 
       w1 = subtract(w1, dotMultiply(this.state.learningRate, dw1));
@@ -820,6 +926,7 @@ class NeuralNets extends Component {
       this.localAQ.push({
         highlightEq: 'b1-update-eq',
         activeMatrix: ['b1'],
+        updatedBias: ['o0-node'],
       });
 
       b1 = subtract(b1, dotMultiply(this.state.learningRate, db1));
@@ -1063,7 +1170,8 @@ class NeuralNets extends Component {
                   animationQueue: [],
                   runningAlg: null,
                 });
-
+                this.deleteNetwork();
+                buildNetwork(this.state.x);
                 this.reset();
               }}
             >

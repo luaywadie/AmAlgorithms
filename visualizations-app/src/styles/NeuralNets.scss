@@ -17,12 +17,29 @@ text {
 
 @keyframes fade-in-active-node-nn-forward {
   from {
-    stroke: #999;
+    stroke: black;
     stroke-width: 3px;
   }
   to {
     stroke: #e76dff;
     stroke-width: 5px;
+  }
+}
+
+.fade-out-node-nn-forward {
+  stroke: black;
+  stroke-width: 3px;
+  animation: fade-out-node-nn-forward 1s;
+}
+
+@keyframes fade-out-node-nn-forward {
+  from {
+    stroke: #e76dff;
+    stroke-width: 5px;
+  }
+  to {
+    stroke: black;
+    stroke-width: 3px;
   }
 }
 
@@ -35,10 +52,45 @@ text {
 
 @keyframes fade-in-active-node-nn-backward {
   from {
-    stroke: #999;
+    stroke: black;
     stroke-width: 3px;
   }
   to {
+    stroke: red;
+    stroke-width: 5px;
+  }
+}
+
+.fade-out-node-nn-backward {
+  stroke: #black;
+  stroke-width: 3px;
+  animation: fade-out-node-nn-backward 1s;
+}
+
+@keyframes fade-out-node-nn-backward {
+  from {
+    stroke: red;
+    stroke-width: 5px;
+  }
+  to {
+    stroke: black;
+    stroke-width: 3px;
+  }
+}
+
+.flash-updated-node {
+  stroke: black;
+  stroke-width: 3px;
+  animation: flash-updated-node 2s;
+}
+
+@keyframes flash-updated-node {
+  0%,
+  100% {
+    stroke: black;
+    stroke-width: 3px;
+  }
+  50% {
     stroke: red;
     stroke-width: 5px;
   }
@@ -73,6 +125,25 @@ text {
   }
 }
 
+.fade-out-link-nn-forward {
+  stroke: #999;
+  stroke-opacity: 0.6;
+  stroke-width: 3px;
+  animation: fade-out-active-link-nn-forward 1s;
+}
+
+@keyframes fade-out-active-link-nn-forward {
+  from {
+    stroke: #e76dff;
+    stroke-width: 8px;
+  }
+  to {
+    stroke: #999;
+    stroke-opacity: 0.6;
+    stroke-width: 3px;
+  }
+}
+
 .active-link-nn-backward {
   stroke-width: 8px;
   stroke: red;
@@ -86,6 +157,45 @@ text {
     stroke-width: 3px;
   }
   to {
+    stroke: red;
+    stroke-width: 8px;
+  }
+}
+
+.fade-out-link-nn-backward {
+  stroke: #999;
+  stroke-opacity: 0.6;
+  stroke-width: 3px;
+  animation: fade-out-active-link-nn-backward 1s;
+}
+
+@keyframes fade-out-active-link-nn-backward {
+  from {
+    stroke: red;
+    stroke-width: 8px;
+  }
+  to {
+    stroke: #999;
+    stroke-opacity: 0.6;
+    stroke-width: 3px;
+  }
+}
+
+.flash-updates-parameters {
+  stroke: #999;
+  stroke-opacity: 0.6;
+  stroke-width: 3px;
+  animation: flash-updated-params 2s;
+}
+
+@keyframes flash-updated-params {
+  0%,
+  100% {
+    stroke: #999;
+    stroke-opacity: 0.6;
+    stroke-width: 3px;
+  }
+  50% {
     stroke: red;
     stroke-width: 8px;
   }
