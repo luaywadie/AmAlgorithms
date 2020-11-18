@@ -198,6 +198,7 @@ class NeuralNets extends Component {
       learningRate: 0.75,
     });
     this.localAQ = [];
+    this.addHoverEventListeners();
   }
 
   addHoverEventListeners() {

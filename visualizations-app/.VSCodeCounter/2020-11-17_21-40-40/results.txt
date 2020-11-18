@@ -1,0 +1,89 @@
+Date : 2020-11-17 21:40:40
+Directory : /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src
+Total : 49 files,  9208 codes, 305 comments, 924 blanks, all 10437 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| JavaScript |         36 |      8,395 |        241 |        813 |      9,449 |
+| SCSS       |         12 |        813 |         64 |        109 |        986 |
+| JSON       |          1 |          0 |          0 |          2 |          2 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++--------------------------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                                                                   | files      | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                                                                      |         49 |      9,208 |        305 |        924 |     10,437 |
+| Components                                                                                                                                             |         24 |      7,187 |        169 |        690 |      8,046 |
+| Components/algorithms                                                                                                                                  |          8 |      1,335 |         67 |        207 |      1,609 |
+| Components/algorithms/clustering-algorithms                                                                                                            |          1 |         93 |         17 |         23 |        133 |
+| Components/algorithms/graph-algorithms                                                                                                                 |          3 |        417 |          3 |         79 |        499 |
+| Components/algorithms/sorts                                                                                                                            |          2 |        658 |         46 |         69 |        773 |
+| Components/algorithms/tree-algorithms                                                                                                                  |          2 |        167 |          1 |         36 |        204 |
+| Components/data-structures                                                                                                                             |          4 |      1,752 |         50 |        148 |      1,950 |
+| Components/sidebar                                                                                                                                     |          3 |        111 |          0 |         13 |        124 |
+| Components/unit-tests                                                                                                                                  |          2 |         88 |          1 |         15 |        104 |
+| data                                                                                                                                                   |          1 |          0 |          0 |          2 |          2 |
+| graph-builders                                                                                                                                         |          6 |      1,030 |         69 |        108 |      1,207 |
+| helpers                                                                                                                                                |          3 |        151 |          3 |          9 |        163 |
+| helpers/data-structures                                                                                                                                |          3 |        151 |          3 |          9 |        163 |
+| styles                                                                                                                                                 |         12 |        813 |         64 |        109 |        986 |
++--------------------------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++--------------------------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                                                                                               | language   | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/App.js                                                      | JavaScript |         19 |          0 |          3 |         22 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/Components/ClusteringAlgorithms.js                          | JavaScript |        309 |         26 |         28 |        363 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/Components/DirectedGraphAlgorithms.js                       | JavaScript |        497 |          4 |         31 |        532 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/Components/MainPage.js                                      | JavaScript |         34 |          0 |          3 |         37 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/Components/NavigationBar.js                                 | JavaScript |        117 |          0 |         11 |        128 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/Components/NeuralNets.js                                    | JavaScript |      1,574 |         16 |        158 |      1,748 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/Components/TreeTraversals.js                                | JavaScript |        479 |          2 |         31 |        512 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/Components/UndirectedGraphAlgorithms.js                     | JavaScript |        891 |          3 |         45 |        939 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/Components/algorithms/clustering-algorithms/KMeans.js       | JavaScript |         93 |         17 |         23 |        133 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/Components/algorithms/graph-algorithms/Dijkstra.js          | JavaScript |        140 |          2 |         27 |        169 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/Components/algorithms/graph-algorithms/Prim.js              | JavaScript |        126 |          1 |         24 |        151 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/Components/algorithms/graph-algorithms/Topsort.js           | JavaScript |        151 |          0 |         28 |        179 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/Components/algorithms/sorts/InsertionSort.js                | JavaScript |        322 |         23 |         36 |        381 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/Components/algorithms/sorts/SelectionSort.js                | JavaScript |        336 |         23 |         33 |        392 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/Components/algorithms/tree-algorithms/BreadthFirstSearch.js | JavaScript |         85 |          0 |         19 |        104 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/Components/algorithms/tree-algorithms/DepthFirstSearch.js   | JavaScript |         82 |          1 |         17 |        100 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/Components/data-structures/Heap.js                          | JavaScript |        941 |         46 |         96 |      1,083 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/Components/data-structures/LinkedList.js                    | JavaScript |         72 |          0 |          7 |         79 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/Components/data-structures/Queue.js                         | JavaScript |        379 |          2 |         21 |        402 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/Components/data-structures/Stack.js                         | JavaScript |        360 |          2 |         24 |        386 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/Components/sidebar/RenderListComponent.js                   | JavaScript |         20 |          0 |          5 |         25 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/Components/sidebar/RenderObjectComponent.js                 | JavaScript |         51 |          0 |          3 |         54 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/Components/sidebar/Sidebar.js                               | JavaScript |         40 |          0 |          5 |         45 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/Components/unit-tests/MainPage.test.js                      | JavaScript |         17 |          1 |          4 |         22 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/Components/unit-tests/NavigationBar.test.js                 | JavaScript |         71 |          0 |         11 |         82 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/data/neural_net.json                                        | JSON       |          0 |          0 |          2 |          2 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/graph-builders/directed-graph-builder.js                    | JavaScript |        156 |          1 |         19 |        176 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/graph-builders/dynamic-tree-builder.js                      | JavaScript |        297 |         37 |         26 |        360 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/graph-builders/neural-net-builder.js                        | JavaScript |        229 |          9 |         21 |        259 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/graph-builders/scatterplot-builder.js                       | JavaScript |         52 |         10 |         16 |         78 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/graph-builders/tree-builder.js                              | JavaScript |        105 |         11 |         11 |        127 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/graph-builders/undirected-graph-builder.js                  | JavaScript |        191 |          1 |         15 |        207 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/helpers/data-structures/bfs_helper.js                       | JavaScript |         21 |          1 |          1 |         23 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/helpers/data-structures/heap_ds_helper.js                   | JavaScript |         65 |          1 |          4 |         70 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/helpers/data-structures/heap_helper.js                      | JavaScript |         65 |          1 |          4 |         70 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/index.js                                                    | JavaScript |          5 |          0 |          3 |          8 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/setupTest.js                                                | JavaScript |          3 |          0 |          0 |          3 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/styles/App.scss                                             | SCSS       |         73 |          8 |         11 |         92 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/styles/Clusters.scss                                        | SCSS       |         81 |          2 |         14 |         97 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/styles/Graph.scss                                           | SCSS       |         12 |          0 |          2 |         14 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/styles/Link.scss                                            | SCSS       |         68 |          4 |          7 |         79 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/styles/MainPage.scss                                        | SCSS       |         33 |          0 |          7 |         40 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/styles/Navigation-bar.scss                                  | SCSS       |        138 |          0 |         10 |        148 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/styles/NeuralNets.scss                                      | SCSS       |        221 |          5 |         36 |        262 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/styles/Node.scss                                            | SCSS       |        121 |          7 |          9 |        137 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/styles/OutputTable.scss                                     | SCSS       |         10 |          3 |          3 |         16 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/styles/Pseudocode.scss                                      | SCSS       |          4 |          0 |          1 |          5 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/styles/Sidebar.scss                                         | SCSS       |         46 |         35 |          8 |         89 |
+| /Users/mattlanzi/Desktop/current-courses/Capstone/proj/AmAlgorithms/visualizations-app/src/styles/Sorts.scss                                           | SCSS       |          6 |          0 |          1 |          7 |
+| Total                                                                                                                                                  |            |      9,208 |        305 |        924 |     10,437 |
++--------------------------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
