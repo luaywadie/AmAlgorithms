@@ -124,10 +124,10 @@ class InsertionSort extends Component {
     for (let i = 0; i < len; i++) {
       let el = arr[i];
       let j;
-      
+      this.state.animation_queue.push([i, j + 1, false])
       for (j = i - 1; j >= 0 && arr[j] > el; j--) {
-        arr[j + 1] = arr[j];
-        this.state.animation_queue.push([j, j + 1]);
+        arr[j + 1] = arr[j]
+        this.state.animation_queue.push([j, j + 1, true])
       }
       arr[j + 1] = el;
     }
@@ -161,7 +161,7 @@ class InsertionSort extends Component {
         this.swapBars(
           this.state.animation_queue[0][0],
           this.state.animation_queue[0][1],
-          this.state.speed
+          this.state.animation_queue[0][2]
         );
         this.state.stepper_queue.push(this.state.animation_queue[0]);
         this.state.animation_queue.shift();
@@ -175,7 +175,7 @@ class InsertionSort extends Component {
     return interval;
   }
 
-  swapBars(barFromIndex, barToIndex) {
+  swapBars(barFromIndex, barToIndex, action) {
     this.setState({swapping: true})
     let speed = this.state.speed;
     let fromObj = d3.selectAll("rect[value='" + barFromIndex + "']");
@@ -183,40 +183,67 @@ class InsertionSort extends Component {
     let fromObjTxt = d3.selectAll("text[value='" + barFromIndex + "']");
     let toObjTxt = d3.selectAll("text[value='" + barToIndex + "']");
 
-    fromObjTxt
-      .transition()
-      .duration(speed)
-      .attr('x', toObjTxt.attr('x'));
+    if (!action) {
+      fromObj
+        .transition()
+        .duration(speed)
+        .attr('fill', '#e65151')
+        .attr('stroke-width', 3)
+        .attr('stroke', '#00000078')
 
-    toObjTxt
-      .transition()
-      .duration(speed)
-      .attr('x', fromObjTxt.attr('x'));
+      toObj
+        .transition()
+        .duration(speed)
+        .attr('fill', '#e65151')
+        .attr('stroke-width', 5)
+        .attr('stroke', '#00000078')
 
-    fromObj
-      .transition()
-      .duration(speed)
-      .attr('fill', '#9537ff')
-      .attr('x', toObj.attr('x'));
+    } else {
+      fromObj
+        .transition()
+        .duration(speed)
+        .attr('fill', '#9537ff')
+        .attr('x', toObj.attr('x'));
 
-    toObj
-      .transition()
-      .duration(speed)
-      .attr('fill', '#ffa500')
-      .attr('x', fromObj.attr('x'));
+      toObj
+        .transition()
+        .duration(speed)
+        .attr('fill', '#ffa500')
+        .attr('x', fromObj.attr('x'));
 
+      fromObjTxt
+        .transition()
+        .duration(speed)
+        .attr('x', toObjTxt.attr('x'));
+
+      toObjTxt
+        .transition()
+        .duration(speed)
+        .attr('x', fromObjTxt.attr('x'));
+
+      fromObj
+        .transition()
+        .duration(speed)
+        .attr('fill', '#9537ff')
+        .attr('x', toObj.attr('x'));
+
+      toObj
+        .transition()
+        .duration(speed)
+        .attr('fill', '#ffa500')
+        .attr('x', fromObj.attr('x'));
+      
+      // Swap
+      let temp = fromObj.attr('value');
+      fromObj.attr('value', toObj.attr('value'));
+      toObj.attr('value', temp);
+      temp = fromObjTxt.attr('value');
+      fromObjTxt.attr('value', toObjTxt.attr('value'));
+      toObjTxt.attr('value', temp);
+    }
     // Reset Colors
-    fromObj.transition().duration(speed).delay(speed).attr('fill', '#39a4ff');
-    toObj.transition().duration(speed).delay(speed).attr('fill', '#39a4ff');
-    
-    // Swap
-    let temp = fromObj.attr('value');
-    fromObj.attr('value', toObj.attr('value'));
-    toObj.attr('value', temp);
-    temp = fromObjTxt.attr('value');
-    fromObjTxt.attr('value', toObjTxt.attr('value'));
-    toObjTxt.attr('value', temp);
-
+    fromObj.transition().duration(speed).delay(speed).attr('fill', '#39a4ff').attr('stroke-width',0);
+    toObj.transition().duration(speed).delay(speed).attr('fill', '#39a4ff').attr('stroke-width',0);
     // Allow next swapping
     setTimeout(() => {
       this.setState({swapping: false})
@@ -228,7 +255,8 @@ class InsertionSort extends Component {
     if (this.state.stepper_queue.length > 0) {
       let toElement = this.state.stepper_queue[this.state.stepper_queue.length - 1][0]
       let fromElement = this.state.stepper_queue[this.state.stepper_queue.length - 1][1]
-      this.swapBars(toElement, fromElement)
+      let action = this.state.stepper_queue[this.state.stepper_queue.length - 1][2]
+      this.swapBars(toElement, fromElement, action)
       this.state.stepper_queue.pop()
       this.state.animation_queue.unshift([fromElement, toElement])
     } else {
@@ -240,7 +268,8 @@ class InsertionSort extends Component {
     if (this.state.animation_queue.length > 0) {
       let toElement = this.state.animation_queue[0][0]
       let fromElement = this.state.animation_queue[0][1]
-      this.swapBars(toElement, fromElement)
+      let action = this.state.animation_queue[this.state.animation_queue.length - 1][2]
+      this.swapBars(toElement, fromElement, action)
       this.state.animation_queue.shift()
       this.state.stepper_queue.unshift([fromElement, toElement])
     } else {
