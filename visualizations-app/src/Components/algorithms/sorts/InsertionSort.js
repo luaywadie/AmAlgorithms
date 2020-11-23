@@ -6,8 +6,7 @@ import 'styles/Sorts.scss';
 // Libraries
 import {Container, Row, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import { FaStepBackward, FaStepForward, FaPause, FaPlay,
-        FaPlus, FaMinus, FaSyncAlt} from 'react-icons/fa';
-
+        FaPlus, FaMinus, FaSyncAlt, FaDiceD20} from 'react-icons/fa';
 
 class InsertionSort extends Component {
   constructor(props) {
@@ -121,16 +120,26 @@ class InsertionSort extends Component {
 
   insertionSort = (arr) => {
     const len = arr.length;
+    this.state.animation_queue.push([0, 0, false, 0])
     for (let i = 0; i < len; i++) {
+      this.state.animation_queue.push([0, 0, false, 1])
       let el = arr[i];
+      this.state.animation_queue.push([0, 0, false, 2])
       let j;
+      this.state.animation_queue.push([0, 0, false, 3])
+      
       this.state.animation_queue.push([i, j + 1, false])
+      this.state.animation_queue.push([0, 0, false, 4])
       for (j = i - 1; j >= 0 && arr[j] > el; j--) {
+        this.state.animation_queue.push([0, 0, false, 5])
         arr[j + 1] = arr[j]
         this.state.animation_queue.push([j, j + 1, true])
+        this.state.animation_queue.push([j, j + 1, false, 5])
       }
       arr[j + 1] = el;
+      this.state.animation_queue.push([0, 0, false, 6])
     }
+    this.state.animation_queue.push([0, 0, false, 7])
     return arr;
   };
 
@@ -161,7 +170,8 @@ class InsertionSort extends Component {
         this.swapBars(
           this.state.animation_queue[0][0],
           this.state.animation_queue[0][1],
-          this.state.animation_queue[0][2]
+          this.state.animation_queue[0][2],
+          this.state.animation_queue[0][3]
         );
         this.state.stepper_queue.push(this.state.animation_queue[0]);
         this.state.animation_queue.shift();
@@ -175,7 +185,7 @@ class InsertionSort extends Component {
     return interval;
   }
 
-  swapBars(barFromIndex, barToIndex, action) {
+  swapBars(barFromIndex, barToIndex, action, pseudoNumber) {
     this.setState({swapping: true})
     let speed = this.state.speed;
     let fromObj = d3.selectAll("rect[value='" + barFromIndex + "']");
@@ -184,19 +194,22 @@ class InsertionSort extends Component {
     let toObjTxt = d3.selectAll("text[value='" + barToIndex + "']");
 
     if (!action) {
-      fromObj
-        .transition()
-        .duration(speed)
-        .attr('fill', '#e65151')
-        .attr('stroke-width', 3)
-        .attr('stroke', '#00000078')
 
-      toObj
-        .transition()
-        .duration(speed)
-        .attr('fill', '#e65151')
-        .attr('stroke-width', 5)
-        .attr('stroke', '#00000078')
+      if (barFromIndex == barToIndex) {
+        d3.selectAll(".code-line").attr("class", "code-line")
+        d3.select("#ins-sort-" + pseudoNumber).attr("class", "code-line active")
+      } else {
+        fromObj
+          .transition()
+          .duration(speed)
+          .attr('fill', '#39a4ff50')
+  
+        toObj
+          .transition()
+          .duration(speed)
+          .attr('fill', '#39a4ff50')
+      }
+  
 
     } else {
       fromObj
@@ -252,7 +265,7 @@ class InsertionSort extends Component {
   
   // Stepper
   stepBack = () => {
-    if (this.state.stepper_queue.length > 0) {
+    if (this.state.stepper_queue.length > 0 && this.state.paused) {
       let toElement = this.state.stepper_queue[this.state.stepper_queue.length - 1][0]
       let fromElement = this.state.stepper_queue[this.state.stepper_queue.length - 1][1]
       let action = this.state.stepper_queue[this.state.stepper_queue.length - 1][2]
@@ -265,10 +278,10 @@ class InsertionSort extends Component {
   }
 
   stepForward = () => {
-    if (this.state.animation_queue.length > 0) {
+    if (this.state.animation_queue.length > 0 && this.state.paused) {
       let toElement = this.state.animation_queue[0][0]
       let fromElement = this.state.animation_queue[0][1]
-      let action = this.state.animation_queue[this.state.animation_queue.length - 1][2]
+      let action = this.state.animation_queue[0][2]
       this.swapBars(toElement, fromElement, action)
       this.state.animation_queue.shift()
       this.state.stepper_queue.unshift([fromElement, toElement])
@@ -292,7 +305,7 @@ class InsertionSort extends Component {
     this.setState({data: randomArray},
       () => {
         this.startAlgorithm()
-      });
+    });
   }
 
   clearSVG = () => {
@@ -303,6 +316,63 @@ class InsertionSort extends Component {
     this.state.stepper_queue = [];
   }
 
+  renderInsertionSortPseudocode() {
+    function indentation(num) {
+      return num * 20;
+    }
+    return (
+      <div style={{padding: "20px"}}>
+        <div id={'ins-sort-0'} className="code-line">
+          1
+          <span style={{ marginLeft: indentation(1) }}>
+            InsertionSort(<i>array</i>):
+          </span>
+        </div>
+        <div id={'ins-sort-1'} className="code-line">
+          2
+          <span style={{ marginLeft: indentation(2) }}>
+            <b>Loop</b> for each item in <i>array</i>
+          </span>
+        </div>
+        <div id={'ins-sort-2'} className="code-line">
+          3
+          <span style={{ marginLeft: indentation(3) }}>
+            Let <i><u>current</u></i> = target element
+          </span>
+        </div>
+        <div id={'ins-sort-3'} className="code-line">
+          4
+          <span style={{ marginLeft: indentation(3) }}>
+            Let <i>j</i> = current.index - 1
+          </span>
+        </div>
+        <div id={'ins-sort-4'} className="code-line">
+          5
+          <span style={{ marginLeft: indentation(3) }}>
+            <b>Loop</b> for every element that is before the index in <i><u>current</u></i>
+          </span>
+        </div>
+        <div id={'ins-sort-5'} className="code-line">
+          6
+          <span style={{ marginLeft: indentation(4) }}>
+            If <i><u>current</u></i> value is less than previous element, <b>swap</b>
+          </span>
+        </div>
+        <div id={'ins-sort-6'} className="code-line">
+          7
+          <span style={{ marginLeft: indentation(3) }}>
+            <b>Set</b> the element at index array[j + 1] to <u><i>current</i></u>
+          </span>
+        </div>
+        <div id={'ins-sort-7'} className="code-line">
+          8
+          <span style={{ marginLeft: indentation(2) }}>
+            Return the sorted <u>array</u>
+          </span>
+        </div>
+      </div>
+    );
+  }
 
   render() {
     return (
@@ -400,6 +470,7 @@ class InsertionSort extends Component {
         </Row>
         <Row>
           <div id="sort-container" className="insertion-sort"></div>
+          {this.renderInsertionSortPseudocode()}
         </Row>
       </Container>
     );
