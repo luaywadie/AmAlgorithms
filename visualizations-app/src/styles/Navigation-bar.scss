@@ -1,3 +1,11 @@
+.navigation {
+  animation-name: fade-in;
+  animation-duration: 4s;
+  animation-delay: 2s;
+  animation-fill-mode: forwards;
+  opacity: 0;
+}
+
 .header-logo {
   width: 100px;
   margin-left: 50px;
@@ -144,4 +152,9 @@
 }
 .burgerIcon:nth-of-type(3) {
   margin-left: 4px;
+}
+
+@keyframes fade-in {
+  0% {opacity: 0}
+  100% {opacity: 1}
 }

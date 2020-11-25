@@ -90,3 +90,10 @@ input {
   margin-left: 10px;
   margin-right: 10px;
 }
+
+
+// Animations
+@keyframes fade-in {
+  0% {opacity: 0}
+  100% {opacity: 1}
+}
