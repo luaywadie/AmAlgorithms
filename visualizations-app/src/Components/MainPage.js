@@ -16,6 +16,8 @@ class MainPage extends Component {
       title_set_1 : "",
       title_set_2 : "",
       title_set_3 : "",
+      background_left_opacity: 0,
+      background_right_opacity: 0
     };
   }
 
@@ -96,7 +98,8 @@ class MainPage extends Component {
             }
             alt={'bg1'}
           />
-          <img style={{ left: (this.state.scroll_position * 6) + "px",
+          <img style={{ 
+            left: (this.state.scroll_position * 6) + "px",
             opacity: this.state.waves_opacity 
           }}
             src={
@@ -104,9 +107,55 @@ class MainPage extends Component {
             }
             alt={'bg2'}
           />
-          <img style={{ left: "-" + (this.state.scroll_position * 6) + "px",
+          <img style={{ 
+            left: "-" + (this.state.scroll_position * 6) + "px",
             opacity: this.state.waves_opacity 
           }} 
+            src={
+              process.env.PUBLIC_URL + '/assets/imgs/home_page_background3.png'
+            }
+            alt={'bg3'}
+          />
+        </div>
+
+        <div className="background background-left" style={{
+          opacity: 1 - this.state.waves_opacity}}>
+          <img
+            src={
+              process.env.PUBLIC_URL + '/assets/imgs/home_page_background1.png'
+            }
+            alt={'bg1'}
+          />
+          <img
+            src={
+              process.env.PUBLIC_URL + '/assets/imgs/home_page_background2.png'
+            }
+            alt={'bg2'}
+          />
+          <img
+            src={
+              process.env.PUBLIC_URL + '/assets/imgs/home_page_background3.png'
+            }
+            alt={'bg3'}
+          />
+        </div>
+
+        <div className="background background-right" style={{
+          transform: "rotate(-90deg)",
+          opacity: 1 - this.state.waves_opacity}}>
+          <img 
+            src={
+              process.env.PUBLIC_URL + '/assets/imgs/home_page_background1.png'
+            }
+            alt={'bg1'}
+          />
+          <img 
+            src={
+              process.env.PUBLIC_URL + '/assets/imgs/home_page_background2.png'
+            }
+            alt={'bg2'}
+          />
+          <img 
             src={
               process.env.PUBLIC_URL + '/assets/imgs/home_page_background3.png'
             }

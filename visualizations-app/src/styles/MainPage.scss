@@ -6,12 +6,23 @@
   animation: fade-in ease-in forwards 3s;
 }
 
-// Background
+// background
 .background {
   position: fixed;
   left: 0;
   bottom: 0;
   opacity: 10;
+}
+
+.background-left {
+  width: 100%;
+  height: 200%;
+  transform: rotate(90deg) scale(-1,1),
+}
+
+.background-right {
+  width: 100%;
+  height: 200%;
 }
 
 .background img {
@@ -39,6 +50,7 @@
   bottom: -80px;
   animation: hover 3s infinite ease-in-out;
 }
+
 
 // Arrow Field
 .arrow_icon_field svg {
