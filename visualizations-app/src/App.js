@@ -34,8 +34,8 @@ class App extends Component {
       "Welcome To",
       "Am",
       "Algorithms",
-      "Think",
-      "Algorithmically",
+      'Think',
+      ' Algorithmically',
     ];
     let i = 0;
     let j = 0;
@@ -90,8 +90,8 @@ class App extends Component {
           <span style={{ color: "#8787fe" }}>{this.state.title_set_3}</span>
         </h1>
         <h1 className="heading">
-          <span style={{ color: "#51a6fc" }}> {this.state.title_set_2}</span>
-          <span style={{ color: "#8787fe" }}>{this.state.title_set_3}</span>
+          <span style={{ color: "#333" }}> {this.state.title_set_4}</span>
+          <span style={{ color: "#8787fe" }}>{this.state.title_set_5}</span>
         </h1>
       </div>
     );
