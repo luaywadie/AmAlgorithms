@@ -8,6 +8,7 @@
   src: url('/AmAlgorithms/assets/fonts/Quicksand-Medium.ttf');
 }
 
+
 .App {
   text-align: center;
 }
@@ -15,7 +16,13 @@
 body {
   background-color: #eee;
   font-family: quickSand_light;
-  height: 2000px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;  
+}
+
+// Hide scrollbar
+body::-webkit-scrollbar {
+  display: none;
 }
 
 button {

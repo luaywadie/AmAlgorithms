@@ -1,0 +1,44 @@
+{
+    "Intro": [
+      {
+        "type": "info",
+        "title": "Why Algorithms?",
+        "text": "Algorithms form the basis of some of the most important aspects of daily life. From powering <i class='highlight'>GPS navigation</i> apps, search engines, computer operating systems, social media news feeds...",
+        "image_link": "../assets/why-algorithms/dijkstra.gif"
+      },
+      {
+        "type": "quiz",
+        "title": "Why Algorithms?",
+        "text": "What is the Euclidean distance between the two points (x_1, y_1) and (x_2, y_2)?",
+        "options": [
+              "5.38",
+              "8",
+              "69",
+              "32"
+        ],
+        "answer": "69",
+        "image_link": "../assets/why-algorithms/euclidean.gif"
+      }
+    ],
+    "Diajestra": [
+        {
+          "type": "info",
+          "title": "Heap",
+          "text": "Algorithms form the basis of some of the most important aspects of daily life. From powering <i class='highlight'>GPS navigation</i> apps, search engines, computer operating systems, social media news feeds...",
+          "image_link": "../assets/why-algorithms/dijkstra.gif"
+        },
+        {
+          "type": "quiz",
+          "title": "Why Algorithms?",
+          "text": "What is the Euclidean distance between the two points (x_1, y_1) and (x_2, y_2)?",
+          "options": [
+                "A",
+                "B",
+                "C",
+                "D"
+          ],
+          "answer": "A",
+          "image_link": "../assets/why-algorithms/euclidean.gif"
+        }
+      ]
+  }

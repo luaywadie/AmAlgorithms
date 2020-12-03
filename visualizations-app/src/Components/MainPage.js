@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import '../styles/MainPage.scss';
 
 // Components
-import { InfoSegment } from './MainPage/InfoSegment';
+import InfoContainer from "./MainPage/InfoContainer";
 
 // Libraries
 import { FaSortDown } from 'react-icons/fa';
@@ -13,9 +13,11 @@ class MainPage extends Component {
     this.state = {
       scroll_position: 0,
       waves_opacity: 1,
-      title_set_1 : "",
-      title_set_2 : "",
-      title_set_3 : "",
+      title_set_1: "",
+      title_set_2: "",
+      title_set_3: "",
+      title_set_4: "",
+      title_set_5: "",
       background_left_opacity: 0,
       background_right_opacity: 0
     };
@@ -31,37 +33,59 @@ class MainPage extends Component {
   }
   
   componentWillUnmount() {
-    // this.endInterval(); 
+    
   }
 
   startTypingTitle = () => {
-    let title_queue = ["Welcome To","Am","Algorithms"]
+    let title_queue = [
+      "Welcome To",
+      "Am",
+      "Algorithms",
+      'Think',
+      ' Algorithmically',
+    ];
     let i = 0;
     let j = 0;
     let interval = setInterval(() => {
-      if (j >= title_queue[i].length) { 
+      if (j >= title_queue[i].length) {
         if (i < title_queue.length - 1) {
           i += 1;
           j = 0;
         } else {
-          clearInterval(interval)
+          clearInterval(interval);
         }
       } else {
         switch (i) {
           case 0:
-            this.setState({title_set_1: this.state.title_set_1 + title_queue[i][j]})
+            this.setState({
+              title_set_1: this.state.title_set_1 + title_queue[i][j],
+            });
             break;
           case 1:
-            this.setState({title_set_2: this.state.title_set_2 + title_queue[i][j]})
+            this.setState({
+              title_set_2: this.state.title_set_2 + title_queue[i][j],
+            });
             break;
           case 2:
-            this.setState({title_set_3: this.state.title_set_3 + title_queue[i][j]})
-            break
+            this.setState({
+              title_set_3: this.state.title_set_3 + title_queue[i][j],
+            });
+            break;
+          case 3:
+            this.setState({
+              title_set_4: this.state.title_set_4 + title_queue[i][j],
+            });
+            break;
+          case 4:
+            this.setState({
+              title_set_5: this.state.title_set_5 + title_queue[i][j],
+            });
+            break;
         }
         j += 1;
       }
-    },100)
-  }
+    }, 100);
+  };
 
   updateScroll = (e) => {
     // Calculate scroll offset
@@ -87,8 +111,22 @@ class MainPage extends Component {
           <FaSortDown></FaSortDown>
           <FaSortDown></FaSortDown>
         </div>
+        <div className="content" style={{opacity: this.state.waves_opacity, letterSpacing: (this.state.scroll_position / 20) + "px"}}>
+          <h1 className="heading">
+              {this.state.title_set_1}
+              <span style={{ color: "#51a6fc" }}> {this.state.title_set_2}</span>
+              <span style={{ color: "#8787fe" }}>{this.state.title_set_3}</span>
+          </h1>
+          <h1 className="heading">
+              <span style={{ color: "#333" }}> {this.state.title_set_4}</span>
+              <span style={{ color: "#8787fe" }}>{this.state.title_set_5}</span>
+          </h1>
+        </div>
         
+        <InfoContainer scroll_position={this.state.scroll_position}></InfoContainer>
+
         <div className="background">
+          {/* TODO: Set min width so the background doesn't keep expanding indefinitely */}
           <img style={{ 
               left: "-" + (this.state.scroll_position * 5) + "px",
               opacity: this.state.waves_opacity
@@ -119,6 +157,7 @@ class MainPage extends Component {
         </div>
 
         <div className="background background-left" style={{
+          left: Math.min(-200 + ((this.state.scroll_position / 100) * 40), -40) + "px",
           opacity: 1 - this.state.waves_opacity}}>
           <img
             src={
@@ -141,7 +180,7 @@ class MainPage extends Component {
         </div>
 
         <div className="background background-right" style={{
-          transform: "rotate(-90deg)",
+          right: Math.min(-200 + ((this.state.scroll_position / 100) * 40), -40) + "px",
           opacity: 1 - this.state.waves_opacity}}>
           <img 
             src={
