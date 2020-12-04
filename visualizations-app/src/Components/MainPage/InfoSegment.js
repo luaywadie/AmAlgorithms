@@ -58,7 +58,12 @@ class InfoSegment extends Component {
                   <FaExclamation></FaExclamation>
                 </i>
               </a>
-              <img src={process.env.PUBLIC_URL + "/assets/gif/segment-1.gif"} />
+              <img
+                src={
+                  process.env.PUBLIC_URL +
+                  this.state.slides[this.state.current_id]["image_link"]
+                }
+              />
             </div>
           </Col>
         )}
