@@ -1,102 +1,119 @@
 .segment {
-    margin-bottom: 200px;
-    transition: 1s;
+  margin-bottom: 200px;
+  transition: 1s;
 }
 
 .segment-gif {
-    display: table;
-    position: relative;
-    width: 500px;
-    height: 500px;
-    background-color: white;
-    margin: auto;
-    box-shadow: 0px 4px 10px 0px #ccc;
-    border-radius: 20px;
-    overflow: hidden;
+  display: table;
+  position: relative;
+  width: 500px;
+  height: 500px;
+  background-color: white;
+  margin: auto;
+  box-shadow: 0px 4px 10px 0px #ccc;
+  border-radius: 20px;
+  overflow: hidden;
 }
 
 .segment-gif img {
-    position: absolute;
-    pointer-events: none;
+  position: absolute;
+  pointer-events: none;
 }
 
 .segment-gif .gif-icon {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-    background-color: #ffffff;
-    color: #7684fb;
-    font-size: 20px;
-    width: 40px;
-    text-align: center;
-    padding-bottom: 6px;
-    border-radius: 50px;
-    border: 2px solid #8377f8;
-    cursor: pointer;
-    z-index: 10;
-    transition: 1s;
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  background-color: #ffffff;
+  color: #7684fb;
+  font-size: 20px;
+  width: 40px;
+  text-align: center;
+  padding-bottom: 6px;
+  border-radius: 50px;
+  border: 2px solid #8377f8;
+  cursor: pointer;
+  z-index: 10;
+  transition: 1s;
 }
 
 .segment-gif .gif-icon:hover {
-    transform: translateY(-5px);
-    border-color: #7684fb;
-    transition: .2s;
-    border-radius: 10px;
+  transform: translateY(-5px);
+  border-color: #7684fb;
+  transition: 0.2s;
+  border-radius: 10px;
 }
 
 .segment-nav {
-    display: flex;
-    justify-content: initial;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    left: 0;
+  display: flex;
+  justify-content: initial;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  left: 0;
 }
 
 .segment-nav .btn-left {
-    flex-grow: 2;
+  flex-grow: 2;
 }
 .segment-nav .btn-right {
-    flex-grow: 2;
+  flex-grow: 2;
 }
 
 .segment-nav .nav-icons .circle-icon {
-    background-color: #fff;   
+  background-color: #fff;
 }
 
 .segment-nav .nav-icons .circle-icon.active {
-    background-color: rgb(135, 135, 254);
+  background-color: rgb(135, 135, 254);
 }
 
 .segment-text h1 {
-    color: #444;
-    margin-bottom: 20px;
+  color: #444;
+  margin-bottom: 20px;
 }
 
 .nav-icons i {
-    display: inline-flex;
-    height: 20px;
-    width: 20px;
-    background-color: #fff;
-    margin: 0px 5px;
-    border-radius: 50px;
-    box-shadow: 0px 0px 5px 0px #bbb;
+  display: inline-flex;
+  height: 20px;
+  width: 20px;
+  background-color: #fff;
+  margin: 0px 5px;
+  border-radius: 50px;
+  box-shadow: 0px 0px 5px 0px #bbb;
 }
 
 .segment-nav .graph-button {
-    padding: 5px 50px 10px;
+  padding: 5px 50px 10px;
 }
 
 .segment-nav .nav-icons {
-    align-self: center;
+  align-self: center;
 }
 
 .fade-transition {
-    animation: fade 1s forwards ease-in-out; 
+  animation: fade 1s forwards ease-in-out;
+}
+
+.quiz_options {
+  width: 70%;
+  margin-top: 15px;
+}
+
+.highlight {
+  background-color: yellow;
+  padding: 0px 10px;
+  border-radius: 50px;
 }
 
 @keyframes fade {
-    0% {opacity: 1}
-    50% {opacity: 0}
-    100% {opacity: 1}
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
