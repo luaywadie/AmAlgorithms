@@ -268,6 +268,57 @@
       "answer": "All of the Above",
       "image_link": "/assets/question-mark.gif"
     }
+  ],
+  "Heap": [
+    {
+      "type": "info",
+      "title": "Heap",
+      "text": "<ul><li>A specialized tree-based data structure which satisfies heap property</li><ul><li>Min-heap: parent is always smaller value than children</li><ul><li>Root is minimum</li></ul></ul><ul><li>Max-heap: parent is always larger than children</li><ul><li>Root is max</li></ul></ul></ul>",
+      "image_link": "/assets/heap/min-heap.png"
+    },
+    {
+      "type": "info",
+      "title": "Elements of a Heap",
+      "text": "<ul><li>Similar to tree, however it is almost always a complete tree</li><ul><li>Complete tree: a binary tree such that every level (except possibly the last) is completely filled and all nodes are as far left as possible</li></ul></ul>",
+      "image_link": "/assets/heap/max-heap.png"
+    },
+    {
+      "type": "info",
+      "title": "Why heaps?",
+      "text": "<ul><li>They are extremely efficient at extracting the min/max value and re-organizing the tree to always maintain its property.</li><li>An maximally efficient implementation of priority queue</li><ul><li>Priority Queue: a queue with a priority associated with it</li><ul><li>Fundamental data structure to many algorithms such as dijkstra  </li></ul></ul></ul>",
+      "image_link": "/assets/need-img.png"
+    },
+    {
+      "type": "info",
+      "title": "Problems that can be solved with a Heap",
+      "text": "Any problem requiring a priority queue such as A* search, Dijkstra, sorting, etc.",
+      "image_link": "/assets/need-img.png"
+    },
+    
+    {
+      "type": "quiz",
+      "title": "A heap is a special binary tree that can be used to:",
+      "text": "",
+      "options": ["Sort a list", "Act as a priority queue", "Quickly find largest/smallest element from a collection", "All of the above"],
+      "answer": "All of the above",
+      "image_link": "/assets/question-mark.gif"
+    },
+    {
+      "type": "quiz",
+      "title": "In a Min-heap, the root node is the max",
+      "text": "",
+      "options": ["True", "False"],
+      "answer": "False",
+      "image_link": "/assets/question-mark.gif"
+    },
+    {
+      "type": "quiz",
+      "title": "A Heap could be used by the operating system’s CPU scheduler to select the next process to execute.",
+      "text": "",
+      "options": ["True","False"],
+      "answer": "True",
+      "image_link": "/assets/question-mark.gif"
+    }
   ]
 
 }
