@@ -3,40 +3,271 @@
     {
       "type": "info",
       "title": "Why Algorithms?",
-      "text": "Algorithms form the basis of some of the most important aspects of daily life. From powering <i class='highlight'>GPS navigation</i> apps, search engines, computer operating systems, social media news feeds...",
-      "image_link": "/assets/why-algorithms/dijkstra.gif"
+      "text": "What is an Algorithm?<ul><br/> <li> An algorithm is a set of instructions designed to perform a specific task.</li><br/> <li> A step-by-step solution, like a recipe </li> </ul>",
+      "image_link": "/assets/why-algorithms/why-alg-1.gif"
     },
-    {
-      "type": "quiz",
-      "title": "Why Algorithms?",
-      "text": "What is the Euclidean distance between the two points (x_1, y_1) and (x_2, y_2)?",
-      "options": ["5.38", "8", "69", "32"],
-      "answer": "69",
-      "image_link": "/assets/why-algorithms/cereal-algs.png"
-    },
-    {
-      "type": "quiz",
-      "title": "Hello World? Or is it",
-      "text": "What is the Euclidean distance between the two points (x_1, y_1) and (x_2, y_2)?",
-      "options": ["5.38", "8", "ASD", "4000"],
-      "answer": "ASD",
-      "image_link": "/assets/why-algorithms/dijkstra.gif"
-    }
-  ],
-  "Diajestra": [
     {
       "type": "info",
-      "title": "Heap",
-      "text": "Hello from heaps",
+      "title": "Why Algorithms?",
+      "text": "How are computers better than humans?<ul><br/><li>Better memories</li><br/><li>Significantly faster and more accurate at executing tasks</li><br/><li>Not influenced by human factors such as emotion, exhaustion, etc</li></ul>",
+      "image_link": "/assets/why-algorithms/Human-Computer.jpg"
+    },
+    {
+      "type": "info",
+      "title": "Why Algorithms?",
+      "text": "Why Learn About Algorithms?<ul><br/><li>Algorithms make it possible to solve everyday tasks such as</li><ul><li>Booking a flight</li><li>Adding a mutual friend on Facebook</li><li>Finding the fastest route to a new destination</li><li>Getting new movie recommendations based on what you’ve watched</li></ul><br><li>They are the future!</li></ul>",
+      "image_link": "/assets/why-algorithms/types-of-algorithm.png"
+    },
+    {
+      "type": "info",
+      "title": "Why Algorithms?",
+      "text":     "How do we harness the powers of  computers?<ul><li>By writing algorithms!</li><li>Computers are very effective at solving well defined problems.</li><ul><li>It is up to the programmer to implement the step-by-step solution to solve some problem.</li> <li>Once the solution is written and is correct, the computer will have no issues executing that exact algorithm for its entire lifetime</li></ul></ul>",
+      "image_link": "/assets/why-algorithms/harness-computers.gif"
+    },
+    {
+      "type": "info",
+      "title": "Why Algorithms?",
+      "text":"Algorithms form the basis of some of the most important aspects of daily life. From powering GPS navigation apps, search engines, computer operating systems, social media news feeds, internet routing networks, recommendation systems, self-driving cars, and more - algorithms are all around us!<br><br>We believe that basic knowledge of data structures and algorithms provide the fundamental foundation for facilitating critical problem-solving skills and computational thinking.",
       "image_link": "/assets/why-algorithms/dijkstra.gif"
     },
     {
-      "type": "quiz",
+      "type": "info",
       "title": "Why Algorithms?",
-      "text": "What is the Euclidean distance between the two points (x_1, y_1) and (x_2, y_2)?",
-      "options": ["A", "B", "C", "D"],
-      "answer": "A",
-      "image_link": "/assets/why-algorithms/dijkstra.gif"
+      "text":"Interested in learning more?<br><br>*** EMBARK ON THE LEARNER QUEST ***<br><br><span style='margin-left: 150px'></span>SCROLL DOWN!",
+      "image_link": "/assets/why-algorithms/learning-more.gif"
+    }
+  ],
+  "Stack": [
+    {
+      "type": "info",
+      "title": "Stack",
+      "text": "A stack is a data structure often used throughout many algorithms in computer science. A stack is exactly just that: a stack of objects just like we see in everyday life. It is like an array in that you put many objects into an array for later use. How these elements are stored and accessed, however, is what makes a stack different from an array and other collection types. Let’s take a look at some of the key characteristics...",
+      "image_link": "/assets/stack/book-stack.png"
+    },
+    {
+      "type": "info",
+      "title": "Characteristics of a Stack",
+      "text": "<ul><li>An array of fixed size</li><li>Last-In-First-Out (LIFO). Whichever element is put in first, it must until all other elements infront have been removed before it can be removed</li><li>Push(item) will add an element to the front of the stack</li><li>Pop() will remove the top element from the stack</li></ul>",
+      "image_link": "/assets/need-img.png"
+    },
+    {
+      "type": "info",
+      "title": "More on Stacks",
+      "text":"<br>There are some very useful features of stacks that are able to make certain problems much easier to solve. That being said, let’s consider some things when using stacks:<ul><li>Removing an element from the middle of a stack is not possible</li><li>Adding too many objects (stack overflow) or removing objects that are not present (stack underflow) will break your code.</li><li>Avoid implementing your own stack class. Instead, import from the necessary library. It will save you time and unnecessary confusion</li></ul>",
+      "image_link": "/assets/stack/stack-pop.png"
+    },
+
+    {
+      "type": "quiz",
+      "title": "Stack?",
+      "text": "A stack can be best described as __ data structure:",
+      "options": ["Last-In-First-Out", "Last-Out-First-In", "Push-Out-Pop-In", "Pull-In-Push-Out"],
+      "answer": "Last-In-First-Out",
+      "image_link": "/assets/question-mark.gif"
+    },
+    {
+      "type": "quiz",
+      "title": "Stack?",
+      "text": "If you wanted to add an item to the stack, you would use:",
+      "options": ["pop()", "push(item)", "add(item)", "append(item)"],
+      "answer": "push(item)",
+      "image_link": "/assets/question-mark.gif"
+    },
+    {
+      "type": "quiz",
+      "title": "Stack?",
+      "text": "If too many items are pushed into the stack, this results in a:",
+      "options": ["stack-overflow", "stack-underflow", "stack-influx", "stack-error"],
+      "answer": "stack-overflow",
+      "image_link": "/assets/question-mark.gif"
+    }
+  ],
+  "Queue": [
+    {
+      "type": "info",
+      "title": "Queue",
+      "text": "A queue is a data structure often used throughout many algorithms in computer science. A queue behaves very much in the same way that a stack does. It is like an array in that you put many objects into an array for later use. Also like a stack, you can’t remove elements in the middle of a queue. Think of a queue like a line at the grocery store. In fact, that’s exactly what a line is, a queue! Knowing what you know now about stacks, learning about queues should be no problem at all.",
+      "image_link": "/assets/queue/line-of-people.jpg"
+    },
+    {
+      "type": "info",
+      "title": "Characteristics of a Queue",
+      "text":"<ul><li>An array of fixed size</li><li>First-In-First-Out (FIFO). Whichever element is put in first, it is the first element out. This is the main behavioral difference between a stack and queue</li><li>Enqueue(item) will add an element to the back of the queue</li><li>Dequeue() will remove the top element from the queue</li></ul>",
+      "image_link": "/assets/need-img.png"
+    },
+    {
+      "type": "info",
+      "title": "More on Queues",
+      "text": "<ul><li>There are some very useful features of queues that are able to make certain problems much easier to solve. But just like stacks, there are some things to consider when using queues:</li><li>Removing an element from the middle of a queue is not possible</li><li>Adding too many objects or removing objects that are not present will break your code.</li><li>Avoid implementing your own queue class. Instead, import from the necessary library. It will save you time and unnecessary confusion just like with a stack</li></ul>",
+      "image_link": "/assets/queue/queue-pop.png"
+    },
+
+    {
+      "type": "quiz",
+      "title": "Queue?",
+      "text": "A queue can be best described as __ data structure:",
+      "options": ["First-In-First-Out", "First-In-Last-Out", "Push-Out-Pop-In", "Pull-In-Push-Out"],
+      "answer": "First-In-First-Out",
+      "image_link": "/assets/question-mark.gif"
+    },
+    {
+      "type": "quiz",
+      "title": "Queue?",
+      "text": "If you wanted to add an item to the queue, you would use:",
+      "options": ["pop()", "push(item)", "enqueue(item)", "dequeue(item)"],
+      "answer": "enqueue(item)",
+      "image_link": "/assets/question-mark.gif"
+    },
+    {
+      "type": "quiz",
+      "title": "Queue?",
+      "text": "I can remove as many objects as I want from the queue with no consequences:",
+      "options": ["True", "False"],
+      "answer": "False",
+      "image_link": "/assets/question-mark.gif"
+    }
+  ],
+
+  "Tree": [
+    {
+      "type": "info",
+      "title": "Binary Tree",
+      "text": "A binary tree data structure is a special type of undirected graph with a root node at the top and each node has at most 2 children",
+      "image_link": "/assets/binary-tree/binary-tree.png"
+    },
+    {
+      "type": "info",
+      "title": "Elements of a Binary Tree",
+      "text": "<ul><li>Similar to graphs, a tree contains nodes and edges.</li><li>Innate hierarchy where the root is the parent and the two nodes it is connected to are its left and right children. </li><li>The principle applies down the tree for left and right all the way down to a leaf node</li><ul><li>Leaf node is a node without any children</li></ul></ul>",
+      "image_link": "/assets/binary-tree/binary-tree-components.png"
+    },
+    {
+      "type": "info",
+      "title": "Problems to be solved with Binary Trees",
+      "text": "<ul><li>Parsers</li><li>Decision making</li><li>Fundamental Components of more elaborate algorithms (topsort, dijkstra)</li></ul> ",
+      "image_link": "/assets/binary-tree/decision-tree.png"
+    },
+    {
+      "type": "info",
+      "title": "Tree Traversals",
+      "text":     "<ul><li>Breath-First Search</li><ul><li>Finds shortest path to a node since it traverses all nodes at a level before going to next level.</li></ul><li>Depth-First Search</li><ul><li>Results in deep trees and is more suitable for game or puzzle problems to explore paths </li></ul></ul>",
+      "image_link": "/assets/binary-tree/tree-traversal.png"
+    },
+
+    {
+      "type": "info",
+      "title": "Problems that can be solved with BFS",
+      "text": "<ul><li>Traverses a graph layer-wise thus exploring neighboring nodes before moving to next level</li><li>Finds shortest path to a node </li>",
+      "image_link": "/assets/need-img.png"
+    },
+
+    {
+      "type": "info",
+      "title": "Problems that can be solved with DFS",
+      "text": "<ul><li>Results in deep trees because the algorithm starts with root node and explores as far as possible down each branch before backtracking</li><li>Fundamental concept for topological sort such as scheduling classes considering prerequisites</li<li>Suitable for game or puzzle problems to explore paths </li></ul>",
+      "image_link": "/assets/need-img.png"
+    },
+    
+    {
+      "type": "quiz",
+      "title": "Which of the following is false about binary trees?",
+      "text": "",
+      "options": ["A child can also be a parent, in another context", "Can have multiple roots", "Recursive", "Fundamental data structure in CS"],
+      "answer": "Can have multiple roots",
+      "image_link": "/assets/question-mark.gif"
+    },
+    {
+      "type": "quiz",
+      "title": "BFS is used in all of the algorithms except ",
+      "text": "",
+      "options": ["Dijkstra’s shortest path, in another context", "Prim’s minimum spanning tree", "Artificial Neural Network", "Search Engine Crawlers"],
+      "answer": "Artificial Neural Network",
+      "image_link": "/assets/question-mark.gif"
+    },
+    {
+      "type": "quiz",
+      "title": "DFS is not used to ",
+      "text": "",
+      "options": ["Find the shortest path, in another context", "Check for cycles in a graph", "Topological sort", "Determine if 2 nodes are connected"],
+      "answer": "Find the shortest path",
+      "image_link": "/assets/question-mark.gif"
+    }
+  ],
+
+  "Graph": [
+    {
+      "type": "info",
+      "title": "Graph",
+      "text": "<ul><li>A graph consists of a finite set of nodes and set of edges which connect a pair of nodes</li><li>Graphs are used to solve many real-life problems by representing networks</li></ul>",
+      "image_link": "/assets/graph/dij-road.png"
+    },
+    {
+      "type": "info",
+      "title": "Elements of a Graph",
+      "text": "<ul><li>Nodes: fundamental units of which graphs are formed</li><ul><li>Also called vertices</li></ul><li>Edges: links or arcs which connect any two nodes in a graph</li></ul>",
+      "image_link": "/assets/graph/graph-elements.png"
+    },
+    {
+      "type": "info",
+      "title": "Types of Graphs",
+      "text": "<ul><li>Directed Graphs</li><ul><li>Edges have a direction</li><li>Uni-directional flow</li></ul><li>Undirected Graphs</li><ul><li>Edges do not have a direction</li><li>Bi-directional flow</li></ul></ul>",
+      "image_link": "/assets/graph/dir-undir-graph.jpg"
+    },
+    {
+      "type": "info",
+      "title": "Undirected Graph",
+      "text": "<ul><li>Represents networks without direction such as</li><ul><li>Typical city grid (excluding one-ways)</li><li>Friendship network on facebook</li><li>Wired connections between a circuit</li></ul></ul>",
+      "image_link": "/assets/graph/fb-graph.png"
+    },
+
+    {
+      "type": "info",
+      "title": "Problems that can be solved with Undirected Graphs:",
+      "text": "<ul><li>Shortest Path between two nodes</li><ul><li>Formally known as Dijkstra’s shortest path</li></ul><li>Minimum spanning tree to connect all nodes with minimal cost</li><ul><li>Formally known as Prim's Minimum Spanning Tree</li></ul><li>Real world Examples:</li><ul><li>Minimal amount of driving to visit all desired cities in a country.</li><li>Minimal wires needed to connect a circuit</li></ul></ul>",
+      "image_link": "/assets/graph/map-graph.png"
+    },
+
+    {
+      "type": "info",
+      "title": "Problems that can be solved with Directed Graphs:",
+      "text": "<ul><li>Scheduling courses to complete a degree</li><ul><li>Topological Sort</li></ul><li>Traveling through flowing rivers to reach a destination</li></ul>",
+      "image_link": "/assets/graph/sched-digraph.png"
+    },
+
+    
+    {
+      "type": "quiz",
+      "title": "Which is an example of an undirected graph?",
+      "text": "",
+      "options": ["Web  (as hyperlinks)", "Followers on Instagram", "Network of flowing rivers", "Road Network"],
+      "answer": "Road Network",
+      "image_link": "/assets/question-mark.gif"
+    },
+    {
+      "type": "quiz",
+      "title": "Which is an example of a directed graph?",
+      "text": "",
+      "options": ["Facebook Friend Network", "Building a house", "Road Network", "Airport Network"],
+      "answer": "Building a house",
+      "image_link": "/assets/question-mark.gif"
+    },
+    {
+      "type": "quiz",
+      "title": "There are many applications of dijkstra such as distance between locations, IP Routing, and telephone network.",
+      "text": "",
+      "options": ["True","False"],
+      "answer": "True",
+      "image_link": "/assets/question-mark.gif"
+    }
+    ,
+    {
+      "type": "quiz",
+      "title": "Topological Sort could be used for",
+      "text": "",
+      "options": ["Dependency Resolution", "Scheduling Classes", "Daily routine", "All of the Above"],
+      "answer": "All of the Above",
+      "image_link": "/assets/question-mark.gif"
     }
   ]
+
 }

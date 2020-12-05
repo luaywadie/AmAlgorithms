@@ -50,13 +50,13 @@ class InfoSegment extends Component {
   renderSection(even) {
     return even ? (
       <>
-        {this.renderInfoOrQuiz()}
         {this.renderGif()}
+        {this.renderInfoOrQuiz()}
       </>
     ) : (
       <>
-        {this.renderGif()}
         {this.renderInfoOrQuiz()}
+        {this.renderGif()}
       </>
     );
   }
@@ -113,6 +113,7 @@ class InfoSegment extends Component {
         <div className="segment-text text-center">
           <h1>{this.state.slides[this.state.current_id]['title']}</h1>
           <h4
+            className="text-left"
             dangerouslySetInnerHTML={{
               __html: this.state.slides[this.state.current_id]['text'],
             }}
@@ -136,8 +137,8 @@ class InfoSegment extends Component {
             </i>
           </a>
           <img
-            // width="500px"
-            // height="500px"
+            width="500px"
+            height="500px"
             src={
               process.env.PUBLIC_URL +
               this.state.slides[this.state.current_id]['image_link']
