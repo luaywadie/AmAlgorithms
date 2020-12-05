@@ -4,7 +4,7 @@
       "type": "info",
       "title": "Why Algorithms?",
       "text": "Algorithms form the basis of some of the most important aspects of daily life. From powering <i class='highlight'>GPS navigation</i> apps, search engines, computer operating systems, social media news feeds...",
-      "image_link": "../assets/why-algorithms/dijkstra.gif"
+      "image_link": "/assets/why-algorithms/dijkstra.gif"
     },
     {
       "type": "quiz",
@@ -12,15 +12,15 @@
       "text": "What is the Euclidean distance between the two points (x_1, y_1) and (x_2, y_2)?",
       "options": ["5.38", "8", "69", "32"],
       "answer": "69",
-      "image_link": "../assets/why-algorithms/euclidean.gif"
+      "image_link": "/assets/why-algorithms/cereal-algs.png"
     },
     {
       "type": "quiz",
       "title": "Hello World? Or is it",
       "text": "What is the Euclidean distance between the two points (x_1, y_1) and (x_2, y_2)?",
-      "options": ["5.38", "8", "ASD", "32"],
+      "options": ["5.38", "8", "ASD", "4000"],
       "answer": "ASD",
-      "image_link": "../assets/why-algorithms/euclidean.gif"
+      "image_link": "/assets/why-algorithms/dijkstra.gif"
     }
   ],
   "Diajestra": [
@@ -28,7 +28,7 @@
       "type": "info",
       "title": "Heap",
       "text": "Hello from heaps",
-      "image_link": "../assets/why-algorithms/dijkstra.gif"
+      "image_link": "/assets/why-algorithms/dijkstra.gif"
     },
     {
       "type": "quiz",
@@ -36,7 +36,7 @@
       "text": "What is the Euclidean distance between the two points (x_1, y_1) and (x_2, y_2)?",
       "options": ["A", "B", "C", "D"],
       "answer": "A",
-      "image_link": "../assets/why-algorithms/euclidean.gif"
+      "image_link": "/assets/why-algorithms/dijkstra.gif"
     }
   ]
 }
