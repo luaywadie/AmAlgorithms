@@ -424,10 +424,45 @@
       "image_link": "/assets/question-mark.gif"
     }
   ],
+
+  "K-Means": [
+    {
+      "type": "info",
+      "title": "K-Means Clustering",
+      "text": "Clustering machine learning algorithms such as <strong>K-Means</strong> can be used for a wide variety of tasks, such as: <ul><li>Image segmentation</li><li>Spam email filtering</li><li>Anomaly detection</li><li>Market segmentation analysis</li><li>...and much more!</li></ul>K-Means is an example of an <strong>unsupervised learning algorithm,</strong> because it can take unlabeled data as input and produce informed, labeled decisions as output.",
+      "image_link": "/assets/kmeans/kmeans-intro.png"
+    },
+    {
+      "type": "info",
+      "title": "The Main Idea",
+      "text": "K-Means is one of the simplest and most commonly used unsupervised machine learning algorithms. It works by taking a collection of data and <strong>grouping similar points into a fixed number of clusters (K)</strong> that you can specify before running the algorithm. The image shown demonstrates K-Means running on a 2D dataset with a <strong>K parameter of 5 - that is, we want the algorithm to converge and find a group of 5 clusters.</strong> The algorithm converges when the centroid locations don’t change between iterations.",
+      "image_link": "/assets/kmeans/kmeans-inprogress.gif"
+    },
+    {
+      "type": "info",
+      "title": "The K-Means Algorithm",
+      "text": "You first define a <strong>target number K, which refers to the number of centroids you want to find in the dataset.</strong> A centroid is the imaginary or real location representing the center of the cluster. The algorithm will then initialize K cluster centroids at random, and alternate between two phases: <ol><li>assigning points to the closest cluster centroids by calculating the distance between them, and</li><li>updating the K centroids to the center, or mean, of the newly assigned group of points (hence the name K-Means).</li></ol>",
+      "image_link": "/assets/kmeans/kmeans-pseudocode.png"
+    },
+    {
+      "type": "info",
+      "title": "Finding the Distance",
+      "text": "There are many different distance metrics used to assign points to their closest cluster centroids. Examples include:<ul><li><strong>Euclidean distance (shown in orange)</strong>, also known as the Pythagorean Theorem, where you take the sum of the squares of the differences between points and then take the square root.</li><li><strong>Manhattan distance (shown in green),</strong> also known as city block distance, where you sum the absolute value of the difference between points, as if you were walking to your destination around the corner of a city block.</li></ul>",
+      "image_link": "/assets/kmeans/kmeans-distance-intro.png"
+    },
+    {
+      "type": "quiz",
+      "title": "What is the Euclidean distance between the two points shown?",
+      "text": "",
+      "options": ["8", "5.83", "5", "3"],
+      "answer": "5.83",
+      "image_link": "/assets/kmeans/kmeans-quiz.png"
+    }
+  ],
   "Neural-Network": [
     {
       "type": "info",
-      "title": "Neural Network",
+      "title": "Neural Networks",
       "text": "Artificial neural networks are based on a collection of connected units or nodes called artificial neurons, which loosely model the neurons in a biological brain. Each connection, like the synapses in a biological brain, can transmit a signal to other neurons. An artificial neuron that receives a signal then processes it and can signal neurons connected to it. The 'signal' at a connection is a real number, and the output of each neuron is computed by some non-linear function of the sum of its inputs.<br><br>The structure of the most simple neural network has an input layer, an output layer, and a hidden layer.",
       "image_link": "/assets/neural-network/nn.png"
     },
