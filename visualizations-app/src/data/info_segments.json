@@ -319,6 +319,144 @@
       "answer": "True",
       "image_link": "/assets/question-mark.gif"
     }
+  ],
+
+  "Insertion-Sort": [
+    {
+      "type": "info",
+      "title": "Insertion Sort",
+      "text": "The insertion sort one of many sorting algorithms that are used to order a list or array from lowest to highest number. It does so by comparing numbers side by side and swap locations in the list if the number is less than the number that is to its left. The algorithm will do this to every number in the list until it reaches the last number and places it in its correct spot. Think of gym class where everyone was lined up from tallest to shortest. You would compare yourself to the person next to you and swap places until you reached your appropriate spot. This is what Insertion sort accomplishes. ",
+      "image_link": "/assets/sort/insertion-sort/is-line.jpg"
+    },
+    {
+      "type": "info",
+      "title": "Insertion Sort Steps",
+      "text": "Each of these steps are done to each object by iterating over the entire array:<ol><li>Compare the current object you are evaluating to its predecessor</li><li>If the predecessor is greater than the current object, swap places</li><li>Continue to evaluate and swap places with previously evaluated objects until the current object is less than or equal to a previous object or reaches the beginning of the array</li><li>Move to the next unevaluated object in the array until complete</li></ol>",
+      "image_link": "/assets/sort/insertion-sort/is-matrix.png"
+    },
+    {
+      "type": "info",
+      "title": "Insertion Sort Code",
+      "text":     "When looking at the algorithm, it uses only two loops to do the job:<ul><li>The first loop is used to iterate over the whole array and assign the current object to be checked</li><li>The second loop will swap objects if the object is not at the beginning of the array AND if the objects prior in the array are greater than the current object.</li></ul>",
+      "image_link": "/assets/sort/insertion-sort/is-code.gif"
+    },
+    {
+      "type": "info",
+      "title": "Big O",
+      "text": "Additional Useful Information for the Nerds:<br><ul><li>Best Case Time Complexity: O(n)</li><li>Worst Case Time Complexity O(n^2)</li><li>In-Place: Only requires a constant amount of memory space</li><li>When to Use: Insertion Sort works best with small lists of numbers or when the list is already somewhat sorted</li></ul>",
+      "image_link": "/assets/sort/insertion-sort/runtime.png"
+    },
+    
+    {
+      "type": "quiz",
+      "title": "When using Insertion Sort, a number can make multiple swaps until it has reached its correct spot in the ordered array",
+      "text": "",
+      "options": ["True","False"],
+      "answer": "True",
+      "image_link": "/assets/question-mark.gif"
+    },
+    {
+      "type": "quiz",
+      "title": "Best Case Time Complexity for Insertion Sort is ___, whereas Worst Case Time Complexity for Insertion Sort ___.",
+      "text": "",
+      "options": ["O(logn), O(logn)", "O(n), O(n^3)", "O(n), O(n^2)","O(logn), O(n^2) "],
+      "answer": "O(n), O(n^2)",
+      "image_link": "/assets/question-mark.gif"
+    },
+    {
+      "type": "quiz",
+      "title": "Which best describes Insertion Sort?",
+      "text": "",
+      "options": ["Most useful when the array size is large and very unordered","Memory space required is dynamic and is not constant", "Uses two loops in order to complete the job", "All of the above"],
+      "answer": "Uses two loops in order to complete the job",
+      "image_link": "/assets/question-mark.gif"
+    }
+  ],
+  "Selection-Sort": [
+    {
+      "type": "info",
+      "title": "Selection Sort",
+      "text": "Selection sort is another way to sort an array in ascending order. By searching through the array over and over, it places the minimum value of searchable objects at the first of the array minimum index, raises that value, and repeats the process again. We’ll discuss in detail what all that really means, but for now consider this example. When you play cards, it is very common to order your cards for better clarity on what you have. You scan your hand and place the lowest value card all the way to the left. Once again, you scan the remaining cards and again place the lowest value card of that set to the left only this time to the right of the lowest value card from the last card placement. Keep doing this and you have a sorted playing hand. You’ve done this simple task by using selection sort.",
+      "image_link": "/assets/sort/selection-sort/sel-sort-cards.jpeg"
+    },
+    {
+      "type": "info",
+      "title": "Selection Sort Steps",
+      "text": "<ol><li>Using a minimum index tracking variable, set it to 0.</li><li>Search the array for the smallest element</li><li>Swap the smallest element with the element that has the minimum index tracking variable</li><li>Increment the minimum tracking variable by 1</li><li>Repeat this process until the list has been sorted</li></ol>",
+      "image_link": "/assets/sort/selection-sort/sel-sort-steps.png"
+    },
+    
+    {
+      "type": "info",
+      "title": "Selection Sort Code",
+      "text": "The main functionality of selection sort relies heavily on the incrementing of the minimum index tracking variable. Each time we find the smallest value and place it at the minimum index tracking variable in the array, we want to shrink the search size by one each time so that we are not iterating over the same array size over and over. It swaps just like insertion sort, but the swap only happens once and that’s it. There’s no need to swap a value more than once because it’s already in the right spot whereas with insertion sort a number may need to swap multiple places before it reaches its final destination.",
+      "image_link": "/assets/sort/selection-sort/sel-sort-code.png"
+    },
+    {
+      "type": "info",
+      "title": "The Nitty Gritty Behind Selection Sort",
+      "text": "<ul><li>Best Case Time Complexity: O(n^2)</li><li>Worst Case Time Complexity: O(n^2)</li><li>In-Place: Only requires a constant amount of memory space</li><li>When to Use: Checking to make sure a list is already sorted. Also used when memory space is limited. This is because swapping is not done until the end which results in less temporary space usage.</li></ul>",
+      "image_link": "/assets/sort/selection-sort/link-up.jpeg"
+    },
+    
+    {
+      "type": "quiz",
+      "title": "When should Selection Sort be used?",
+      "text": "",
+      "options": ["Checking to make sure a list is already sorted.","When memory space is limited","Both", "None" ],
+      "answer": "Both",
+      "image_link": "/assets/question-mark.gif"
+    },
+    {
+      "type": "quiz",
+      "title": "Best Case Time Complexity for Selection Sort is ___, whereas Worst Case Time Complexity for Selection Sort ___.",
+      "text": "",
+      "options": ["O(logn), O(n^2)", "O(n), O(n)", "O(n^2), O(n^2)","O(logn), O(n^2) "],
+      "answer": "O(n^2), O(n^2)",
+      "image_link": "/assets/question-mark.gif"
+    },
+    {
+      "type": "quiz",
+      "title": "Selection Sort only swaps a number once whereas Insertion Sort may swap a number many times.",
+      "text": "",
+      "options": ["True","False"],
+      "answer": "True",
+      "image_link": "/assets/question-mark.gif"
+    }
+  ],
+  "Neural-Network": [
+    {
+      "type": "info",
+      "title": "Neural Network",
+      "text": "Artificial neural networks are based on a collection of connected units or nodes called artificial neurons, which loosely model the neurons in a biological brain. Each connection, like the synapses in a biological brain, can transmit a signal to other neurons. An artificial neuron that receives a signal then processes it and can signal neurons connected to it. The 'signal' at a connection is a real number, and the output of each neuron is computed by some non-linear function of the sum of its inputs.<br><br>The structure of the most simple neural network has an input layer, an output layer, and a hidden layer.",
+      "image_link": "/assets/neural-network/nn.png"
+    },
+    {
+      "type": "info",
+      "title": "Forward Propogation",
+      "text": "The firing of individual neurons can be mathematically represented as the input values (x) multiplied by the weight values (w) that correspond to each connection, and then added to a bias value (b). ",
+      "image_link": "/assets/neural-network/forward-prop.png"
+    },
+    
+    {
+      "type": "info",
+      "title": "Training a Neural Network",
+      "text": "Training a neural network can be broken down into three main stages:<ol><li>Forward propagation</li><li>Backpropagation</li><li>Parameter update </li></ol>",
+      "image_link": "/assets/neural-network/nn-train.gif"
+    },
+    {
+      "type": "info",
+      "title": "Neural Network Basis",
+      "text": "",
+      "image_link": "/assets/neural-network/nn-axons.png"
+    },
+    {
+      "type": "info",
+      "title": "Forward Prop",
+      "text": "",
+      "image_link": "/assets/neural-network/forward-prop.png"
+    }
+    
   ]
 
 }
