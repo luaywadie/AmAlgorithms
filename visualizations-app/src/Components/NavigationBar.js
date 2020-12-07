@@ -1,5 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Link, HashRouter } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  HashRouter,
+} from 'react-router-dom';
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 
 import TreeTraversals from '../Components/TreeTraversals';
@@ -9,7 +14,6 @@ import ClusteringAlgorithms from '../Components/ClusteringAlgorithms';
 import Heap from '../Components/data-structures/Heap';
 import Stack from '../Components/data-structures/Stack';
 import Queue from '../Components/data-structures/Queue';
-import LinkedList from '../Components/data-structures/LinkedList';
 import InsertionSort from '../Components/algorithms/sorts/InsertionSort';
 import SelectionSort from '../Components/algorithms/sorts/SelectionSort';
 import NeuralNets from '../Components/NeuralNets';
@@ -32,17 +36,14 @@ const NavigationBar = () => {
 
           <Nav className="ml-auto">
             <NavDropdown title="Data Structures">
-              <NavDropdown.Item eventKey="1" as={Link} to="/heap">
-                Heap
-              </NavDropdown.Item>
               <NavDropdown.Item eventKey="2" as={Link} to="/stack">
                 Stack
               </NavDropdown.Item>
               <NavDropdown.Item eventKey="3" as={Link} to="/queue">
                 Queue
               </NavDropdown.Item>
-              <NavDropdown.Item eventKey="4" as={Link} to="/linkedlist">
-                LinkedList
+              <NavDropdown.Item eventKey="1" as={Link} to="/heap">
+                Heap
               </NavDropdown.Item>
             </NavDropdown>
 
@@ -86,11 +87,7 @@ const NavigationBar = () => {
               >
                 K-Means
               </NavDropdown.Item>
-              <NavDropdown.Item
-                eventKey="4"
-                as={Link}
-                to="/neural_nets"
-              >
+              <NavDropdown.Item eventKey="4" as={Link} to="/neural_nets">
                 Neural Nets
               </NavDropdown.Item>
             </NavDropdown>
@@ -115,7 +112,6 @@ const NavigationBar = () => {
         <Route path="/heap" component={Heap} />
         <Route path="/stack" component={Stack} />
         <Route path="/queue" component={Queue} />
-        <Route path="/linkedlist" component={LinkedList} />
         <Route path="/insertion_sort" component={InsertionSort} />
         <Route path="/selection_sort" component={SelectionSort} />
         <Route path="/ClusteringAlgorithms" component={ClusteringAlgorithms} />

@@ -286,7 +286,7 @@
       "type": "info",
       "title": "Why heaps?",
       "text": "<ul><li>They are extremely efficient at extracting the min/max value and re-organizing the tree to always maintain its property.</li><li>An maximally efficient implementation of priority queue</li><ul><li>Priority Queue: a queue with a priority associated with it</li><ul><li>Fundamental data structure to many algorithms such as dijkstra  </li></ul></ul></ul>",
-      "image_link": "/assets/need-img.png"
+      "image_link": "/assets/heap/heap-remove-root.gif"
     },
     {
       "type": "info",

@@ -48,7 +48,7 @@ class DepthFirstSearch extends Component {
         currentNode: currentNode,
         activatedNode: currentNode,
         activatedLink: currentNode,
-        nodePath: nodePath,
+        nodePath: [...nodePath],
       });
 
       for (let child of this.props.g[currentNode]) {
