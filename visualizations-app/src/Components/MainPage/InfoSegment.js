@@ -34,9 +34,9 @@ class InfoSegment extends Component {
     let parsedName = className.split('|');
     let obj = document.getElementsByClassName(className)[0];
     if (parsedName[0] == 'quiz_correct-' + this.state.segment_id) {
-      obj.style.backgroundColor = 'green';
+      obj.style.backgroundColor = '#6bfb6b';
     } else {
-      obj.style.backgroundColor = 'red';
+      obj.style.backgroundColor = '#fb4f4f';
     }
   };
 
