@@ -3,7 +3,7 @@ import '../../styles/segment/InfoSegment.scss';
 import { useHistory } from 'react-router-dom';
 // Libraries
 import { Container, Row, Col, ListGroup } from 'react-bootstrap';
-import { FaArrowLeft, FaArrowRight, FaExclamation } from 'react-icons/fa';
+import { FaArrowLeft, FaArrowRight, FaExclamation, FaExternalLinkAlt } from 'react-icons/fa';
 
 class InfoSegment extends Component {
   constructor(props) {
@@ -128,12 +128,21 @@ class InfoSegment extends Component {
     return (
       <Col>
         <div className="segment-gif">
+          {/* TODO: Add source att */}
           <a
             href={process.env.PUBLIC_URL + '#/undirected_graph_algorithms'}
             target="_blank"
           >
             <i className="gif-icon">
-              <FaExclamation></FaExclamation>
+              <FaExternalLinkAlt></FaExternalLinkAlt>
+            </i>
+          </a>
+          <a
+            href={process.env.PUBLIC_URL + '#/undirected_graph_algorithms'}
+            target="_blank"
+          >
+            <i className="gif-icon2">
+              Credit Link
             </i>
           </a>
           <img
