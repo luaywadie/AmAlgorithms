@@ -172,14 +172,14 @@
       "type": "info",
       "title": "Problems that can be solved with BFS",
       "text": "<ul><li>Traverses a graph layer-wise thus exploring neighboring nodes before moving to next level</li><li>Finds shortest path to a node </li>",
-      "image_link": "/assets/need-img.png"
+      "image_link": "/assets/binary-tree/BFS-traverse.gif"
     },
 
     {
       "type": "info",
       "title": "Problems that can be solved with DFS",
       "text": "<ul><li>Results in deep trees because the algorithm starts with root node and explores as far as possible down each branch before backtracking</li><li>Fundamental concept for topological sort such as scheduling classes considering prerequisites</li<li>Suitable for game or puzzle problems to explore paths </li></ul>",
-      "image_link": "/assets/need-img.png"
+      "image_link": "/assets/binary-tree/DFS-traverse-low.gif"
     },
     
     {
