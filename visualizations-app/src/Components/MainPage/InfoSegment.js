@@ -3,7 +3,12 @@ import '../../styles/segment/InfoSegment.scss';
 import { useHistory } from 'react-router-dom';
 // Libraries
 import { Container, Row, Col, ListGroup } from 'react-bootstrap';
-import { FaArrowLeft, FaArrowRight, FaExclamation } from 'react-icons/fa';
+import {
+  FaArrowLeft,
+  FaArrowRight,
+  FaExclamation,
+  FaExternalLinkAlt,
+} from 'react-icons/fa';
 
 class InfoSegment extends Component {
   constructor(props) {
@@ -17,7 +22,9 @@ class InfoSegment extends Component {
     };
   }
 
-  componentDidMount = () => {};
+  componentDidMount = () => {
+    console.log(this.props.segment_data);
+  };
 
   componentDidUpdate = () => {
     let el = document.getElementById('segment' + this.props.segment_id);
@@ -34,9 +41,9 @@ class InfoSegment extends Component {
     let parsedName = className.split('|');
     let obj = document.getElementsByClassName(className)[0];
     if (parsedName[0] == 'quiz_correct-' + this.state.segment_id) {
-      obj.style.backgroundColor = 'green';
+      obj.style.backgroundColor = '#6bfb6b';
     } else {
-      obj.style.backgroundColor = 'red';
+      obj.style.backgroundColor = '#fb4f4f';
     }
   };
 
@@ -128,15 +135,28 @@ class InfoSegment extends Component {
     return (
       <Col>
         <div className="segment-gif">
-          <a
-          //TODO: use redirect_route in place of "#/..."
-            href={process.env.PUBLIC_URL + '#/undirected_graph_algorithms'}
-            target="_blank"
-          >
-            <i className="gif-icon">
-              <FaExclamation></FaExclamation>
-            </i>
-          </a>
+          {this.state.slides[this.state.current_id]['redirect_link'] != null &&
+              <a
+              href={
+                process.env.PUBLIC_URL + "/#/" +
+                this.state.slides[this.state.current_id]['redirect_link']
+              }
+              target="_blank"
+            >
+              <i className="gif-icon">
+                <FaExternalLinkAlt></FaExternalLinkAlt>
+              </i>
+            </a>
+          }
+          {
+            this.state.slides[this.state.current_id]['credit_link'] != null && 
+            <a
+              href={this.state.slides[this.state.current_id]['credit_link']}
+              target="_blank"
+            >
+              <i className="gif-credit-link">Credit Link</i>
+            </a>
+          }
           <img
             width="500px"
             height="500px"

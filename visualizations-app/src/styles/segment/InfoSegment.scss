@@ -23,6 +23,22 @@
   object-fit: contain;
 }
 
+.segment-gif .gif-credit-link {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background-color: #ffffff;
+  color: #7684fb;
+  font-size: 20px;
+  text-align: center;
+  padding: 5px 15px;
+  border-radius: 50px;
+  border: 2px solid #8377f8;
+  cursor: pointer;
+  z-index: 10;
+  transition: 1s;
+}
+
 .segment-gif .gif-icon {
   position: absolute;
   bottom: 20px;
@@ -41,6 +57,13 @@
 }
 
 .segment-gif .gif-icon:hover {
+  transform: translateY(-5px);
+  border-color: #7684fb;
+  transition: 0.2s;
+  border-radius: 10px;
+}
+
+.segment-gif .gif-credit-link:hover {
   transform: translateY(-5px);
   border-color: #7684fb;
   transition: 0.2s;
@@ -86,6 +109,7 @@
 .segment-text .quiz_options {
   width: 70%;
   margin-top: 15px;
+  animation: none !important;
   font-family: 'Lato';
   font-weight: 400;
 }
@@ -100,9 +124,11 @@
   box-shadow: 0px 0px 5px 0px #bbb;
 }
 
+/*
 .segment-nav .graph-button {
-  //padding: 5px 50px 10px;
+  padding: 5px 50px 10px;
 }
+*/
 
 .segment-nav .nav-icons {
   align-self: center;
@@ -111,8 +137,6 @@
 .fade-transition {
   animation: fade 1s forwards ease-in-out;
 }
-
-
 
 .highlight {
   background-color: yellow;

@@ -4,37 +4,51 @@
       "type": "info",
       "title": "Why Algorithms?",
       "text": "What is an Algorithm?<ul><br/> <li> An algorithm is a set of instructions designed to perform a specific task.</li><br/> <li> A step-by-step solution, like a recipe </li> </ul>",
-      "image_link": "/assets/why-algorithms/why-alg-1.gif"
+      "image_link": "/assets/why-algorithms/why-alg-1.gif",
+      "credit_link": "https://www.thisiscolossal.com/tags/gifs/page/2/",
+      "redirect_link": null
     },
     {
       "type": "info",
       "title": "Why Algorithms?",
       "text": "How are computers better than humans?<ul><br/><li>Better memories</li><br/><li>Significantly faster and more accurate at executing tasks</li><br/><li>Not influenced by human factors such as emotion, exhaustion, etc</li></ul>",
-      "image_link": "/assets/why-algorithms/Human-Computer.jpg"
+      "image_link": "/assets/why-algorithms/Human-Computer.jpg",
+      "credit_link": "https://wonderfulengineering.com/man-vs-machine-wins/",
+      "redirect_link": null
     },
     {
       "type": "info",
       "title": "Why Algorithms?",
       "text": "Why Learn About Algorithms?<ul><br/><li>Algorithms make it possible to solve everyday tasks such as</li><ul><li>Booking a flight</li><li>Adding a mutual friend on Facebook</li><li>Finding the fastest route to a new destination</li><li>Getting new movie recommendations based on what you’ve watched</li></ul><br><li>They are the future!</li></ul>",
-      "image_link": "/assets/why-algorithms/types-of-algorithm.png"
+      "image_link": "/assets/why-algorithms/types-of-algorithm.png",
+      "credit_link": "https://www.educba.com/types-of-algorithms/",
+      "redirect_link": null
     },
+    
     {
       "type": "info",
       "title": "Why Algorithms?",
-      "text": "How do we harness the powers of  computers?<ul><li>By writing algorithms!</li><li>Computers are very effective at solving well defined problems.</li><ul><li>It is up to the programmer to implement the step-by-step solution to solve some problem.</li> <li>Once the solution is written and is correct, the computer will have no issues executing that exact algorithm for its entire lifetime</li></ul></ul>",
-      "image_link": "/assets/why-algorithms/harness-computers.gif"
+      "text":     "How do we harness the powers of  computers?<ul><li>By writing algorithms!</li><li>Computers are very effective at solving well defined problems.</li><ul><li>It is up to the programmer to implement the step-by-step solution to solve some problem.</li> <li>Once the solution is written and is correct, the computer will have no issues executing that exact algorithm for its entire lifetime</li></ul></ul>",
+      "image_link": "/assets/why-algorithms/harness-computers.gif",
+      "credit_link": "https://www.thisiscolossal.com/tags/gifs/page/2/",
+      "redirect_link": null
     },
+    
     {
       "type": "info",
       "title": "Why Algorithms?",
       "text":"Algorithms form the basis of some of the most important aspects of daily life. From powering GPS navigation apps, search engines, computer operating systems, social media news feeds, internet routing networks, recommendation systems, self-driving cars, and more - algorithms are all around us!<br><br>We believe that basic knowledge of data structures and algorithms provide the fundamental foundation for facilitating critical problem-solving skills and computational thinking.",
-      "image_link": "/assets/why-algorithms/dijkstra.gif"
+      "image_link": "/assets/why-algorithms/dijkstra.gif",
+      "credit_link": null,
+      "redirect_link": "undirected_graph_algorithms"
     },
     {
       "type": "info",
       "title": "Why Algorithms?",
       "text":"Want to learn about fundamental algorithms?<br/><br/> <b>↓ EMBARK ON THE LEARNER QUEST ↓</b> <br><br>",
-      "image_link": "/assets/why-algorithms/learning-more.gif"
+      "image_link": "/assets/why-algorithms/learning-more.gif",
+      "credit_link": "https://www.thisiscolossal.com/tags/gifs/page/2/",
+      "redirect_link": null
     }
   ],
   "Stack": [
