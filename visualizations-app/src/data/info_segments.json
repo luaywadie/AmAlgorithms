@@ -21,7 +21,7 @@
     {
       "type": "info",
       "title": "Why Algorithms?",
-      "text":     "How do we harness the powers of  computers?<ul><li>By writing algorithms!</li><li>Computers are very effective at solving well defined problems.</li><ul><li>It is up to the programmer to implement the step-by-step solution to solve some problem.</li> <li>Once the solution is written and is correct, the computer will have no issues executing that exact algorithm for its entire lifetime</li></ul></ul>",
+      "text": "How do we harness the powers of  computers?<ul><li>By writing algorithms!</li><li>Computers are very effective at solving well defined problems.</li><ul><li>It is up to the programmer to implement the step-by-step solution to solve some problem.</li> <li>Once the solution is written and is correct, the computer will have no issues executing that exact algorithm for its entire lifetime</li></ul></ul>",
       "image_link": "/assets/why-algorithms/harness-computers.gif"
     },
     {
@@ -33,7 +33,7 @@
     {
       "type": "info",
       "title": "Why Algorithms?",
-      "text":"Interested in learning more?<br><br>*** EMBARK ON THE LEARNER QUEST ***<br><br><span style='margin-left: 150px'></span>SCROLL DOWN!",
+      "text":"Want to learn about fundamental algorithms?<br/><br/> <b>↓ EMBARK ON THE LEARNER QUEST ↓</b> <br><br>",
       "image_link": "/assets/why-algorithms/learning-more.gif"
     }
   ],
@@ -41,44 +41,44 @@
     {
       "type": "info",
       "title": "Stack",
-      "text": "A stack is a data structure often used throughout many algorithms in computer science. A stack is exactly just that: a stack of objects just like we see in everyday life. It is like an array in that you put many objects into an array for later use. How these elements are stored and accessed, however, is what makes a stack different from an array and other collection types. Let’s take a look at some of the key characteristics...",
+      "text": "A stack is an abstract data structure often used throughout many algorithms in computer science. A stack is exactly just that: a stack of objects like we see in everyday life. Like a stack of plates on a table, you can only take off the top object (<i>pop</i>), or place a new object on top (<i>push</i>).  Let’s take a look at some of the key characteristics...",
       "image_link": "/assets/stack/book-stack.png"
     },
     {
       "type": "info",
       "title": "Characteristics of a Stack",
-      "text": "<ul><li>An array of fixed size</li><li>Last-In-First-Out (LIFO). Whichever element is put in first, it must until all other elements infront have been removed before it can be removed</li><li>Push(item) will add an element to the front of the stack</li><li>Pop() will remove the top element from the stack</li></ul>",
+      "text": "<ul><li><b>Last In, First Out</b> (<b>LIFO</b>): The last object added to the stack will be on top of the rest, and therefore will be taken off the stack first.</li><li><b>Push</b>(<i>object</i>) adds an object on top of the stack</li><li><b>Pop</b>() will remove the top element from the stack</li></ul>",
       "image_link": "/assets/need-img.png"
     },
     {
       "type": "info",
       "title": "More on Stacks",
-      "text":"<br>There are some very useful features of stacks that are able to make certain problems much easier to solve. That being said, let’s consider some things when using stacks:<ul><li>Removing an element from the middle of a stack is not possible</li><li>Adding too many objects (stack overflow) or removing objects that are not present (stack underflow) will break your code.</li><li>Avoid implementing your own stack class. Instead, import from the necessary library. It will save you time and unnecessary confusion</li></ul>",
+      "text":"There are some very useful features of stacks that are able to make certain problems much easier to solve. That being said, let’s consider some things when using stacks:<ul><li>Removing an element from the middle of a stack is not possible</li><li>Adding too many objects (stack overflow) or removing objects that are not present (stack underflow) will break your code.</li><li>Avoid implementing your own stack class. Instead, import from the necessary library. It will save you time and unnecessary confusion</li></ul>",
       "image_link": "/assets/stack/stack-pop.png"
     },
 
     {
       "type": "quiz",
-      "title": "Stack?",
-      "text": "A stack can be best described as __ data structure:",
-      "options": ["Last-In-First-Out", "Last-Out-First-In", "Push-Out-Pop-In", "Pull-In-Push-Out"],
-      "answer": "Last-In-First-Out",
+      "title": "Question #1",
+      "text": "A stack can be best described as a ____ data structure.",
+      "options": ["Push Out, Pop In", "First In, First Out", "Pull In, Push Out", "Last In, First Out"],
+      "answer": "Last In, First Out",
       "image_link": "/assets/question-mark.gif"
     },
     {
       "type": "quiz",
-      "title": "Stack?",
-      "text": "If you wanted to add an item to the stack, you would use:",
-      "options": ["pop()", "push(item)", "add(item)", "append(item)"],
-      "answer": "push(item)",
+      "title": "Question #2",
+      "text": "If you wanted to add an object to the stack, you would use this operation",
+      "options": ["pop()", "push(object)", "add(object)", "append(object)"],
+      "answer": "push(object)",
       "image_link": "/assets/question-mark.gif"
     },
     {
       "type": "quiz",
-      "title": "Stack?",
-      "text": "If too many items are pushed into the stack, this results in a:",
-      "options": ["stack-overflow", "stack-underflow", "stack-influx", "stack-error"],
-      "answer": "stack-overflow",
+      "title": "Question #3",
+      "text": "If too many items are pushed into the stack, this results in a",
+      "options": ["stack error", "stack underflow", "stack overflow", "stack influx" ],
+      "answer": "stack overflow",
       "image_link": "/assets/question-mark.gif"
     }
   ],
@@ -104,24 +104,24 @@
 
     {
       "type": "quiz",
-      "title": "Queue?",
-      "text": "A queue can be best described as __ data structure:",
+      "title": "Question #1",
+      "text": "A queue can be best described as __ data structure.",
       "options": ["First-In-First-Out", "First-In-Last-Out", "Push-Out-Pop-In", "Pull-In-Push-Out"],
       "answer": "First-In-First-Out",
       "image_link": "/assets/question-mark.gif"
     },
     {
       "type": "quiz",
-      "title": "Queue?",
-      "text": "If you wanted to add an item to the queue, you would use:",
+      "title": "Question #2",
+      "text": "If you wanted to add an item to the queue, you would use",
       "options": ["pop()", "push(item)", "enqueue(item)", "dequeue(item)"],
       "answer": "enqueue(item)",
       "image_link": "/assets/question-mark.gif"
     },
     {
       "type": "quiz",
-      "title": "Queue?",
-      "text": "I can remove as many objects as I want from the queue with no consequences:",
+      "title": "Question #3",
+      "text": "I can remove as many objects as I want from the queue with no consequences.",
       "options": ["True", "False"],
       "answer": "False",
       "image_link": "/assets/question-mark.gif"
@@ -170,24 +170,24 @@
     
     {
       "type": "quiz",
-      "title": "Which of the following is false about binary trees?",
-      "text": "",
+      "title": "Question #1",
+      "text": "Which of the following is false about binary trees?",
       "options": ["A child can also be a parent, in another context", "Can have multiple roots", "Recursive", "Fundamental data structure in CS"],
       "answer": "Can have multiple roots",
       "image_link": "/assets/question-mark.gif"
     },
     {
       "type": "quiz",
-      "title": "BFS is used in all of the algorithms except ",
-      "text": "",
+      "title": "Question #2",
+      "text": "BFS is used in all of the algorithms except",
       "options": ["Dijkstra’s shortest path, in another context", "Prim’s minimum spanning tree", "Artificial Neural Network", "Search Engine Crawlers"],
       "answer": "Artificial Neural Network",
       "image_link": "/assets/question-mark.gif"
     },
     {
       "type": "quiz",
-      "title": "DFS is not used to ",
-      "text": "",
+      "title": "Question #3",
+      "text": "DFS is not used to",
       "options": ["Find the shortest path, in another context", "Check for cycles in a graph", "Topological sort", "Determine if 2 nodes are connected"],
       "answer": "Find the shortest path",
       "image_link": "/assets/question-mark.gif"
@@ -198,63 +198,83 @@
     {
       "type": "info",
       "title": "Graph",
-      "text": "<ul><li>A graph consists of a finite set of nodes and set of edges which connect a pair of nodes</li><li>Graphs are used to solve many real-life problems by representing networks</li></ul>",
-      "image_link": "/assets/graph/dij-road.png"
+      "text": "<ul><li>A graph consists of a finite set of nodes and a finite set of edges which connect those nodes.</li><li>Graphs are used to solve many real-life problems by representing networks of just about anything!</li></ul>",
+      "image_link": "/assets/graph/dij-road.png",
+      "redirect_route": "#/undirected_graph_algorithms", 
+      "credit_link": "https://www.quora.com/Does-Google-Maps-use-Dijkstras-algorithm-If-so-can-you-explain-how-they-discretize-the-world"
     },
     {
       "type": "info",
       "title": "Elements of a Graph",
-      "text": "<ul><li>Nodes: fundamental units of which graphs are formed</li><ul><li>Also called vertices</li></ul><li>Edges: links or arcs which connect any two nodes in a graph</li></ul>",
-      "image_link": "/assets/graph/graph-elements.png"
+      "text": "<ul><li><b>Nodes</b>: the fundamental units, also called <i>vertices</i><ul><li>Each node can simply be identified by a number of letter</li><li>Nodes can also contain objects with many fields</li></ul><li><b>Edges</b>: links which connect any two nodes in a graph</li></ul>",
+      "image_link": "/assets/graph/graph-elements.png",
+      "redirect_route": "#/undirected_graph_algorithms",
+      "credit_link": "https://www.geeksforgeeks.org/applications-of-graph-data-structure/"
     },
     {
       "type": "info",
       "title": "Types of Graphs",
-      "text": "<ul><li>Directed Graphs</li><ul><li>Edges have a direction</li><li>Uni-directional flow</li></ul><li>Undirected Graphs</li><ul><li>Edges do not have a direction</li><li>Bi-directional flow</li></ul></ul>",
-      "image_link": "/assets/graph/dir-undir-graph.jpg"
+      "text": "<ul><li>Directed Graphs</li><ul><li>Each edge has a direction associated with it, represented by an <i>arrow</i></li><li>Can only move from one node to another if there is an arrow pointing from the source node to the target node</li></ul><li>Undirected Graphs</li><ul><li>Every edge has a double-sided arrow (↔), but the arrow heads are not shown</li><li>Can move from any node to any other node as long as they are connected by an edge</li></ul></ul>",
+      "image_link": "/assets/graph/dir-undir-graph.png",
+      "redirect_route": "#/directed_graph_algorithms",
+      "credit_link": "https://towardsdatascience.com/graph-theory-basic-properties-955fe2f61914"
     },
     {
       "type": "info",
-      "title": "Undirected Graph",
-      "text": "<ul><li>Represents networks without direction such as</li><ul><li>Typical city grid (excluding one-ways)</li><li>Friendship network on facebook</li><li>Wired connections between a circuit</li></ul></ul>",
-      "image_link": "/assets/graph/fb-graph.png"
+      "title": "Weighted Graphs",
+      "text": "In weighted graphs, each edge has a numerical <i>weight</i> associated with it (typically positive integers). An edge’s weight is the cost of moving along that edge. <br/>Edge weights can represent physical distance, travel time, or energy required. <br/>Unweighted graphs can be thought of as a special case of weighted graphs in which all the weights are zero.",
+      "image_link": "/assets/graph/weighted-graph-flights.gif",
+      "redirect_route": "#/undirected_graph_algorithms",
+      "credit_link": "http://jcsites.juniata.edu/faculty/rhodes/cs2java/graphs.htm"
+
+    },
+    {
+      "type": "info",
+      "title": "What Can Be Represented By Graphs?",
+      "text": "<ul><li>Undirected graphs</li><ul><li>Street map (excluding one-ways)</li><li>Friendship network on Facebook</li><li>Wired connections between a circuit</li><li>Biological molecules like proteins and DNA</li></ul><li>Directed graphs</li><ul><li>The World Wide Web, where every hyperlink is an arrow from the current page to another page</li><li>Follower-based social media like Twitter and Facebook</li><li>Airline flights</li><li>Scheduling tasks</li></ul></ul>",
+      "image_link": "/assets/graph/fb-graph.png",
+      "redirect_route": "#/undirected_graph_algorithms",
+      "credit_link": "https://medium.com/@verdi/working-with-graphs-f5cfc912e8bc"
     },
 
     {
       "type": "info",
-      "title": "Problems that can be solved with Undirected Graphs:",
-      "text": "<ul><li>Shortest Path between two nodes</li><ul><li>Formally known as Dijkstra’s shortest path</li></ul><li>Minimum spanning tree to connect all nodes with minimal cost</li><ul><li>Formally known as Prim's Minimum Spanning Tree</li></ul><li>Real world Examples:</li><ul><li>Minimal amount of driving to visit all desired cities in a country.</li><li>Minimal wires needed to connect a circuit</li></ul></ul>",
-      "image_link": "/assets/graph/map-graph.png"
+      "title": "Undirected Weighted Graph Problems",
+      "text": "<ul><li>Finding the shortest paths from one node to every other node</li><ul><li>Solution: <b>Dijkstra’s Shortest Path First</b> algorithm</li><li>Application: Mapping app that finds the fastest route to a destination</li></ul><li>Connecting all nodes with the smallest possible total edge weight, generating a <i>minimum spanning tree</i></li><ul><li>Solution: Prim's algorithm</li></ul><li>Application: a telecom company finding the least amount of cable needed to connect all houses</li></ul></ul>",
+      "image_link": "/assets/graph/map-graph.png",
+      "redirect_route": "#/undirected_graph_algorithms",
+      "credit_link": "https://medium.com/@verdi/working-with-graphs-f5cfc912e8bc"
     },
 
     {
       "type": "info",
-      "title": "Problems that can be solved with Directed Graphs:",
-      "text": "<ul><li>Scheduling courses to complete a degree</li><ul><li>Topological Sort</li></ul><li>Traveling through flowing rivers to reach a destination</li></ul>",
-      "image_link": "/assets/graph/sched-digraph.png"
+      "title": "Directed Graph Problems",
+      "text": "Finding a linear sequence of all the nodes in a directed graph.<ul><li>Solution: Topological sort</li><li>Applications</li><ul><li>Determining a schedule of classes to complete a degree</li><li>Ordering the tasks in a project management flowchart</li><li>Operating systems task scheduling</li></ul></ul>",
+      "image_link": "/assets/graph/sched-digraph.png",
+      "redirect_route": "#/directed_graph_algorithms",
+      "credit_link": ""
     },
 
-    
     {
       "type": "quiz",
-      "title": "Which is an example of an undirected graph?",
-      "text": "",
-      "options": ["Web  (as hyperlinks)", "Followers on Instagram", "Network of flowing rivers", "Road Network"],
+      "title": "Question #1",
+      "text": "Which is an example of an undirected graph?",
+      "options": ["The World Wide Web", "Followers on Instagram", "Network of flowing rivers", "Road network"],
       "answer": "Road Network",
       "image_link": "/assets/question-mark.gif"
     },
     {
       "type": "quiz",
-      "title": "Which is an example of a directed graph?",
-      "text": "",
-      "options": ["Facebook Friend Network", "Building a house", "Road Network", "Airport Network"],
+      "title": "Question #2",
+      "text": "Which is an example of a directed graph?",
+      "options": ["Facebook friend network", "Building a house", "Road network", "Airport network"],
       "answer": "Building a house",
       "image_link": "/assets/question-mark.gif"
     },
     {
       "type": "quiz",
-      "title": "There are many applications of dijkstra such as distance between locations, IP Routing, and telephone network.",
-      "text": "",
+      "title": "Question #3",
+      "text": "There are many applications of Dijkstra's algorithm such as distance between locations, IP Routing, and telephone networks.",
       "options": ["True","False"],
       "answer": "True",
       "image_link": "/assets/question-mark.gif"
@@ -262,9 +282,9 @@
     ,
     {
       "type": "quiz",
-      "title": "Topological Sort could be used for",
-      "text": "",
-      "options": ["Dependency Resolution", "Scheduling Classes", "Daily routine", "All of the Above"],
+      "title": "",
+      "text": "Topological Sort can be used for",
+      "options": ["Dependency resolution", "Scheduling classes", "Daily routine", "All of the above"],
       "answer": "All of the Above",
       "image_link": "/assets/question-mark.gif"
     }
@@ -297,24 +317,24 @@
     
     {
       "type": "quiz",
-      "title": "A heap is a special binary tree that can be used to:",
-      "text": "",
+      "title": "Question #1",
+      "text": "A heap is a special binary tree that can be used to",
       "options": ["Sort a list", "Act as a priority queue", "Quickly find largest/smallest element from a collection", "All of the above"],
       "answer": "All of the above",
       "image_link": "/assets/question-mark.gif"
     },
     {
       "type": "quiz",
-      "title": "In a Min-heap, the root node is the max",
-      "text": "",
+      "title": "Question #2",
+      "text": "In a min-heap, the root node is the largest number.",
       "options": ["True", "False"],
       "answer": "False",
       "image_link": "/assets/question-mark.gif"
     },
     {
       "type": "quiz",
-      "title": "A Heap could be used by the operating system’s CPU scheduler to select the next process to execute.",
-      "text": "",
+      "title": "Question #3",
+      "text": "A heap could be used by the operating system’s CPU scheduler to select the next process to execute.",
       "options": ["True","False"],
       "answer": "True",
       "image_link": "/assets/question-mark.gif"
@@ -337,7 +357,7 @@
     {
       "type": "info",
       "title": "Insertion Sort Code",
-      "text":     "When looking at the algorithm, it uses only two loops to do the job:<ul><li>The first loop is used to iterate over the whole array and assign the current object to be checked</li><li>The second loop will swap objects if the object is not at the beginning of the array AND if the objects prior in the array are greater than the current object.</li></ul>",
+      "text": "When looking at the algorithm, it uses only two loops to do the job:<ul><li>The first loop is used to iterate over the whole array and assign the current object to be checked</li><li>The second loop will swap objects if the object is not at the beginning of the array AND if the objects prior in the array are greater than the current object.</li></ul>",
       "image_link": "/assets/sort/insertion-sort/is-code.gif"
     },
     {
@@ -349,24 +369,24 @@
     
     {
       "type": "quiz",
-      "title": "When using Insertion Sort, a number can make multiple swaps until it has reached its correct spot in the ordered array",
-      "text": "",
+      "title": "Question #1",
+      "text": "When using insertion sort, a number can make multiple swaps until it has reached its correct spot in the ordered array",
       "options": ["True","False"],
       "answer": "True",
       "image_link": "/assets/question-mark.gif"
     },
     {
       "type": "quiz",
-      "title": "Best Case Time Complexity for Insertion Sort is ___, whereas Worst Case Time Complexity for Insertion Sort ___.",
-      "text": "",
+      "title": "Question #2",
+      "text": "Best-case time complexity for insertion sort is ____, whereas worst-case time complexity for insertion sort is ____.",
       "options": ["O(logn), O(logn)", "O(n), O(n^3)", "O(n), O(n^2)","O(logn), O(n^2) "],
       "answer": "O(n), O(n^2)",
       "image_link": "/assets/question-mark.gif"
     },
     {
       "type": "quiz",
-      "title": "Which best describes Insertion Sort?",
-      "text": "",
+      "title": "Question #3",
+      "text": "Which best describes Insertion Sort?",
       "options": ["Most useful when the array size is large and very unordered","Memory space required is dynamic and is not constant", "Uses two loops in order to complete the job", "All of the above"],
       "answer": "Uses two loops in order to complete the job",
       "image_link": "/assets/question-mark.gif"
@@ -401,24 +421,24 @@
     
     {
       "type": "quiz",
-      "title": "When should Selection Sort be used?",
-      "text": "",
+      "title": "Question #1",
+      "text": "When should selection sort be used?",
       "options": ["Checking to make sure a list is already sorted.","When memory space is limited","Both", "None" ],
       "answer": "Both",
       "image_link": "/assets/question-mark.gif"
     },
     {
       "type": "quiz",
-      "title": "Best Case Time Complexity for Selection Sort is ___, whereas Worst Case Time Complexity for Selection Sort ___.",
-      "text": "",
+      "title": "Question #2",
+      "text": "Best-case time complexity for selection sort is ____, whereas worst-case time complexity for selection sort is ____.",
       "options": ["O(logn), O(n^2)", "O(n), O(n)", "O(n^2), O(n^2)","O(logn), O(n^2) "],
       "answer": "O(n^2), O(n^2)",
       "image_link": "/assets/question-mark.gif"
     },
     {
       "type": "quiz",
-      "title": "Selection Sort only swaps a number once whereas Insertion Sort may swap a number many times.",
-      "text": "",
+      "title": "Question #3",
+      "text": "Selection sort only swaps a number once whereas insertion sort may swap a number many times.",
       "options": ["True","False"],
       "answer": "True",
       "image_link": "/assets/question-mark.gif"
@@ -452,8 +472,8 @@
     },
     {
       "type": "quiz",
-      "title": "What is the Euclidean distance between the two points shown?",
-      "text": "",
+      "title": "Question #1",
+      "text": "What is the Euclidean distance between the two points shown?",
       "options": ["8", "5.83", "5", "3"],
       "answer": "5.83",
       "image_link": "/assets/kmeans/kmeans-quiz.png"

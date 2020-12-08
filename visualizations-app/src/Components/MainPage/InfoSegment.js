@@ -129,6 +129,7 @@ class InfoSegment extends Component {
       <Col>
         <div className="segment-gif">
           <a
+          //TODO: use redirect_route in place of "#/..."
             href={process.env.PUBLIC_URL + '#/undirected_graph_algorithms'}
             target="_blank"
           >

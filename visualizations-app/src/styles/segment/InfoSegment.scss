@@ -4,8 +4,10 @@
 }
 
 .segment-gif {
-  display: table;
+  //display: flex;
   position: relative;
+  //justify-content: center;
+  //align-items: center;
   width: 500px;
   height: 500px;
   background-color: white;
@@ -18,6 +20,7 @@
 .segment-gif img {
   position: absolute;
   pointer-events: none;
+  object-fit: contain;
 }
 
 .segment-gif .gif-icon {
@@ -71,6 +74,20 @@
 .segment-text h1 {
   color: #444;
   margin-bottom: 20px;
+  font-family: quickSand_medium;
+}
+
+.segment-text h4 {
+  font-size: 22px;
+  font-family: 'Lato';
+  font-weight: 400;
+}
+
+.segment-text .quiz_options {
+  width: 70%;
+  margin-top: 15px;
+  font-family: 'Lato';
+  font-weight: 400;
 }
 
 .nav-icons i {
@@ -84,7 +101,7 @@
 }
 
 .segment-nav .graph-button {
-  padding: 5px 50px 10px;
+  //padding: 5px 50px 10px;
 }
 
 .segment-nav .nav-icons {
@@ -95,10 +112,7 @@
   animation: fade 1s forwards ease-in-out;
 }
 
-.quiz_options {
-  width: 70%;
-  margin-top: 15px;
-}
+
 
 .highlight {
   background-color: yellow;
