@@ -135,10 +135,12 @@ class InfoSegment extends Component {
     return (
       <Col>
         <div className="segment-gif">
-          {this.state.slides[this.state.current_id]['redirect_link'] != null &&
-              <a
+          {this.state.slides[this.state.current_id]['redirect_link'] !=
+            null && (
+            <a
               href={
-                process.env.PUBLIC_URL + "/#/" +
+                process.env.PUBLIC_URL +
+                '/#/' +
                 this.state.slides[this.state.current_id]['redirect_link']
               }
               target="_blank"
@@ -147,16 +149,15 @@ class InfoSegment extends Component {
                 <FaExternalLinkAlt></FaExternalLinkAlt>
               </i>
             </a>
-          }
-          {
-            this.state.slides[this.state.current_id]['credit_link'] != null && 
+          )}
+          {this.state.slides[this.state.current_id]['credit_link'] != null && (
             <a
               href={this.state.slides[this.state.current_id]['credit_link']}
               target="_blank"
             >
               <i className="gif-credit-link">Credit Link</i>
             </a>
-          }
+          )}
           <img
             width="500px"
             height="500px"
