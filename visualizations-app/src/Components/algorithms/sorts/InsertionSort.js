@@ -20,7 +20,8 @@ class InsertionSort extends Component {
       speedChanged: false,
       paused: true,
       swapping: false,
-      interval: null
+      interval: null,
+      sorted: false
     };
   }
   componentDidMount() {
@@ -140,12 +141,15 @@ class InsertionSort extends Component {
       this.state.animation_queue.push([0, 0, false, 6])
     }
     this.state.animation_queue.push([0, 0, false, 7])
+    this.setState({sorted: true})
     return arr;
   };
 
   startInterval = () => {
     // Sort
-    this.insertionSort(this.state.data)
+    if (!this.state.sorted) {
+      this.insertionSort(this.state.data)
+    }
     this.setState({speed: (1000 - ((this.state.speedFactor * 1000) - 1000))})
     this.setState({interval: this.intervalEngine()})
   }
@@ -158,6 +162,7 @@ class InsertionSort extends Component {
 
   endInterval = () => {
     clearInterval(this.state.interval);
+    this.setState({sorted: false})
     this.setState({paused: true})
   }
 
