@@ -56,19 +56,25 @@
       "type": "info",
       "title": "Stack",
       "text": "A stack is an abstract data structure often used throughout many algorithms in computer science. A stack is exactly just that: a stack of objects like we see in everyday life. Like a stack of plates on a table, you can only take off the top object (<i>pop</i>), or place a new object on top (<i>push</i>).  Let’s take a look at some of the key characteristics...",
-      "image_link": "/assets/stack/book-stack.png"
+      "image_link": "/assets/stack/stack-of-plates.png",
+      "credit_link": "https://www.programiz.com/dsa/stack",
+      "redirect_link": "stack"
     },
     {
       "type": "info",
       "title": "Characteristics of a Stack",
       "text": "<ul><li><b>Last In, First Out</b> (<b>LIFO</b>): The last object added to the stack will be on top of the rest, and therefore will be taken off the stack first.</li><li><b>Push</b>(<i>object</i>) adds an object on top of the stack</li><li><b>Pop</b>() will remove the top element from the stack</li></ul>",
-      "image_link": "/assets/need-img.png"
+      "image_link": "/assets/stack/push-pop.png",
+      "credit_link": "https://www.programiz.com/dsa/stack",
+      "redirect_link": "stack"
     },
     {
       "type": "info",
       "title": "More on Stacks",
       "text":"There are some very useful features of stacks that are able to make certain problems much easier to solve. That being said, let’s consider some things when using stacks:<ul><li>Removing an element from the middle of a stack is not possible</li><li>Adding too many objects (stack overflow) or removing objects that are not present (stack underflow) will break your code.</li><li>Avoid implementing your own stack class. Instead, import from the necessary library. It will save you time and unnecessary confusion</li></ul>",
-      "image_link": "/assets/stack/stack-pop.png"
+      "image_link": "/assets/stack/stack-animation.gif",
+      "credit-link": null,
+      "redirect_link": "stack"
     },
 
     {
@@ -77,7 +83,8 @@
       "text": "A stack can be best described as a ____ data structure.",
       "options": ["Push Out, Pop In", "First In, First Out", "Pull In, Push Out", "Last In, First Out"],
       "answer": "Last In, First Out",
-      "image_link": "/assets/question-mark.gif"
+      "image_link": "/assets/neon-question-mark.jpg",
+      "redirect_link": "stack"
     },
     {
       "type": "quiz",
@@ -85,7 +92,8 @@
       "text": "If you wanted to add an object to the stack, you would use this operation",
       "options": ["pop()", "push(object)", "add(object)", "append(object)"],
       "answer": "push(object)",
-      "image_link": "/assets/question-mark.gif"
+      "image_link": "/assets/neon-question-mark.jpg",
+      "redirect_link": "stack"
     },
     {
       "type": "quiz",
@@ -93,7 +101,8 @@
       "text": "If too many items are pushed into the stack, this results in a",
       "options": ["stack error", "stack underflow", "stack overflow", "stack influx" ],
       "answer": "stack overflow",
-      "image_link": "/assets/question-mark.gif"
+      "image_link": "/assets/neon-question-mark.jpg",
+      "redirect_link": "stack"
     }
   ],
   "Queue": [
@@ -122,7 +131,7 @@
       "text": "A queue can be best described as __ data structure.",
       "options": ["First-In-First-Out", "First-In-Last-Out", "Push-Out-Pop-In", "Pull-In-Push-Out"],
       "answer": "First-In-First-Out",
-      "image_link": "/assets/question-mark.gif"
+      "image_link": "/assets/neon-question-mark.jpg"
     },
     {
       "type": "quiz",
@@ -130,7 +139,7 @@
       "text": "If you wanted to add an item to the queue, you would use",
       "options": ["pop()", "push(item)", "enqueue(item)", "dequeue(item)"],
       "answer": "enqueue(item)",
-      "image_link": "/assets/question-mark.gif"
+      "image_link": "/assets/neon-question-mark.jpg"
     },
     {
       "type": "quiz",
@@ -138,7 +147,7 @@
       "text": "I can remove as many objects as I want from the queue with no consequences.",
       "options": ["True", "False"],
       "answer": "False",
-      "image_link": "/assets/question-mark.gif"
+      "image_link": "/assets/neon-question-mark.jpg"
     }
   ],
 
@@ -188,7 +197,7 @@
       "text": "Which of the following is false about binary trees?",
       "options": ["A child can also be a parent, in another context", "Can have multiple roots", "Recursive", "Fundamental data structure in CS"],
       "answer": "Can have multiple roots",
-      "image_link": "/assets/question-mark.gif"
+      "image_link": "/assets/neon-question-mark.jpg"
     },
     {
       "type": "quiz",
@@ -196,7 +205,7 @@
       "text": "BFS is used in all of the algorithms except",
       "options": ["Dijkstra’s shortest path, in another context", "Prim’s minimum spanning tree", "Artificial Neural Network", "Search Engine Crawlers"],
       "answer": "Artificial Neural Network",
-      "image_link": "/assets/question-mark.gif"
+      "image_link": "/assets/neon-question-mark.jpg"
     },
     {
       "type": "quiz",
@@ -204,7 +213,7 @@
       "text": "DFS is not used to",
       "options": ["Find the shortest path, in another context", "Check for cycles in a graph", "Topological sort", "Determine if 2 nodes are connected"],
       "answer": "Find the shortest path",
-      "image_link": "/assets/question-mark.gif"
+      "image_link": "/assets/neon-question-mark.jpg"
     }
   ],
 
@@ -266,7 +275,7 @@
       "text": "Finding a linear sequence of all the nodes in a directed graph.<ul><li>Solution: Topological sort</li><li>Applications</li><ul><li>Determining a schedule of classes to complete a degree</li><li>Ordering the tasks in a project management flowchart</li><li>Operating systems task scheduling</li></ul></ul>",
       "image_link": "/assets/graph/sched-digraph.png",
       "redirect_route": "#/directed_graph_algorithms",
-      "credit_link": ""
+      "credit_link": null
     },
 
     {
@@ -275,7 +284,7 @@
       "text": "Which is an example of an undirected graph?",
       "options": ["The World Wide Web", "Followers on Instagram", "Network of flowing rivers", "Road network"],
       "answer": "Road Network",
-      "image_link": "/assets/question-mark.gif"
+      "image_link": "/assets/neon-question-mark.jpg"
     },
     {
       "type": "quiz",
@@ -283,7 +292,7 @@
       "text": "Which is an example of a directed graph?",
       "options": ["Facebook friend network", "Building a house", "Road network", "Airport network"],
       "answer": "Building a house",
-      "image_link": "/assets/question-mark.gif"
+      "image_link": "/assets/neon-question-mark.jpg"
     },
     {
       "type": "quiz",
@@ -291,7 +300,7 @@
       "text": "There are many applications of Dijkstra's algorithm such as distance between locations, IP Routing, and telephone networks.",
       "options": ["True","False"],
       "answer": "True",
-      "image_link": "/assets/question-mark.gif"
+      "image_link": "/assets/neon-question-mark.jpg"
     }
     ,
     {
@@ -300,7 +309,7 @@
       "text": "Topological Sort can be used for",
       "options": ["Dependency resolution", "Scheduling classes", "Daily routine", "All of the above"],
       "answer": "All of the Above",
-      "image_link": "/assets/question-mark.gif"
+      "image_link": "/assets/neon-question-mark.jpg"
     }
   ],
   "Heap": [
@@ -335,7 +344,7 @@
       "text": "A heap is a special binary tree that can be used to",
       "options": ["Sort a list", "Act as a priority queue", "Quickly find largest/smallest element from a collection", "All of the above"],
       "answer": "All of the above",
-      "image_link": "/assets/question-mark.gif"
+      "image_link": "/assets/neon-question-mark.jpg"
     },
     {
       "type": "quiz",
@@ -343,7 +352,7 @@
       "text": "In a min-heap, the root node is the largest number.",
       "options": ["True", "False"],
       "answer": "False",
-      "image_link": "/assets/question-mark.gif"
+      "image_link": "/assets/neon-question-mark.jpg"
     },
     {
       "type": "quiz",
@@ -351,7 +360,7 @@
       "text": "A heap could be used by the operating system’s CPU scheduler to select the next process to execute.",
       "options": ["True","False"],
       "answer": "True",
-      "image_link": "/assets/question-mark.gif"
+      "image_link": "/assets/neon-question-mark.jpg"
     }
   ],
 
@@ -366,7 +375,7 @@
       "type": "info",
       "title": "Insertion Sort Steps",
       "text": "Each of these steps are done to each object by iterating over the entire array:<ol><li>Compare the current object you are evaluating to its predecessor</li><li>If the predecessor is greater than the current object, swap places</li><li>Continue to evaluate and swap places with previously evaluated objects until the current object is less than or equal to a previous object or reaches the beginning of the array</li><li>Move to the next unevaluated object in the array until complete</li></ol>",
-      "image_link": "/assets/sort/insertion-sort/is-matrix.png"
+      "image_link": "/assets/sort/insertion-sort/Is-matrix.png"
     },
     {
       "type": "info",
@@ -387,7 +396,7 @@
       "text": "When using insertion sort, a number can make multiple swaps until it has reached its correct spot in the ordered array",
       "options": ["True","False"],
       "answer": "True",
-      "image_link": "/assets/question-mark.gif"
+      "image_link": "/assets/neon-question-mark.jpg"
     },
     {
       "type": "quiz",
@@ -395,7 +404,7 @@
       "text": "Best-case time complexity for insertion sort is ____, whereas worst-case time complexity for insertion sort is ____.",
       "options": ["O(logn), O(logn)", "O(n), O(n^3)", "O(n), O(n^2)","O(logn), O(n^2) "],
       "answer": "O(n), O(n^2)",
-      "image_link": "/assets/question-mark.gif"
+      "image_link": "/assets/neon-question-mark.jpg"
     },
     {
       "type": "quiz",
@@ -403,7 +412,7 @@
       "text": "Which best describes Insertion Sort?",
       "options": ["Most useful when the array size is large and very unordered","Memory space required is dynamic and is not constant", "Uses two loops in order to complete the job", "All of the above"],
       "answer": "Uses two loops in order to complete the job",
-      "image_link": "/assets/question-mark.gif"
+      "image_link": "/assets/neon-question-mark.jpg"
     }
   ],
   "Selection-Sort": [
@@ -439,7 +448,7 @@
       "text": "When should selection sort be used?",
       "options": ["Checking to make sure a list is already sorted.","When memory space is limited","Both", "None" ],
       "answer": "Both",
-      "image_link": "/assets/question-mark.gif"
+      "image_link": "/assets/neon-question-mark.jpg"
     },
     {
       "type": "quiz",
@@ -447,7 +456,7 @@
       "text": "Best-case time complexity for selection sort is ____, whereas worst-case time complexity for selection sort is ____.",
       "options": ["O(logn), O(n^2)", "O(n), O(n)", "O(n^2), O(n^2)","O(logn), O(n^2) "],
       "answer": "O(n^2), O(n^2)",
-      "image_link": "/assets/question-mark.gif"
+      "image_link": "/assets/neon-question-mark.jpg"
     },
     {
       "type": "quiz",
@@ -455,7 +464,7 @@
       "text": "Selection sort only swaps a number once whereas insertion sort may swap a number many times.",
       "options": ["True","False"],
       "answer": "True",
-      "image_link": "/assets/question-mark.gif"
+      "image_link": "/assets/neon-question-mark.jpg"
     }
   ],
 
@@ -497,33 +506,36 @@
     {
       "type": "info",
       "title": "Neural Networks",
-      "text": "Artificial neural networks are based on a collection of connected units or nodes called artificial neurons, which loosely model the neurons in a biological brain. Each connection, like the synapses in a biological brain, can transmit a signal to other neurons. An artificial neuron that receives a signal then processes it and can signal neurons connected to it. The 'signal' at a connection is a real number, and the output of each neuron is computed by some non-linear function of the sum of its inputs.<br><br>The structure of the most simple neural network has an input layer, an output layer, and a hidden layer.",
+      "text":  "<b>Artificial neural networks</b> are based on a collection of connected units or nodes called artificial neurons, which loosely model the neurons in a biological brain. Each connection, like the synapses in a biological brain, can transmit a signal to other neurons. An artificial neuron that receives a signal (which is just a number) processes it and can then signal neurons connected to it. <br><br>Neural networks are typically structured into layers of connected neurons, with the most simple structure having <b>an input layer, an output layer, and a hidden layer.</b>"      ,
       "image_link": "/assets/neural-network/nn.png"
     },
-    {
-      "type": "info",
-      "title": "Forward Propogation",
-      "text": "The firing of individual neurons can be mathematically represented as the input values (x) multiplied by the weight values (w) that correspond to each connection, and then added to a bias value (b). ",
-      "image_link": "/assets/neural-network/forward-prop.png"
-    },
+
     
     {
       "type": "info",
-      "title": "Training a Neural Network",
-      "text": "Training a neural network can be broken down into three main stages:<ol><li>Forward propagation</li><li>Backpropagation</li><li>Parameter update </li></ol>",
+      "title": "The Three Stages of Learning",
+      "text":  "Training a neural network can be broken down into three main stages:<ul><li><b>Forward propagation</b></li><li><b>Backpropagation</b></li><li><b>Parameter update</b> </li> </ul> Let’s continue on to look at these in more detail.",
       "image_link": "/assets/neural-network/nn-train.gif"
     },
+
     {
       "type": "info",
-      "title": "Neural Network Basis",
-      "text": "",
-      "image_link": "/assets/neural-network/nn-axons.png"
+      "title": "Forward Propogation",
+      "text":  "The “firing” of individual neurons can be calculated as the sum of:<ul><li><b>input values (x)</b>, multiplied by </li><li>the corresponding <b>weight values (w)</b></li><li>added to a <b>bias value (called b or w_0)</b></li></ul>This intermediate sum (z) is then passed through an activation function, such as the sigmoid function, to compute the final <b>activation value (a).</b>"      ,
+      "image_link": "/assets/neural-network/forward-prop.png"
     },
     {
       "type": "info",
-      "title": "Forward Prop",
+      "title": "Activation Functions",
+      "text": "The sigmoid function is a common example to use as an activation function for the output of neurons. The output range of values falls nicely <b>between 0 and 1</b>, and the function is smooth and differentiable, which is exactly what we need to make <b>small changes to the network’s weights and biases in order to learn.</b>",
+      "image_link": "/assets/neural-network/sigmoid.png"
+    },
+
+    {
+      "type": "info",
+      "title": "Backpropogation",
       "text": "",
-      "image_link": "/assets/neural-network/forward-prop.png"
+      "image_link": "/assets/neural-network/backprop.png"
     }
     
   ]
