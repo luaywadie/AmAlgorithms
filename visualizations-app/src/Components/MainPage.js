@@ -33,8 +33,6 @@ class MainPage extends Component {
     }, 500);
   }
 
-  componentWillUnmount() {}
-
   startTypingTitle = () => {
     let title_queue = [
       'Welcome To',

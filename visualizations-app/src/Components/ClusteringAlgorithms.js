@@ -8,7 +8,7 @@ class ClusteringAlgorithms extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      pause: true,
+      pause: false,
       stop: true,
       isStepping: false,
       speed: 1,
@@ -16,18 +16,19 @@ class ClusteringAlgorithms extends Component {
       k: 5,
       points: [],
       animationQueue: [],
-      stepIndex: 0
+      stepIndex: 0,
     };
   }
 
-  setPoints = (ps) => this.setState({points: ps});
+  setPoints = (ps) => this.setState({ points: ps });
 
   async componentDidMount() {
     //Load in the csv data points (2D) as an object
     let x = await d3.csv(
-      'https://raw.githubusercontent.com/luaywadie/AmAlgorithms/master/visualizations-app/src/data/cluster_data.csv');
-    this.setState({points: x});
-      //imported from scatterplot-builder
+      'https://raw.githubusercontent.com/luaywadie/AmAlgorithms/master/visualizations-app/src/data/cluster_data.csv'
+    );
+    this.setState({ points: x });
+    //imported from scatterplot-builder
     createScatterplot(this.state.points);
 
     this.scatter = document.getElementById('graph-container');
@@ -40,24 +41,41 @@ class ClusteringAlgorithms extends Component {
 
   reset = () => {
     //Remove all centroids from the DOM
-    const centroidGroup = document.getElementById("centroid-group");
+    const centroidGroup = document.getElementById('centroid-group');
     centroidGroup.parentNode.removeChild(centroidGroup);
 
+    //Set state
+    this.setState({
+      pause: false,
+      animationQueue: [],
+      centroids: [],
+      closestCentroids: [],
+      hasConverged: false,
+      lineNum: null,
+      runningAlg: false,
+    });
     //Clear the class list of each circle on scatterplot (reset) and restore to 'unassigned' state
     let circleElements = document.getElementsByTagName('circle');
     for (let i = 0; i < circleElements.length; i++) {
-        //Remove the classes and reset the point to 'unassigned'
-        circleElements[i].setAttribute('class', '');
-        circleElements[i].classList.add('cluster-unassigned');
+      //Remove the classes and reset the point to 'unassigned'
+      circleElements[i].setAttribute('class', '');
+      circleElements[i].classList.add('cluster-unassigned');
+    }
+
+    // remove highlighted lines
+    for (let i = 0; i < 10; i++) {
+      let el = document.getElementById('kmeans-' + i);
+      if (el) {
+        if (el.classList.contains('active-code-line')) {
+          el.classList.remove('active-code-line');
+        }
       }
-    //Set state
-    this.setState({ pause: false });
+    }
   };
 
   setRunningAlg = (alg) => {
     this.setState({ runningAlg: alg });
   };
-
 
   async wait() {
     while (!this.state.isStepping && this.state.pause) {
@@ -71,9 +89,13 @@ class ClusteringAlgorithms extends Component {
 
     let waitTime = 1000;
     this.setState({ stepIndex: 0 });
-    while (!this.state.stop) {
+    while (
+      !this.state.stop &&
+      this.state.stepIndex < this.state.animationQueue.length
+    ) {
       const currentStepIndex = this.state.stepIndex;
-      const currentLineNum = this.state.animationQueue[currentStepIndex].lineNum;
+      const currentLineNum = this.state.animationQueue[currentStepIndex]
+        .lineNum;
       this.setState({ lineNum: currentLineNum });
       this.toggleLineHighlight(currentLineNum);
       //wait until a step button or the play button is pressed
@@ -83,24 +105,23 @@ class ClusteringAlgorithms extends Component {
       //wait for a moment while in play mode (dependent on the speed)
       await new Promise((r) => setTimeout(r, waitTime / this.state.speed));
       this.toggleLineHighlight(currentLineNum);
+
       //line execution
       //check if the user stepped backwards
       if (this.state.stepIndex === currentStepIndex - 1) {
-        
         if (currentStepIndex === 1) {
-          this.setState({ ...this.state.animationQueue[currentStepIndex - 1]});
+          this.setState({ ...this.state.animationQueue[currentStepIndex - 1] });
         }
         //need to hide centroids from the plot if stepping back to line 1?
         else {
           //state needs to be reset to one line before the line we're stepping back to
-          this.setState({ ...this.state.animationQueue[currentStepIndex - 2]});
+          this.setState({ ...this.state.animationQueue[currentStepIndex - 2] });
         }
-      }
-      else {
+      } else {
         //execute the currently highlighted line as normal
-        this.setState({ ...this.state.animationQueue[currentStepIndex]});
+        this.setState({ ...this.state.animationQueue[currentStepIndex] });
       }
-      if(this.state.shouldInitCentroids) {
+      if (this.state.shouldInitCentroids) {
         this.addCentroids();
       }
       if (this.state.closestCentroids && this.state.closestCentroids.length) {
@@ -110,17 +131,23 @@ class ClusteringAlgorithms extends Component {
         this.moveCentroids();
       }
       //if just executed the line before the DONE line (or somehow after the DONE line)
-      if (currentStepIndex >= this.state.animationQueue.length - 2) {
-        this.setState({ pause: true })
-      }
+      // if (currentStepIndex >= this.state.animationQueue.length - 2) {
+      //   this.setState({ pause: true });
+      // }
       this.setState(
-        (this.state.isStepping) ?
-        {isStepping: !this.state.isStepping} :
-        {stepIndex: this.state.stepIndex + 1}
+        this.state.isStepping
+          ? { isStepping: !this.state.isStepping }
+          : { stepIndex: this.state.stepIndex + 1 }
       );
+      if (this.state.stepIndex === this.state.animationQueue.length - 1) {
+        this.toggleLineHighlight(9);
+        this.setState({ runningAlg: null });
+      }
     }
-  }
-  
+    // let el = document.getElementById(this.state.runningAlg + '-' + 9);
+    // if (el) el.classList.add('active-code-line');
+  };
+
   // -----------------------------------------
   // Helper functions for renderAnimationQueue
   toggleLineHighlight(lineNum) {
@@ -130,29 +157,31 @@ class ClusteringAlgorithms extends Component {
 
   addCentroids() {
     // Create centroid container group
-    d3.select("#scatter-no-margin")
-      .append("g")
-      .attr("id", "centroid-group")
-      .classed("centroid", true);
+    d3.select('#scatter-no-margin')
+      .append('g')
+      .attr('id', 'centroid-group')
+      .classed('centroid', true);
 
     // Add initial centroids to the plot
     // Set the classes of the initialized centroid elements
-    d3.select("#centroid-group")
-      .selectAll("circle")
+    d3.select('#centroid-group')
+      .selectAll('circle')
       .data(this.state.centroids)
       .enter()
-      .append("circle")
-      .attr("cx", (centroid) => this.scaleX(centroid.x))
-      .attr("cy", (centroid) => this.scaleY(centroid.y))
-      .attr("r", 10)
-      .attr("id", (d, i) => `centroid${i}`)
-      .attr("class", (d, i) => `cluster${i} centroid`);
+      .append('circle')
+      .attr('cx', (centroid) => this.scaleX(centroid.x))
+      .attr('cy', (centroid) => this.scaleY(centroid.y))
+      .attr('r', 10)
+      .attr('id', (d, i) => `centroid${i}`)
+      .attr('class', (d, i) => `cluster${i} centroid`);
   }
 
   colorPoints() {
     this.state.points.forEach((point, index) => {
       let pointElement = document.getElementById(
-        `x:${parseFloat(point.x).toFixed(1)}-y:${parseFloat(point.y).toFixed(1)}`
+        `x:${parseFloat(point.x).toFixed(1)}-y:${parseFloat(point.y).toFixed(
+          1
+        )}`
       );
       let pointClasses = pointElement.classList;
       if (pointElement) {
@@ -183,13 +212,9 @@ class ClusteringAlgorithms extends Component {
   }
 
   //Scale point coordinates to fit on the scatter plot
-  scaleX = d3.scaleLinear()
-    .domain([4, 8])
-    .range([0, 510]);
+  scaleX = d3.scaleLinear().domain([4, 8]).range([0, 510]);
 
-  scaleY = d3.scaleLinear()
-    .domain([0, 7])
-    .range([460, 0]);
+  scaleY = d3.scaleLinear().domain([0, 7]).range([460, 0]);
   // -----------------------------------------
 
   renderKMeansPseudocode() {
@@ -253,10 +278,7 @@ class ClusteringAlgorithms extends Component {
           </span>
         </div>
         <div id={'kmeans-9'}>
-          9
-          <span style={{ marginLeft: indentation(1) }}>
-            DONE
-          </span>
+          9<span style={{ marginLeft: indentation(1) }}>DONE</span>
         </div>
       </div>
     );
@@ -266,10 +288,10 @@ class ClusteringAlgorithms extends Component {
     return (
       <div>
         <div className={'row'}>
-          <div className={'col-6'} id={'graph-container'}>
+          <div className={'col-7'} id={'graph-container'}>
             <KMeans
               points={this.state.points}
-              toggleStop={() => this.setState({ stop: !this.state.stop})}
+              toggleStop={() => this.setState({ stop: !this.state.stop })}
               speed={this.state.speed}
               getRunningAlg={this.state.runningAlg}
               setRunningAlg={this.setRunningAlg}
@@ -280,8 +302,8 @@ class ClusteringAlgorithms extends Component {
             <div className={'divider'}></div>
             <button
               className="graph-button"
-              onClick={ async () => {
-                this.setState({pause: false, stop: true});
+              onClick={async () => {
+                this.setState({ pause: false, stop: true });
                 this.reset();
               }}
             >
@@ -290,73 +312,86 @@ class ClusteringAlgorithms extends Component {
             <div className={'divider'}></div>
             <button
               onClick={() => {
-                if(this.state.stepIndex > 0) {
-                  this.setState({ stepIndex: this.state.stepIndex - 1, pause: true, isStepping: true });
+                if (this.state.stepIndex > 0) {
+                  this.setState({
+                    stepIndex: this.state.stepIndex - 1,
+                    pause: true,
+                    isStepping: true,
+                  });
                 }
               }}
             >
-              <FaStepBackward/>
+              <FaStepBackward />
             </button>
             <button
               onClick={() => {
                 this.setState({ pause: !this.state.pause, isStepping: false });
               }}
             >
-            {this.state.pause ? <FaPlay /> : <FaPause />}
+              {this.state.pause ? <FaPlay /> : <FaPause />}
             </button>
             <button
               onClick={() => {
-                if(this.state.stepIndex < this.state.animationQueue.length - 1) {
-                  this.setState({ stepIndex: this.state.stepIndex + 1, pause: true, isStepping: true });
+                if (
+                  this.state.stepIndex <
+                  this.state.animationQueue.length - 1
+                ) {
+                  this.setState({
+                    stepIndex: this.state.stepIndex + 1,
+                    pause: true,
+                    isStepping: true,
+                  });
                 }
               }}
             >
-              <FaStepForward/>
+              <FaStepForward />
             </button>
-            <form style={{display: "inline-block"}} onSubmit={(event) => event.preventDefault()}>
-            <label>
-              Number of Clusters (K):
-              <input
-                style={{ width: '50px' }}
-                type="number"
-                value={this.state.k}
-                onChange={(event) =>
-                  this.setState({
-                    k: event.target.value,
-                  })
-                }
-                disabled={!this.state.stop}
-               max="9"
-               min="1"
-              />
-            </label>
-          </form>
-          <form style={{display: "inline-block"}} onSubmit={(event) => event.preventDefault()}>
-          <label>
-            Speed:
-            <input
-              style={{ width: '50px' }}
-              type="number"
-              value={this.state.speed}
-              onChange={(event) =>
-                this.setState({
-                  speed: event.target.value,
-                })
-              }
-              max="50"
-              min="1"
-            />
-          </label>
-        </form>
+            <form
+              style={{ display: 'inline-block' }}
+              onSubmit={(event) => event.preventDefault()}
+            >
+              <label>
+                Number of Clusters (K):
+                <input
+                  style={{ width: '50px' }}
+                  type="number"
+                  value={this.state.k}
+                  onChange={(event) =>
+                    this.setState({
+                      k: event.target.value,
+                    })
+                  }
+                  disabled={!this.state.stop}
+                  max="9"
+                  min="1"
+                />
+              </label>
+            </form>
+            <form
+              style={{ display: 'inline-block' }}
+              onSubmit={(event) => event.preventDefault()}
+            >
+              <label>
+                Speed:
+                <input
+                  style={{ width: '50px' }}
+                  type="number"
+                  value={this.state.speed}
+                  onChange={(event) =>
+                    this.setState({
+                      speed: event.target.value,
+                    })
+                  }
+                  max="50"
+                  min="1"
+                />
+              </label>
+            </form>
           </div>
 
-
-          <div className={'col-6'}>
-          <div className={'row'}>
-            {this.renderKMeansPseudocode()}
+          <div className={'col-5'}>
+            <div className={'row'}>{this.renderKMeansPseudocode()}</div>
           </div>
-        </div>
-
         </div>
       </div>
     );

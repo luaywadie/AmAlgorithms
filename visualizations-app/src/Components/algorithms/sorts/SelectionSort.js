@@ -1,10 +1,10 @@
 // Core Imports
-import React, { Component } from "react";
-import * as d3 from "d3";
+import React, { Component } from 'react';
+import * as d3 from 'd3';
 // Styling
-import "styles/Sorts.scss";
+import 'styles/Sorts.scss';
 // Libraries
-import { Container, Row, Tooltip, OverlayTrigger } from "react-bootstrap";
+import { Container, Row, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import {
   FaStepBackward,
   FaStepForward,
@@ -13,7 +13,7 @@ import {
   FaPlus,
   FaMinus,
   FaSyncAlt,
-} from "react-icons/fa";
+} from 'react-icons/fa';
 
 class SelectionSort extends Component {
   constructor(props) {
@@ -54,12 +54,12 @@ class SelectionSort extends Component {
 
     // append the svg object to the body of the page
     var svg = d3
-      .select("#sort-container.selection-sort")
-      .append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+      .select('#sort-container.selection-sort')
+      .append('svg')
+      .attr('width', width + margin.left + margin.right)
+      .attr('height', height + margin.top + margin.bottom)
+      .append('g')
+      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
     // X axis
     var x = d3
@@ -73,37 +73,37 @@ class SelectionSort extends Component {
 
     // Bars
     svg
-      .selectAll("mybar")
+      .selectAll('mybar')
       .data(this.state.data)
       .enter()
-      .append("rect")
-      .attr("x", function (d) {
+      .append('rect')
+      .attr('x', function (d) {
         return x(d);
       })
-      .attr("y", function (d) {
+      .attr('y', function (d) {
         return y(0);
       })
-      .attr("width", x.bandwidth())
-      .attr("fill", "#39a4ff")
-      .attr("height", function (d) {
+      .attr('width', x.bandwidth())
+      .attr('fill', '#39a4ff')
+      .attr('height', function (d) {
         return height - y(0);
       }) // always equal to 0
-      .attr("value", function (d, index) {
+      .attr('value', function (d, index) {
         return index;
       });
 
     svg
-      .selectAll("mybar")
+      .selectAll('mybar')
       .data(this.state.data)
       .enter()
-      .append("text")
-      .attr("x", function (d) {
+      .append('text')
+      .attr('x', function (d) {
         return x(d) + 35;
       })
-      .attr("y", function (d) {
+      .attr('y', function (d) {
         return y(d) - 10;
       })
-      .attr("value", function (d, index) {
+      .attr('value', function (d, index) {
         return index;
       })
       .text(function (d) {
@@ -112,13 +112,13 @@ class SelectionSort extends Component {
 
     // Animation
     svg
-      .selectAll("rect")
+      .selectAll('rect')
       .transition()
       .duration(800)
-      .attr("y", function (d) {
+      .attr('y', function (d) {
         return y(d);
       })
-      .attr("height", function (d) {
+      .attr('height', function (d) {
         return height - y(d);
       });
 
@@ -150,7 +150,7 @@ class SelectionSort extends Component {
       }
     }
     this.state.animation_queue.push([0, 0, false, 6]);
-    this.setState({sorted: true})
+    this.setState({ sorted: true });
     return arr;
   };
 
@@ -169,8 +169,8 @@ class SelectionSort extends Component {
 
   endInterval = () => {
     clearInterval(this.state.interval);
-    this.setState({sorted: false})
-    this.setState({paused: true});
+    this.setState({ sorted: false });
+    this.setState({ paused: true });
   };
 
   intervalEngine = () => {
@@ -182,14 +182,14 @@ class SelectionSort extends Component {
           this.state.animation_queue[0][0],
           this.state.animation_queue[0][1],
           this.state.animation_queue[0][2],
-          this.state.animation_queue[0][3],
+          this.state.animation_queue[0][3]
         );
         this.state.stepper_queue.push(this.state.animation_queue[0]);
         this.state.animation_queue.shift();
       } else if (this.state.animation_queue.length == 0) {
         clearInterval(interval);
       } else if (this.state.paused) {
-        console.log("Paused");
+        console.log('Paused');
       }
     }, this.state.speed);
 
@@ -197,7 +197,7 @@ class SelectionSort extends Component {
   };
 
   swapBars(barFromIndex, barToIndex, action, pseudoNumber) {
-    this.setState({swapping: true})
+    this.setState({ swapping: true });
     let speed = this.state.speed;
     let fromObj = d3.selectAll("rect[value='" + barFromIndex + "']");
     let toObj = d3.selectAll("rect[value='" + barToIndex + "']");
@@ -205,23 +205,17 @@ class SelectionSort extends Component {
     let toObjTxt = d3.selectAll("text[value='" + barToIndex + "']");
 
     if (!action) {
-
       if (barFromIndex == barToIndex) {
-        d3.selectAll(".code-line").attr("class", "code-line")
-        d3.select("#sel-sort-" + pseudoNumber).attr("class", "code-line active")
+        d3.selectAll('.code-line').attr('class', 'code-line');
+        d3.select('#sel-sort-' + pseudoNumber).attr(
+          'class',
+          'code-line active'
+        );
       } else {
-        fromObj
-          .transition()
-          .duration(speed)
-          .attr('fill', '#39a4ff50')
-  
-        toObj
-          .transition()
-          .duration(speed)
-          .attr('fill', '#39a4ff50')
-      }
-  
+        fromObj.transition().duration(speed).attr('fill', '#39a4ff50');
 
+        toObj.transition().duration(speed).attr('fill', '#39a4ff50');
+      }
     } else {
       fromObj
         .transition()
@@ -235,15 +229,9 @@ class SelectionSort extends Component {
         .attr('fill', '#ffa500')
         .attr('x', fromObj.attr('x'));
 
-      fromObjTxt
-        .transition()
-        .duration(speed)
-        .attr('x', toObjTxt.attr('x'));
+      fromObjTxt.transition().duration(speed).attr('x', toObjTxt.attr('x'));
 
-      toObjTxt
-        .transition()
-        .duration(speed)
-        .attr('x', fromObjTxt.attr('x'));
+      toObjTxt.transition().duration(speed).attr('x', fromObjTxt.attr('x'));
 
       fromObj
         .transition()
@@ -256,7 +244,7 @@ class SelectionSort extends Component {
         .duration(speed)
         .attr('fill', '#ffa500')
         .attr('x', fromObj.attr('x'));
-      
+
       // Swap
       let temp = fromObj.attr('value');
       fromObj.attr('value', toObj.attr('value'));
@@ -266,12 +254,22 @@ class SelectionSort extends Component {
       toObjTxt.attr('value', temp);
     }
     // Reset Colors
-    fromObj.transition().duration(speed).delay(speed).attr('fill', '#39a4ff').attr('stroke-width',0);
-    toObj.transition().duration(speed).delay(speed).attr('fill', '#39a4ff').attr('stroke-width',0);
+    fromObj
+      .transition()
+      .duration(speed)
+      .delay(speed)
+      .attr('fill', '#39a4ff')
+      .attr('stroke-width', 0);
+    toObj
+      .transition()
+      .duration(speed)
+      .delay(speed)
+      .attr('fill', '#39a4ff')
+      .attr('stroke-width', 0);
     // Allow next swapping
     setTimeout(() => {
-      this.setState({swapping: false})
-    }, speed)
+      this.setState({ swapping: false });
+    }, speed);
   }
 
   // Stepper
@@ -322,7 +320,7 @@ class SelectionSort extends Component {
 
   clearSVG = () => {
     // Clear the document container
-    document.getElementById("sort-container").innerHTML = "";
+    document.getElementById('sort-container').innerHTML = '';
     // Clear the animation and stepper queues
     this.state.animation_queue = [];
     this.state.stepper_queue = [];
@@ -333,7 +331,7 @@ class SelectionSort extends Component {
       return num * 20;
     }
     return (
-      <div style={{padding: "20px"}}>
+      <div>
         <div id={'sel-sort-0'} className="code-line">
           1
           <span style={{ marginLeft: indentation(1) }}>
@@ -349,7 +347,11 @@ class SelectionSort extends Component {
         <div id={'sel-sort-2'} className="code-line">
           3
           <span style={{ marginLeft: indentation(3) }}>
-            Let <i><u>min</u></i> = current index in <b>Loop</b>
+            Let{' '}
+            <i>
+              <u>min</u>
+            </i>{' '}
+            = current index in <b>Loop</b>
           </span>
         </div>
         <div id={'sel-sort-3'} className="code-line">
@@ -361,13 +363,29 @@ class SelectionSort extends Component {
         <div id={'sel-sort-4'} className="code-line">
           5
           <span style={{ marginLeft: indentation(4) }}>
-            If <i><u>min element</u></i> is greator than <i><u>current element</u></i>, set <i><u>min</u></i> = current element index
+            If{' '}
+            <i>
+              <u>min element</u>
+            </i>{' '}
+            is greator than{' '}
+            <i>
+              <u>current element</u>
+            </i>
+            , set{' '}
+            <i>
+              <u>min</u>
+            </i>{' '}
+            = current element index
           </span>
         </div>
         <div id={'sel-sort-5'} className="code-line">
           6
           <span style={{ marginLeft: indentation(3) }}>
-            If <i><u>min</u></i> does not equal to current index, <b>swap</b> them 
+            If{' '}
+            <i>
+              <u>min</u>
+            </i>{' '}
+            does not equal to current index, <b>swap</b> them
           </span>
         </div>
         <div id={'sel-sort-6'} className="code-line">
@@ -405,7 +423,7 @@ class SelectionSort extends Component {
           <button
             className="graph-button"
             onClick={() => {
-              if (this.state.speedFactor <= 1.4) {
+              if (this.state.speedFactor <= 1.6) {
                 this.setState({ speedChanged: true });
                 this.setState({
                   speedFactor: parseFloat(
