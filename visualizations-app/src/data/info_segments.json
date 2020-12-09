@@ -3,14 +3,22 @@
     {
       "type": "info",
       "title": "Why Algorithms?",
-      "text": "What is an Algorithm?<ul><br/> <li> An algorithm is a set of instructions designed to perform a specific task.</li><br/> <li> A step-by-step solution, like a recipe </li> </ul>",
+      "text":"Algorithms form the basis of some of the most important aspects of daily life. From powering GPS navigation apps, search engines, computer operating systems, social media news feeds, internet routing networks, recommendation systems, self-driving cars, and more - algorithms are all around us!<br><br>We believe that basic knowledge of data structures and algorithms provide the fundamental foundation for facilitating critical problem-solving skills and computational thinking.",
+      "image_link": "/assets/why-algorithms/dijkstra.gif",
+      "credit_link": null,
+      "redirect_link": "undirected_graph_algorithms"
+    },
+    {
+      "type": "info",
+      "title": "What Is An Algorithm?",
+      "text": "<ul> <li> An algorithm is a well-defined set of instructions designed to perform a specific task.</li><br/><li>Algorithms allow computers to decisively and efficiently perform computations and solve problems.</li><br/><li>Humans follow some algorithms too, like  cooking recipes and certain governmental processes. </li> </ul>",
       "image_link": "/assets/why-algorithms/why-algs-1.gif",
       "credit_link": "https://www.thisiscolossal.com/tags/gifs/page/2/",
       "redirect_link": null
     },
     {
       "type": "info",
-      "title": "Why Algorithms?",
+      "title": "Algorithms Are Run On Computers",
       "text": "How are computers better than humans?<ul><br/><li>Better memories</li><br/><li>Significantly faster and more accurate at executing tasks</li><br/><li>Not influenced by human factors such as emotion, exhaustion, etc</li></ul>",
       "image_link": "/assets/why-algorithms/Human-Computer.jpg",
       "credit_link": "https://wonderfulengineering.com/man-vs-machine-wins/",
@@ -18,8 +26,8 @@
     },
     {
       "type": "info",
-      "title": "Why Algorithms?",
-      "text": "Why Learn About Algorithms?<ul><br/><li>Algorithms make it possible to solve everyday tasks such as</li><ul><li>Booking a flight</li><li>Adding a mutual friend on Facebook</li><li>Finding the fastest route to a new destination</li><li>Getting new movie recommendations based on what you’ve watched</li></ul><br><li>They are the future!</li></ul>",
+      "title": "Why Learn About Algorithms?",
+      "text": "<ul><li>Algorithms make it possible to solve everyday tasks such as</li><ul><li>Booking a flight</li><li>Adding a mutual friend on Facebook</li><li>Finding the fastest route to a new destination</li><li>Getting new movie recommendations based on what you’ve watched</li></ul><li>They are increasingly relevant in today's technological world.</li></ul>",
       "image_link": "/assets/why-algorithms/types-of-algorithm.png",
       "credit_link": "https://www.educba.com/types-of-algorithms/",
       "redirect_link": null
@@ -27,21 +35,13 @@
     
     {
       "type": "info",
-      "title": "Why Algorithms?",
-      "text":     "How do we harness the powers of  computers?<ul><li>By writing algorithms!</li><li>Computers are very effective at solving well defined problems.</li><ul><li>It is up to the programmer to implement the step-by-step solution to solve some problem.</li> <li>Once the solution is written and is correct, the computer will have no issues executing that exact algorithm for its entire lifetime</li></ul></ul>",
+      "title": "Utilizing Processing Power",
+      "text": "How do we harness the power of computers?<ul><li>By writing algorithms!</li><li>Computers are very efficient at solving well-defined problems.</li><ul><li>It is up to the programmer to implement the step-by-step solution to solve some problem.</li> <li>Once the solution is written and is correct, the computer will have no issues executing that exact algorithm for its entire lifetime</li></ul></ul>",
       "image_link": "/assets/why-algorithms/binary-travel.gif",
       "credit_link": "https://www.thisiscolossal.com/tags/gifs/page/2/",
       "redirect_link": null
     },
-    
-    {
-      "type": "info",
-      "title": "Why Algorithms?",
-      "text":"Algorithms form the basis of some of the most important aspects of daily life. From powering GPS navigation apps, search engines, computer operating systems, social media news feeds, internet routing networks, recommendation systems, self-driving cars, and more - algorithms are all around us!<br><br>We believe that basic knowledge of data structures and algorithms provide the fundamental foundation for facilitating critical problem-solving skills and computational thinking.",
-      "image_link": "/assets/why-algorithms/dijkstra.gif",
-      "credit_link": null,
-      "redirect_link": "undirected_graph_algorithms"
-    },
+
     {
       "type": "info",
       "title": "Why Algorithms?",
@@ -84,7 +84,8 @@
       "options": ["Push Out, Pop In", "First In, First Out", "Pull In, Push Out", "Last In, First Out"],
       "answer": "Last In, First Out",
       "image_link": "/assets/neon-question-mark.jpg",
-      "redirect_link": "stack"
+      "redirect_link": "stack",
+      "credit_link": "https://www.istockphoto.com/photo/question-mark-shaped-red-neon-light-on-black-wall-gm1141315710-305719019"
     },
     {
       "type": "quiz",
@@ -93,7 +94,8 @@
       "options": ["pop()", "push(object)", "add(object)", "append(object)"],
       "answer": "push(object)",
       "image_link": "/assets/neon-question-mark.jpg",
-      "redirect_link": "stack"
+      "redirect_link": "stack",
+      "credit_link": "https://www.istockphoto.com/photo/question-mark-shaped-red-neon-light-on-black-wall-gm1141315710-305719019"
     },
     {
       "type": "quiz",
@@ -102,7 +104,8 @@
       "options": ["stack error", "stack underflow", "stack overflow", "stack influx" ],
       "answer": "stack overflow",
       "image_link": "/assets/neon-question-mark.jpg",
-      "redirect_link": "stack"
+      "redirect_link": "stack",
+      "credit_link": "https://www.istockphoto.com/photo/question-mark-shaped-red-neon-light-on-black-wall-gm1141315710-305719019"
     }
   ],
   "Queue": [
@@ -110,19 +113,24 @@
       "type": "info",
       "title": "Queue",
       "text": "A queue is a data structure often used throughout many algorithms in computer science. A queue behaves very much in the same way that a stack does. It is like an array in that you put many objects into an array for later use. Also like a stack, you can’t remove elements in the middle of a queue. Think of a queue like a line at the grocery store. In fact, that’s exactly what a line is, a queue! Knowing what you know now about stacks, learning about queues should be no problem at all.",
-      "image_link": "/assets/queue/line-of-people.jpg"
+      "image_link": "/assets/queue/line-of-people.jpg",
+      "credit_link": "https://epayglobal.wordpress.com/2019/11/12/echeck-processing-helps-you-to-increase-your-business-sales-2/",
+      "redirect_link": "queue"
     },
     {
       "type": "info",
       "title": "Characteristics of a Queue",
       "text":"<ul><li>An array of fixed size</li><li>First-In-First-Out (FIFO). Whichever element is put in first, it is the first element out. This is the main behavioral difference between a stack and queue</li><li>Enqueue(item) will add an element to the back of the queue</li><li>Dequeue() will remove the top element from the queue</li></ul>",
-      "image_link": "/assets/need-img.png"
+      "image_link": "/assets/queue/queue-pop.png",
+      "credit_link": "https://velog.io/@dankim/2019.09.18-Queue-blk0opzrtd",
+      "redirect_link": "queue"
     },
     {
       "type": "info",
       "title": "More on Queues",
       "text": "<ul><li>There are some very useful features of queues that are able to make certain problems much easier to solve. But just like stacks, there are some things to consider when using queues:</li><li>Removing an element from the middle of a queue is not possible</li><li>Adding too many objects or removing objects that are not present will break your code.</li><li>Avoid implementing your own queue class. Instead, import from the necessary library. It will save you time and unnecessary confusion just like with a stack</li></ul>",
-      "image_link": "/assets/queue/queue-pop.png"
+      "image_link": "/assets/queue/queue-animation.gif",
+      "redirect_link": "queue"
     },
 
     {
@@ -131,7 +139,9 @@
       "text": "A queue can be best described as __ data structure.",
       "options": ["First-In-First-Out", "First-In-Last-Out", "Push-Out-Pop-In", "Pull-In-Push-Out"],
       "answer": "First-In-First-Out",
-      "image_link": "/assets/neon-question-mark.jpg"
+      "image_link": "/assets/neon-question-mark.jpg",
+      "credit_link": "https://www.istockphoto.com/photo/question-mark-shaped-red-neon-light-on-black-wall-gm1141315710-305719019",
+      "redirect_link": "queue"
     },
     {
       "type": "quiz",
@@ -139,7 +149,9 @@
       "text": "If you wanted to add an item to the queue, you would use",
       "options": ["pop()", "push(item)", "enqueue(item)", "dequeue(item)"],
       "answer": "enqueue(item)",
-      "image_link": "/assets/neon-question-mark.jpg"
+      "image_link": "/assets/neon-question-mark.jpg",
+      "credit_link": "https://www.istockphoto.com/photo/question-mark-shaped-red-neon-light-on-black-wall-gm1141315710-305719019",
+      "redirect_link": "queue"
     },
     {
       "type": "quiz",
@@ -147,7 +159,9 @@
       "text": "I can remove as many objects as I want from the queue with no consequences.",
       "options": ["True", "False"],
       "answer": "False",
-      "image_link": "/assets/neon-question-mark.jpg"
+      "image_link": "/assets/neon-question-mark.jpg",
+      "credit_link": "https://www.istockphoto.com/photo/question-mark-shaped-red-neon-light-on-black-wall-gm1141315710-305719019",
+      "redirect_link": "queue"
     }
   ],
 
@@ -155,49 +169,58 @@
     {
       "type": "info",
       "title": "Binary Tree",
-      "text": "A binary tree data structure is a special type of undirected graph with a root node at the top and each node has at most 2 children",
-      "image_link": "/assets/binary-tree/binary-tree.png"
+      "text": "A binary tree data structure is a special type of undirected graph with a root node at the top and with each node having at most two children.",
+      "image_link": "/assets/binary-tree/binary-tree.png",
+      "credit_link": "https://www.geeksforgeeks.org/applications-of-tree-data-structure/",
+      "redirect_link": "tree_traversals"
     },
     {
       "type": "info",
       "title": "Elements of a Binary Tree",
       "text": "<ul><li>Similar to graphs, a tree contains nodes and edges.</li><li>Innate hierarchy where the root is the parent and the two nodes it is connected to are its left and right children. </li><li>The principle applies down the tree for left and right all the way down to a leaf node</li><ul><li>Leaf node is a node without any children</li></ul></ul>",
-      "image_link": "/assets/binary-tree/binary-tree-components.png"
+      "image_link": "/assets/binary-tree/binary-tree-components.png",
+      "credit_link": "https://entcheva.github.io/2017/01/24/the_tree_data_structure/",
+      "redirect_link": "tree_traversals"
     },
     {
       "type": "info",
       "title": "Problems to be solved with Binary Trees",
-      "text": "<ul><li>Parsers</li><li>Decision making</li><li>Fundamental Components of more elaborate algorithms (topsort, dijkstra)</li></ul> ",
-      "image_link": "/assets/binary-tree/decision-tree.png"
+      "text": "<ul><li>Parsers</li><li>Decision making</li><li>The traversal algorithms on binary trees are used as fundamental components of more elaborate algorithms like <i>topological sort</i> and <i>Dijkstra</i> (covered later).</li></ul> ",
+      "image_link": "/assets/binary-tree/decision-tree.png",
+      "credit_link": "https://blog.iao.fraunhofer.de/endlich-verstaendlich-ki-verfahren-einfach-erklaert/",
+      "redirect_link": "tree_traversals"
     },
     {
       "type": "info",
       "title": "Tree Traversals",
-      "text":     "<ul><li>Breath-First Search</li><ul><li>Finds shortest path to a node since it traverses all nodes at a level before going to next level.</li></ul><li>Depth-First Search</li><ul><li>Results in deep trees and is more suitable for game or puzzle problems to explore paths </li></ul></ul>",
-      "image_link": "/assets/binary-tree/tree-traversal.png"
+      "text": "<ul><li>Breath-First Search (<b>BFS</b>)</li><ul><li>Finds shortest path to a node since it traverses all nodes at a level before going to next level.</li></ul><li>Depth-First Search (<b>DFS</b>)</li><ul><li>Results in deep trees and is more suitable for game or puzzle problems to explore paths </li></ul></ul>",
+      "image_link": "/assets/binary-tree/tree-traversal.png",
+      "credit_link": "https://11011110.github.io/blog/2013/12/17/stack-based-graph-traversal.html",
+      "redirect_link": "tree_traversals"
     },
-
     {
       "type": "info",
       "title": "Problems that can be solved with BFS",
       "text": "<ul><li>Traverses a graph layer-wise thus exploring neighboring nodes before moving to next level</li><li>Finds shortest path to a node </li>",
-      "image_link": "/assets/binary-tree/BFS-traverse.gif"
+      "image_link": "/assets/binary-tree/BFS-traverse.gif",
+      "redirect_link": "tree_traversals"
     },
-
     {
       "type": "info",
       "title": "Problems that can be solved with DFS",
       "text": "<ul><li>Results in deep trees because the algorithm starts with root node and explores as far as possible down each branch before backtracking</li><li>Fundamental concept for topological sort such as scheduling classes considering prerequisites</li<li>Suitable for game or puzzle problems to explore paths </li></ul>",
-      "image_link": "/assets/binary-tree/DFS-traverse-low.gif"
+      "image_link": "/assets/binary-tree/DFS-traverse-low.gif",
+      "redirect_link": "tree_traversals"
     },
-    
     {
       "type": "quiz",
       "title": "Question #1",
       "text": "Which of the following is false about binary trees?",
       "options": ["A child can also be a parent, in another context", "Can have multiple roots", "Recursive", "Fundamental data structure in CS"],
       "answer": "Can have multiple roots",
-      "image_link": "/assets/neon-question-mark.jpg"
+      "image_link": "/assets/neon-question-mark.jpg",
+      "credit_link": "https://www.istockphoto.com/photo/question-mark-shaped-red-neon-light-on-black-wall-gm1141315710-305719019",
+      "redirect_link": "tree_traversals"
     },
     {
       "type": "quiz",
@@ -205,7 +228,9 @@
       "text": "BFS is used in all of the algorithms except",
       "options": ["Dijkstra’s shortest path, in another context", "Prim’s minimum spanning tree", "Artificial Neural Network", "Search Engine Crawlers"],
       "answer": "Artificial Neural Network",
-      "image_link": "/assets/neon-question-mark.jpg"
+      "image_link": "/assets/neon-question-mark.jpg",
+      "credit_link": "https://www.istockphoto.com/photo/question-mark-shaped-red-neon-light-on-black-wall-gm1141315710-305719019",
+      "redirect_link": "tree_traversals"
     },
     {
       "type": "quiz",
@@ -213,7 +238,74 @@
       "text": "DFS is not used to",
       "options": ["Find the shortest path, in another context", "Check for cycles in a graph", "Topological sort", "Determine if 2 nodes are connected"],
       "answer": "Find the shortest path",
-      "image_link": "/assets/neon-question-mark.jpg"
+      "image_link": "/assets/neon-question-mark.jpg",
+      "credit_link": "https://www.istockphoto.com/photo/question-mark-shaped-red-neon-light-on-black-wall-gm1141315710-305719019",
+      "redirect_link": "tree_traversals"
+    }
+  ],
+
+  "Heap": [
+    {
+      "type": "info",
+      "title": "Heap",
+      "text": "<ul><li>A specialized tree-based data structure which satisfies heap property</li><ul><li>Min-heap: parent is always smaller value than children</li><ul><li>Root is minimum</li></ul></ul><ul><li>Max-heap: parent is always larger than children</li><ul><li>Root is max</li></ul></ul></ul>",
+      "image_link": "/assets/heap/min-heap.png",
+      "credit_link": "https://randerson112358.medium.com/min-heap-deletion-step-by-step-1e05ff9d3932",
+      "redirect_link": "heap"
+    },
+    {
+      "type": "info",
+      "title": "Elements of a Heap",
+      "text": "<ul><li>Similar to tree, however it is almost always a complete tree</li><ul><li>Complete tree: a binary tree such that every level (except possibly the last) is completely filled and all nodes are as far left as possible</li></ul></ul>",
+      "image_link": "/assets/heap/max-heap.png",
+      "credit_link": "http://gardnervickers.github.io/2014/04/10/heaps-in-clojure/",
+      "redirect_link": "heap"
+    },
+    {
+      "type": "info",
+      "title": "Why heaps?",
+      "text": "<ul><li>They are extremely efficient at extracting the min/max value and re-organizing the tree to always maintain its property.</li><li>An maximally efficient implementation of priority queue</li><ul><li>Priority Queue: a queue with a priority associated with it</li><ul><li>Fundamental data structure to many algorithms such as Dijkstra  </li></ul></ul></ul>",
+      "image_link": "/assets/heap/heap-remove-root.gif",
+      "redirect_link": "heap"
+    },
+    {
+      "type": "info",
+      "title": "Problems that can be solved with a Heap",
+      "text": "Any problem requiring a priority queue, such as <ul><li>A* search</li> <li>Dijkstra's shortest path algorithm</li>Sorting<li>And much more!</li>",
+      "image_link": "/assets/heap/max-heap-balance.jpg",
+      "credit_link": "https://www.hackerearth.com/practice/notes/heaps-and-priority-queues/",
+      "redirect_link": "heap"
+    },
+    
+    {
+      "type": "quiz",
+      "title": "Question #1",
+      "text": "A heap is a special binary tree that can be used to",
+      "options": ["Sort a list", "Act as a priority queue", "Quickly find largest/smallest element from a collection", "All of the above"],
+      "answer": "All of the above",
+      "image_link": "/assets/neon-question-mark.jpg",
+      "credit_link": "https://www.istockphoto.com/photo/question-mark-shaped-red-neon-light-on-black-wall-gm1141315710-305719019",
+      "redirect_link": "heap"
+    },
+    {
+      "type": "quiz",
+      "title": "Question #2",
+      "text": "In a min-heap, the root node is the largest number.",
+      "options": ["True", "False"],
+      "answer": "False",
+      "image_link": "/assets/neon-question-mark.jpg",
+      "credit_link": "https://www.istockphoto.com/photo/question-mark-shaped-red-neon-light-on-black-wall-gm1141315710-305719019",
+      "redirect_link": "heap"
+    },
+    {
+      "type": "quiz",
+      "title": "Question #3",
+      "text": "A heap could be used by the operating system’s CPU scheduler to select the next process to execute.",
+      "options": ["True","False"],
+      "answer": "True",
+      "image_link": "/assets/neon-question-mark.jpg",
+      "credit_link": "https://www.istockphoto.com/photo/question-mark-shaped-red-neon-light-on-black-wall-gm1141315710-305719019",
+      "redirect_link": "heap"
     }
   ],
 
@@ -223,7 +315,7 @@
       "title": "Graph",
       "text": "<ul><li>A graph consists of a finite set of nodes and a finite set of edges which connect those nodes.</li><li>Graphs are used to solve many real-life problems by representing networks of just about anything!</li></ul>",
       "image_link": "/assets/graph/dij-road.png",
-      "redirect_route": "#/undirected_graph_algorithms", 
+      "redirect_link": "undirected_graph_algorithms",
       "credit_link": "https://www.quora.com/Does-Google-Maps-use-Dijkstras-algorithm-If-so-can-you-explain-how-they-discretize-the-world"
     },
     {
@@ -231,7 +323,7 @@
       "title": "Elements of a Graph",
       "text": "<ul><li><b>Nodes</b>: the fundamental units, also called <i>vertices</i><ul><li>Each node can simply be identified by a number of letter</li><li>Nodes can also contain objects with many fields</li></ul><li><b>Edges</b>: links which connect any two nodes in a graph</li></ul>",
       "image_link": "/assets/graph/graph-elements.png",
-      "redirect_route": "#/undirected_graph_algorithms",
+      "redirect_link": "undirected_graph_algorithms",
       "credit_link": "https://www.geeksforgeeks.org/applications-of-graph-data-structure/"
     },
     {
@@ -239,7 +331,7 @@
       "title": "Types of Graphs",
       "text": "<ul><li>Directed Graphs</li><ul><li>Each edge has a direction associated with it, represented by an <i>arrow</i></li><li>Can only move from one node to another if there is an arrow pointing from the source node to the target node</li></ul><li>Undirected Graphs</li><ul><li>Every edge has a double-sided arrow (↔), but the arrow heads are not shown</li><li>Can move from any node to any other node as long as they are connected by an edge</li></ul></ul>",
       "image_link": "/assets/graph/dir-undir-graph.png",
-      "redirect_route": "#/directed_graph_algorithms",
+      "redirect_link": "directed_graph_algorithms",
       "credit_link": "https://towardsdatascience.com/graph-theory-basic-properties-955fe2f61914"
     },
     {
@@ -247,7 +339,7 @@
       "title": "Weighted Graphs",
       "text": "In weighted graphs, each edge has a numerical <i>weight</i> associated with it (typically positive integers). An edge’s weight is the cost of moving along that edge. <br/>Edge weights can represent physical distance, travel time, or energy required. <br/>Unweighted graphs can be thought of as a special case of weighted graphs in which all the weights are zero.",
       "image_link": "/assets/graph/weighted-graph-flights.gif",
-      "redirect_route": "#/undirected_graph_algorithms",
+      "redirect_link": "undirected_graph_algorithms",
       "credit_link": "http://jcsites.juniata.edu/faculty/rhodes/cs2java/graphs.htm"
 
     },
@@ -256,7 +348,7 @@
       "title": "What Can Be Represented By Graphs?",
       "text": "<ul><li>Undirected graphs</li><ul><li>Street map (excluding one-ways)</li><li>Friendship network on Facebook</li><li>Wired connections between a circuit</li><li>Biological molecules like proteins and DNA</li></ul><li>Directed graphs</li><ul><li>The World Wide Web, where every hyperlink is an arrow from the current page to another page</li><li>Follower-based social media like Twitter and Facebook</li><li>Airline flights</li><li>Scheduling tasks</li></ul></ul>",
       "image_link": "/assets/graph/fb-graph.png",
-      "redirect_route": "#/undirected_graph_algorithms",
+      "redirect_link": "#/undirected_graph_algorithms",
       "credit_link": "https://medium.com/@verdi/working-with-graphs-f5cfc912e8bc"
     },
 
@@ -265,7 +357,7 @@
       "title": "Undirected Weighted Graph Problems",
       "text": "<ul><li>Finding the shortest paths from one node to every other node</li><ul><li>Solution: <b>Dijkstra’s Shortest Path First</b> algorithm</li><li>Application: Mapping app that finds the fastest route to a destination</li></ul><li>Connecting all nodes with the smallest possible total edge weight, generating a <i>minimum spanning tree</i></li><ul><li>Solution: Prim's algorithm</li></ul><li>Application: a telecom company finding the least amount of cable needed to connect all houses</li></ul></ul>",
       "image_link": "/assets/graph/map-graph.png",
-      "redirect_route": "#/undirected_graph_algorithms",
+      "redirect_link": "#/undirected_graph_algorithms",
       "credit_link": "https://medium.com/@verdi/working-with-graphs-f5cfc912e8bc"
     },
 
@@ -274,7 +366,7 @@
       "title": "Directed Graph Problems",
       "text": "Finding a linear sequence of all the nodes in a directed graph.<ul><li>Solution: Topological sort</li><li>Applications</li><ul><li>Determining a schedule of classes to complete a degree</li><li>Ordering the tasks in a project management flowchart</li><li>Operating systems task scheduling</li></ul></ul>",
       "image_link": "/assets/graph/sched-digraph.png",
-      "redirect_route": "#/directed_graph_algorithms",
+      "redirect_link": "#/directed_graph_algorithms",
       "credit_link": null
     },
 
@@ -283,16 +375,18 @@
       "title": "Question #1",
       "text": "Which is an example of an undirected graph?",
       "options": ["The World Wide Web", "Followers on Instagram", "Network of flowing rivers", "Road network"],
-      "answer": "Road Network",
-      "image_link": "/assets/neon-question-mark.jpg"
+      "answer": "Road network",
+      "image_link": "/assets/neon-question-mark.jpg",
+      "credit_link": "https://www.istockphoto.com/photo/question-mark-shaped-red-neon-light-on-black-wall-gm1141315710-305719019"
     },
     {
       "type": "quiz",
       "title": "Question #2",
-      "text": "Which is an example of a directed graph?",
-      "options": ["Facebook friend network", "Building a house", "Road network", "Airport network"],
-      "answer": "Building a house",
-      "image_link": "/assets/neon-question-mark.jpg"
+      "text": "What can be represented by a directed graph?",
+      "options": ["Facebook friend network", "The process of building a house", "Road network", "DNA molecules"],
+      "answer": "The process of building a house",
+      "image_link": "/assets/neon-question-mark.jpg",
+      "credit_link": "https://www.istockphoto.com/photo/question-mark-shaped-red-neon-light-on-black-wall-gm1141315710-305719019"
     },
     {
       "type": "quiz",
@@ -300,94 +394,55 @@
       "text": "There are many applications of Dijkstra's algorithm such as distance between locations, IP Routing, and telephone networks.",
       "options": ["True","False"],
       "answer": "True",
-      "image_link": "/assets/neon-question-mark.jpg"
+      "image_link": "/assets/neon-question-mark.jpg",
+      "credit_link": "https://www.istockphoto.com/photo/question-mark-shaped-red-neon-light-on-black-wall-gm1141315710-305719019"
     }
     ,
     {
       "type": "quiz",
-      "title": "",
-      "text": "Topological Sort can be used for",
+      "title": "Question #4",
+      "text": "Topological sort can be used for",
       "options": ["Dependency resolution", "Scheduling classes", "Daily routine", "All of the above"],
-      "answer": "All of the Above",
-      "image_link": "/assets/neon-question-mark.jpg"
-    }
-  ],
-  "Heap": [
-    {
-      "type": "info",
-      "title": "Heap",
-      "text": "<ul><li>A specialized tree-based data structure which satisfies heap property</li><ul><li>Min-heap: parent is always smaller value than children</li><ul><li>Root is minimum</li></ul></ul><ul><li>Max-heap: parent is always larger than children</li><ul><li>Root is max</li></ul></ul></ul>",
-      "image_link": "/assets/heap/min-heap.png"
-    },
-    {
-      "type": "info",
-      "title": "Elements of a Heap",
-      "text": "<ul><li>Similar to tree, however it is almost always a complete tree</li><ul><li>Complete tree: a binary tree such that every level (except possibly the last) is completely filled and all nodes are as far left as possible</li></ul></ul>",
-      "image_link": "/assets/heap/max-heap.png"
-    },
-    {
-      "type": "info",
-      "title": "Why heaps?",
-      "text": "<ul><li>They are extremely efficient at extracting the min/max value and re-organizing the tree to always maintain its property.</li><li>An maximally efficient implementation of priority queue</li><ul><li>Priority Queue: a queue with a priority associated with it</li><ul><li>Fundamental data structure to many algorithms such as dijkstra  </li></ul></ul></ul>",
-      "image_link": "/assets/heap/heap-remove-root.gif"
-    },
-    {
-      "type": "info",
-      "title": "Problems that can be solved with a Heap",
-      "text": "Any problem requiring a priority queue such as A* search, Dijkstra, sorting, etc.",
-      "image_link": "/assets/need-img.png"
-    },
-    
-    {
-      "type": "quiz",
-      "title": "Question #1",
-      "text": "A heap is a special binary tree that can be used to",
-      "options": ["Sort a list", "Act as a priority queue", "Quickly find largest/smallest element from a collection", "All of the above"],
       "answer": "All of the above",
-      "image_link": "/assets/neon-question-mark.jpg"
-    },
-    {
-      "type": "quiz",
-      "title": "Question #2",
-      "text": "In a min-heap, the root node is the largest number.",
-      "options": ["True", "False"],
-      "answer": "False",
-      "image_link": "/assets/neon-question-mark.jpg"
-    },
-    {
-      "type": "quiz",
-      "title": "Question #3",
-      "text": "A heap could be used by the operating system’s CPU scheduler to select the next process to execute.",
-      "options": ["True","False"],
-      "answer": "True",
-      "image_link": "/assets/neon-question-mark.jpg"
+      "image_link": "/assets/neon-question-mark.jpg",
+      "credit_link": "https://www.istockphoto.com/photo/question-mark-shaped-red-neon-light-on-black-wall-gm1141315710-305719019"
     }
   ],
+  
 
   "Insertion-Sort": [
     {
       "type": "info",
       "title": "Insertion Sort",
       "text": "The insertion sort one of many sorting algorithms that are used to order a list or array from lowest to highest number. It does so by comparing numbers side by side and swap locations in the list if the number is less than the number that is to its left. The algorithm will do this to every number in the list until it reaches the last number and places it in its correct spot. Think of gym class where everyone was lined up from tallest to shortest. You would compare yourself to the person next to you and swap places until you reached your appropriate spot. This is what Insertion sort accomplishes. ",
-      "image_link": "/assets/sort/insertion-sort/is-line.jpg"
+      "image_link": "/assets/sort/insertion-sort/is-line.jpg",
+      "credit_link": "https://kenshoo.com/reports-and-whitepapers/page/3/",
+      "redirect_link": "insertion_sort"
+
     },
     {
       "type": "info",
       "title": "Insertion Sort Steps",
       "text": "Each of these steps are done to each object by iterating over the entire array:<ol><li>Compare the current object you are evaluating to its predecessor</li><li>If the predecessor is greater than the current object, swap places</li><li>Continue to evaluate and swap places with previously evaluated objects until the current object is less than or equal to a previous object or reaches the beginning of the array</li><li>Move to the next unevaluated object in the array until complete</li></ol>",
-      "image_link": "/assets/sort/insertion-sort/Is-matrix.png"
+      "image_link": "/assets/sort/insertion-sort/Is-matrix.png",
+      "credit_link": "https://www.101computing.net/insertion-sort-algorithm/",
+      "redirect_link": "insertion_sort"
     },
     {
       "type": "info",
       "title": "Insertion Sort Code",
       "text": "When looking at the algorithm, it uses only two loops to do the job:<ul><li>The first loop is used to iterate over the whole array and assign the current object to be checked</li><li>The second loop will swap objects if the object is not at the beginning of the array AND if the objects prior in the array are greater than the current object.</li></ul>",
-      "image_link": "/assets/sort/insertion-sort/is-code.gif"
+      "image_link": "/assets/sort/insertion-sort/is-code.gif",
+      "credit_link": "https://www.cs.mcgill.ca/~cs203/lectures/lecture7/sld005.htm",
+      "redirect_link": "insertion_sort"
     },
     {
       "type": "info",
       "title": "Big O",
       "text": "Additional Useful Information for the Nerds:<br><ul><li>Best Case Time Complexity: O(n)</li><li>Worst Case Time Complexity O(n^2)</li><li>In-Place: Only requires a constant amount of memory space</li><li>When to Use: Insertion Sort works best with small lists of numbers or when the list is already somewhat sorted</li></ul>",
-      "image_link": "/assets/sort/insertion-sort/runtime.png"
+      "image_link": "/assets/sort/insertion-sort/runtime.png",
+      "credit_link": "https://charliepatronr.medium.com/big-o-2ecdecc7c0c1",
+      "redirect_link": "insertion_sort"
     },
     
     {
@@ -396,7 +451,9 @@
       "text": "When using insertion sort, a number can make multiple swaps until it has reached its correct spot in the ordered array",
       "options": ["True","False"],
       "answer": "True",
-      "image_link": "/assets/neon-question-mark.jpg"
+      "image_link": "/assets/neon-question-mark.jpg",
+      "credit_link": "https://www.istockphoto.com/photo/question-mark-shaped-red-neon-light-on-black-wall-gm1141315710-305719019",
+      "redirect_link": "insertion_sort"
     },
     {
       "type": "quiz",
@@ -404,7 +461,9 @@
       "text": "Best-case time complexity for insertion sort is ____, whereas worst-case time complexity for insertion sort is ____.",
       "options": ["O(logn), O(logn)", "O(n), O(n^3)", "O(n), O(n^2)","O(logn), O(n^2) "],
       "answer": "O(n), O(n^2)",
-      "image_link": "/assets/neon-question-mark.jpg"
+      "image_link": "/assets/neon-question-mark.jpg",
+      "credit_link": "https://www.istockphoto.com/photo/question-mark-shaped-red-neon-light-on-black-wall-gm1141315710-305719019",
+      "redirect_link": "insertion_sort"
     },
     {
       "type": "quiz",
@@ -412,34 +471,44 @@
       "text": "Which best describes Insertion Sort?",
       "options": ["Most useful when the array size is large and very unordered","Memory space required is dynamic and is not constant", "Uses two loops in order to complete the job", "All of the above"],
       "answer": "Uses two loops in order to complete the job",
-      "image_link": "/assets/neon-question-mark.jpg"
+      "image_link": "/assets/neon-question-mark.jpg",
+      "credit_link": "https://www.istockphoto.com/photo/question-mark-shaped-red-neon-light-on-black-wall-gm1141315710-305719019",
+      "redirect_link": "insertion_sort"
     }
   ],
   "Selection-Sort": [
     {
       "type": "info",
       "title": "Selection Sort",
-      "text": "Selection sort is another way to sort an array in ascending order. By searching through the array over and over, it places the minimum value of searchable objects at the first of the array minimum index, raises that value, and repeats the process again. We’ll discuss in detail what all that really means, but for now consider this example. When you play cards, it is very common to order your cards for better clarity on what you have. You scan your hand and place the lowest value card all the way to the left. Once again, you scan the remaining cards and again place the lowest value card of that set to the left only this time to the right of the lowest value card from the last card placement. Keep doing this and you have a sorted playing hand. You’ve done this simple task by using selection sort.",
-      "image_link": "/assets/sort/selection-sort/sel-sort-cards.jpeg"
+      "text": "Selection sort searches through an array over and over, places the minimum value of searchable objects at the first of the array minimum index, raises that value, and repeats the process again. We’ll discuss in detail what all that really means, but for now consider this example. When you play cards, it is very common to order your cards for better clarity on what you have. You scan your hand and place the lowest value card all the way to the left. Once again, you scan the remaining cards and again place the lowest value card of that set to the left only this time to the right of the lowest value card from the last card placement. Keep doing this and you have a sorted playing hand. You’ve done this simple task by using selection sort.",
+      "image_link": "/assets/sort/selection-sort/sel-sort-cards.jpeg",
+      "credit_link": "https://freefeast.info/general-it-articles/insertion-sort-pseudo-code-of-insertion-sort-insertion-sort-in-data-structure/",
+      "redirect_link": "selection_sort"
     },
     {
       "type": "info",
       "title": "Selection Sort Steps",
       "text": "<ol><li>Using a minimum index tracking variable, set it to 0.</li><li>Search the array for the smallest element</li><li>Swap the smallest element with the element that has the minimum index tracking variable</li><li>Increment the minimum tracking variable by 1</li><li>Repeat this process until the list has been sorted</li></ol>",
-      "image_link": "/assets/sort/selection-sort/sel-sort-steps.png"
+      "image_link": "/assets/sort/selection-sort/sel-sort-steps.png",
+      "credit_link": "https://www.programiz.com/dsa/selection-sort",
+      "redirect_link": "selection_sort"
     },
     
     {
       "type": "info",
       "title": "Selection Sort Code",
       "text": "The main functionality of selection sort relies heavily on the incrementing of the minimum index tracking variable. Each time we find the smallest value and place it at the minimum index tracking variable in the array, we want to shrink the search size by one each time so that we are not iterating over the same array size over and over. It swaps just like insertion sort, but the swap only happens once and that’s it. There’s no need to swap a value more than once because it’s already in the right spot whereas with insertion sort a number may need to swap multiple places before it reaches its final destination.",
-      "image_link": "/assets/sort/selection-sort/sel-sort-code.png"
+      "image_link": "/assets/sort/selection-sort/sel-sort-code.png",
+      "credit_link": "https://stackoverflow.com/questions/36075326/brute-force-selection-sort",
+      "redirect_link": "selection_sort"
     },
     {
       "type": "info",
       "title": "The Nitty Gritty Behind Selection Sort",
       "text": "<ul><li>Best Case Time Complexity: O(n^2)</li><li>Worst Case Time Complexity: O(n^2)</li><li>In-Place: Only requires a constant amount of memory space</li><li>When to Use: Checking to make sure a list is already sorted. Also used when memory space is limited. This is because swapping is not done until the end which results in less temporary space usage.</li></ul>",
-      "image_link": "/assets/sort/selection-sort/link-up.jpeg"
+      "image_link": "/assets/sort/selection-sort/link-up.jpeg",
+      "credit_link": "http://www.beacon-academy.org/web/perch/resources/a-level-product-design-enrichment-project-1.pdf",
+      "redirect_link": "selection_sort"
     },
     
     {
@@ -448,7 +517,9 @@
       "text": "When should selection sort be used?",
       "options": ["Checking to make sure a list is already sorted.","When memory space is limited","Both", "None" ],
       "answer": "Both",
-      "image_link": "/assets/neon-question-mark.jpg"
+      "image_link": "/assets/neon-question-mark.jpg",
+      "credit_link": "https://www.istockphoto.com/photo/question-mark-shaped-red-neon-light-on-black-wall-gm1141315710-305719019",
+      "redirect_link": "selection_sort"
     },
     {
       "type": "quiz",
@@ -456,7 +527,9 @@
       "text": "Best-case time complexity for selection sort is ____, whereas worst-case time complexity for selection sort is ____.",
       "options": ["O(logn), O(n^2)", "O(n), O(n)", "O(n^2), O(n^2)","O(logn), O(n^2) "],
       "answer": "O(n^2), O(n^2)",
-      "image_link": "/assets/neon-question-mark.jpg"
+      "image_link": "/assets/neon-question-mark.jpg",
+      "credit_link": "https://www.istockphoto.com/photo/question-mark-shaped-red-neon-light-on-black-wall-gm1141315710-305719019",
+      "redirect_link": "selection_sort"
     },
     {
       "type": "quiz",
@@ -464,7 +537,9 @@
       "text": "Selection sort only swaps a number once whereas insertion sort may swap a number many times.",
       "options": ["True","False"],
       "answer": "True",
-      "image_link": "/assets/neon-question-mark.jpg"
+      "image_link": "/assets/neon-question-mark.jpg",
+      "credit_link": "https://www.istockphoto.com/photo/question-mark-shaped-red-neon-light-on-black-wall-gm1141315710-305719019",
+      "redirect_link": "selection_sort"
     }
   ],
 
