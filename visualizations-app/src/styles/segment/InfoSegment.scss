@@ -56,6 +56,22 @@
   transition: 1s;
 }
 
+.segment-gif .gif-icon2 {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background-color: #ffffff;
+  color: #7684fb;
+  font-size: 20px;
+  text-align: center;
+  padding: 5px 15px;
+  border-radius: 50px;
+  border: 2px solid #8377f8;
+  cursor: pointer;
+  z-index: 10;
+  transition: 1s;
+}
+
 .segment-gif .gif-icon:hover {
   transform: translateY(-5px);
   border-color: #7684fb;

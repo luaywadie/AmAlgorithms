@@ -326,6 +326,8 @@ class ClusteringAlgorithms extends Component {
                   })
                 }
                 disabled={!this.state.stop}
+               max="9"
+               min="1"
               />
             </label>
           </form>
@@ -341,6 +343,8 @@ class ClusteringAlgorithms extends Component {
                   speed: event.target.value,
                 })
               }
+              max="50"
+              min="1"
             />
           </label>
         </form>

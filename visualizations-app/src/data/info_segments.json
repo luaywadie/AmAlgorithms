@@ -548,25 +548,33 @@
       "type": "info",
       "title": "K-Means Clustering",
       "text": "Clustering machine learning algorithms such as <strong>K-Means</strong> can be used for a wide variety of tasks, such as: <ul><li>Image segmentation</li><li>Spam email filtering</li><li>Anomaly detection</li><li>Market segmentation analysis</li><li>...and much more!</li></ul>K-Means is an example of an <strong>unsupervised learning algorithm,</strong> because it can take unlabeled data as input and produce informed, labeled decisions as output.",
-      "image_link": "/assets/kmeans/kmeans-intro.png"
+      "image_link": "/assets/kmeans/kmeans-intro.png",
+      "credit_link": "https://miro.medium.com/max/1200/1*rw8IUza1dbffBhiA4i0GNQ.png",
+      "redirect_link": null
     },
     {
       "type": "info",
       "title": "The Main Idea",
       "text": "K-Means is one of the simplest and most commonly used unsupervised machine learning algorithms. It works by taking a collection of data and <strong>grouping similar points into a fixed number of clusters (K)</strong> that you can specify before running the algorithm. The image shown demonstrates K-Means running on a 2D dataset with a <strong>K parameter of 5 - that is, we want the algorithm to converge and find a group of 5 clusters.</strong> The algorithm converges when the centroid locations don’t change between iterations.",
-      "image_link": "/assets/kmeans/kmeans-inprogress.gif"
+      "image_link": "/assets/kmeans/kmeans-inprogress.gif",
+      "credit_link": null,
+      "redirect_link": "ClusteringAlgorithms"
     },
     {
       "type": "info",
       "title": "The K-Means Algorithm",
       "text": "You first define a <strong>target number K, which refers to the number of centroids you want to find in the dataset.</strong> A centroid is the imaginary or real location representing the center of the cluster. The algorithm will then initialize K cluster centroids at random, and alternate between two phases: <ol><li>assigning points to the closest cluster centroids by calculating the distance between them, and</li><li>updating the K centroids to the center, or mean, of the newly assigned group of points (hence the name K-Means).</li></ol>",
-      "image_link": "/assets/kmeans/kmeans-pseudocode.png"
+      "image_link": "/assets/kmeans/kmeans-pseudocode.png",
+      "credit_link": null,
+      "redirect_link": "ClusteringAlgorithms"
     },
     {
       "type": "info",
       "title": "Finding the Distance",
       "text": "There are many different distance metrics used to assign points to their closest cluster centroids. Examples include:<ul><li><strong>Euclidean distance (shown in orange)</strong>, also known as the Pythagorean Theorem, where you take the sum of the squares of the differences between points and then take the square root.</li><li><strong>Manhattan distance (shown in green),</strong> also known as city block distance, where you sum the absolute value of the difference between points, as if you were walking to your destination around the corner of a city block.</li></ul>",
-      "image_link": "/assets/kmeans/kmeans-distance-intro.png"
+      "image_link": "/assets/kmeans/kmeans-distance-intro.png",
+      "credit_link": "https://towardsdatascience.com/log-book-guide-to-distance-measuring-approaches-for-k-means-clustering-f137807e8e21",
+      "redirect_link": null
     },
     {
       "type": "quiz",
@@ -582,7 +590,9 @@
       "type": "info",
       "title": "Neural Networks",
       "text":  "<b>Artificial neural networks</b> are based on a collection of connected units or nodes called artificial neurons, which loosely model the neurons in a biological brain. Each connection, like the synapses in a biological brain, can transmit a signal to other neurons. An artificial neuron that receives a signal (which is just a number) processes it and can then signal neurons connected to it. <br><br>Neural networks are typically structured into layers of connected neurons, with the most simple structure having <b>an input layer, an output layer, and a hidden layer.</b>"      ,
-      "image_link": "/assets/neural-network/nn.png"
+      "image_link": "/assets/neural-network/nn.png",
+      "credit_link": "https://www.innoarchitech.com/blog/artificial-intelligence-deep-learning-neural-networks-explained",
+      "redirect_link": null
     },
 
     
@@ -590,27 +600,51 @@
       "type": "info",
       "title": "The Three Stages of Learning",
       "text":  "Training a neural network can be broken down into three main stages:<ul><li><b>Forward propagation</b></li><li><b>Backpropagation</b></li><li><b>Parameter update</b> </li> </ul> Let’s continue on to look at these in more detail.",
-      "image_link": "/assets/neural-network/nn-train.gif"
+      "image_link": "/assets/neural-network/nn-train.gif",
+      "credit_link": "https://youtu.be/aircAruvnKk",
+      "redirect_link": null
     },
 
     {
       "type": "info",
       "title": "Forward Propogation",
-      "text":  "The “firing” of individual neurons can be calculated as the sum of:<ul><li><b>input values (x)</b>, multiplied by </li><li>the corresponding <b>weight values (w)</b></li><li>added to a <b>bias value (called b or w_0)</b></li></ul>This intermediate sum (z) is then passed through an activation function, such as the sigmoid function, to compute the final <b>activation value (a).</b>"      ,
-      "image_link": "/assets/neural-network/forward-prop.png"
+      "text":  "The “firing” of individual neurons can be calculated as the sum of:<ul><li><b>input values (x)</b>, multiplied by </li><li>the corresponding <b>weight values (w)</b></li><li>added to a <b>bias value (b)</b></li></ul>This intermediate sum (z) is then passed through an activation function, such as the sigmoid function, to compute the final <b>activation value (a).</b>"      ,
+      "image_link": "/assets/neural-network/forward-prop.png",
+      "credit_link": "https://www.innoarchitech.com/blog/artificial-intelligence-deep-learning-neural-networks-explained",
+      "redirect_link": null
     },
     {
       "type": "info",
       "title": "Activation Functions",
       "text": "The sigmoid function is a common example to use as an activation function for the output of neurons. The output range of values falls nicely <b>between 0 and 1</b>, and the function is smooth and differentiable, which is exactly what we need to make <b>small changes to the network’s weights and biases in order to learn.</b>",
-      "image_link": "/assets/neural-network/sigmoid.png"
+      "image_link": "/assets/neural-network/sigmoid.png",
+      "credit_link": "https://youtu.be/njKP3FqW3Sk",
+      "redirect_link": null
     },
-
     {
       "type": "info",
-      "title": "Backpropogation",
-      "text": "",
-      "image_link": "/assets/neural-network/backprop.png"
+      "title": "Learning with Gradient Descent",
+      "text": "After calculating the final output, the network can use a <b>loss function</b> to tell how good or bad it’s doing at predicting the correct value given an input. A neural network “learns” to do better by performing what is known as <b>gradient descent,</b> where after each iteration, it updates its internal weights and biases slightly to optimize its loss function. <b>Updating the weights and biases in this way causes the network to slowly learn and do better on the next input.</b>",
+      "image_link": "/assets/neural-network/loss.png",
+      "credit_link": "https://youtu.be/njKP3FqW3Sk",
+      "redirect_link": null
+    },
+    {
+      "type": "info",
+      "title": "Backpropagation",
+      "text": "<b>Backpropagation is the algorithm used for computing the gradient,</b> which gives the slight adjustments to the network’s weights and biases needed to most quickly increase the loss (make the network worse). <b>Subtracting the gradient</b> from the weights and biases performs gradient descent and causes the network to learn. The main idea behind backpropagation comes from the chain rule from calculus, where determining a small change of a composite function can be reduced to multiplying the derivatives of the changes that caused it.",
+      "image_link": "/assets/neural-network/backprop.png",
+      "credit_link": "https://youtu.be/njKP3FqW3Sk",
+      "redirect_link": null
+    },
+    {
+      "type": "info",
+      "title": "Try it Yourself!",
+      "text": "Here at AmAlgorithms, we believe the best way to learn is through visualization and interaction. Click on the link to learn more about neural networks!",
+      "image_link": "/assets/neural-network/nn-demo.gif",
+      "credit_link": null,
+      "redirect_link": "neural_nets"
+
     }
     
   ]
