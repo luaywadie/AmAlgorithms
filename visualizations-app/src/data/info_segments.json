@@ -375,7 +375,7 @@
       "type": "info",
       "title": "Insertion Sort Steps",
       "text": "Each of these steps are done to each object by iterating over the entire array:<ol><li>Compare the current object you are evaluating to its predecessor</li><li>If the predecessor is greater than the current object, swap places</li><li>Continue to evaluate and swap places with previously evaluated objects until the current object is less than or equal to a previous object or reaches the beginning of the array</li><li>Move to the next unevaluated object in the array until complete</li></ol>",
-      "image_link": "/assets/sort/insertion-sort/is-matrix.png"
+      "image_link": "/assets/sort/insertion-sort/Is-matrix.png"
     },
     {
       "type": "info",
@@ -506,33 +506,36 @@
     {
       "type": "info",
       "title": "Neural Networks",
-      "text": "Artificial neural networks are based on a collection of connected units or nodes called artificial neurons, which loosely model the neurons in a biological brain. Each connection, like the synapses in a biological brain, can transmit a signal to other neurons. An artificial neuron that receives a signal then processes it and can signal neurons connected to it. The 'signal' at a connection is a real number, and the output of each neuron is computed by some non-linear function of the sum of its inputs.<br><br>The structure of the most simple neural network has an input layer, an output layer, and a hidden layer.",
+      "text":  "<b>Artificial neural networks</b> are based on a collection of connected units or nodes called artificial neurons, which loosely model the neurons in a biological brain. Each connection, like the synapses in a biological brain, can transmit a signal to other neurons. An artificial neuron that receives a signal (which is just a number) processes it and can then signal neurons connected to it. <br><br>Neural networks are typically structured into layers of connected neurons, with the most simple structure having <b>an input layer, an output layer, and a hidden layer.</b>"      ,
       "image_link": "/assets/neural-network/nn.png"
     },
-    {
-      "type": "info",
-      "title": "Forward Propogation",
-      "text": "The firing of individual neurons can be mathematically represented as the input values (x) multiplied by the weight values (w) that correspond to each connection, and then added to a bias value (b). ",
-      "image_link": "/assets/neural-network/forward-prop.png"
-    },
+
     
     {
       "type": "info",
-      "title": "Training a Neural Network",
-      "text": "Training a neural network can be broken down into three main stages:<ol><li>Forward propagation</li><li>Backpropagation</li><li>Parameter update </li></ol>",
+      "title": "The Three Stages of Learning",
+      "text":  "Training a neural network can be broken down into three main stages:<ul><li><b>Forward propagation</b></li><li><b>Backpropagation</b></li><li><b>Parameter update</b> </li> </ul> Let’s continue on to look at these in more detail.",
       "image_link": "/assets/neural-network/nn-train.gif"
     },
+
     {
       "type": "info",
-      "title": "Neural Network Basis",
-      "text": "",
-      "image_link": "/assets/neural-network/nn-axons.png"
+      "title": "Forward Propogation",
+      "text":  "The “firing” of individual neurons can be calculated as the sum of:<ul><li><b>input values (x)</b>, multiplied by </li><li>the corresponding <b>weight values (w)</b></li><li>added to a <b>bias value (called b or w_0)</b></li></ul>This intermediate sum (z) is then passed through an activation function, such as the sigmoid function, to compute the final <b>activation value (a).</b>"      ,
+      "image_link": "/assets/neural-network/forward-prop.png"
     },
     {
       "type": "info",
-      "title": "Forward Prop",
+      "title": "Activation Functions",
+      "text": "The sigmoid function is a common example to use as an activation function for the output of neurons. The output range of values falls nicely <b>between 0 and 1</b>, and the function is smooth and differentiable, which is exactly what we need to make <b>small changes to the network’s weights and biases in order to learn.</b>",
+      "image_link": "/assets/neural-network/sigmoid.png"
+    },
+
+    {
+      "type": "info",
+      "title": "Backpropogation",
       "text": "",
-      "image_link": "/assets/neural-network/forward-prop.png"
+      "image_link": "/assets/neural-network/backprop.png"
     }
     
   ]
