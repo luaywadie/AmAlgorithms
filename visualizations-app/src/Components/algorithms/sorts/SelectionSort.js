@@ -22,11 +22,12 @@ class SelectionSort extends Component {
       animation_queue: [],
       stepper_queue: [],
       data: [],
+      sorted: false,
       speed: 1000,
       speedFactor: 1,
       speedChanged: false,
-      paused: true,
       swapping: false,
+      paused: true,
       interval: null,
     };
   }
@@ -126,27 +127,36 @@ class SelectionSort extends Component {
   };
 
   selectionSort = (arr) => {
+    this.state.animation_queue.push([0, 0, false, 0]);
     let len = arr.length;
     for (let i = 0; i < len; i++) {
+      this.state.animation_queue.push([0, 0, false, 1]);
       let min = i;
+      this.state.animation_queue.push([0, 0, false, 2]);
       for (let j = i + 1; j < len; j++) {
+        this.state.animation_queue.push([min, j, false]);
+        this.state.animation_queue.push([0, 0, false, 3]);
         if (arr[min] > arr[j]) {
+          this.state.animation_queue.push([0, 0, false, 4]);
           min = j;
         }
       }
       if (min !== i) {
+        this.state.animation_queue.push([0, 0, false, 5]);
         let tmp = arr[i];
         arr[i] = arr[min];
         arr[min] = tmp;
-        this.state.animation_queue.push([i, min]);
+        this.state.animation_queue.push([i, min, true]);
       }
     }
+    this.state.animation_queue.push([0, 0, false, 6]);
+    this.setState({sorted: true})
     return arr;
   };
 
   startInterval = () => {
     // Sort
-    this.selectionSort(this.state.data);
+    if (!this.state.sorted) this.selectionSort(this.state.data);
     this.setState({ speed: 1000 - (this.state.speedFactor * 1000 - 1000) });
     this.setState({ interval: this.intervalEngine() });
   };
@@ -159,7 +169,8 @@ class SelectionSort extends Component {
 
   endInterval = () => {
     clearInterval(this.state.interval);
-    this.setState({ paused: true });
+    this.setState({sorted: false})
+    this.setState({paused: true});
   };
 
   intervalEngine = () => {
@@ -170,7 +181,8 @@ class SelectionSort extends Component {
         this.swapBars(
           this.state.animation_queue[0][0],
           this.state.animation_queue[0][1],
-          this.state.speed
+          this.state.animation_queue[0][2],
+          this.state.animation_queue[0][3],
         );
         this.state.stepper_queue.push(this.state.animation_queue[0]);
         this.state.animation_queue.shift();
@@ -184,46 +196,82 @@ class SelectionSort extends Component {
     return interval;
   };
 
-  swapBars(barFromIndex, barToIndex) {
-    this.setState({ swapping: true });
+  swapBars(barFromIndex, barToIndex, action, pseudoNumber) {
+    this.setState({swapping: true})
     let speed = this.state.speed;
     let fromObj = d3.selectAll("rect[value='" + barFromIndex + "']");
     let toObj = d3.selectAll("rect[value='" + barToIndex + "']");
     let fromObjTxt = d3.selectAll("text[value='" + barFromIndex + "']");
     let toObjTxt = d3.selectAll("text[value='" + barToIndex + "']");
 
-    fromObjTxt.transition().duration(speed).attr("x", toObjTxt.attr("x"));
+    if (!action) {
 
-    toObjTxt.transition().duration(speed).attr("x", fromObjTxt.attr("x"));
+      if (barFromIndex == barToIndex) {
+        d3.selectAll(".code-line").attr("class", "code-line")
+        d3.select("#sel-sort-" + pseudoNumber).attr("class", "code-line active")
+      } else {
+        fromObj
+          .transition()
+          .duration(speed)
+          .attr('fill', '#39a4ff50')
+  
+        toObj
+          .transition()
+          .duration(speed)
+          .attr('fill', '#39a4ff50')
+      }
+  
 
-    fromObj
-      .transition()
-      .duration(speed)
-      .attr("fill", "#9537ff")
-      .attr("x", toObj.attr("x"));
+    } else {
+      fromObj
+        .transition()
+        .duration(speed)
+        .attr('fill', '#9537ff')
+        .attr('x', toObj.attr('x'));
 
-    toObj
-      .transition()
-      .duration(speed)
-      .attr("fill", "#ffa500")
-      .attr("x", fromObj.attr("x"));
+      toObj
+        .transition()
+        .duration(speed)
+        .attr('fill', '#ffa500')
+        .attr('x', fromObj.attr('x'));
 
+      fromObjTxt
+        .transition()
+        .duration(speed)
+        .attr('x', toObjTxt.attr('x'));
+
+      toObjTxt
+        .transition()
+        .duration(speed)
+        .attr('x', fromObjTxt.attr('x'));
+
+      fromObj
+        .transition()
+        .duration(speed)
+        .attr('fill', '#9537ff')
+        .attr('x', toObj.attr('x'));
+
+      toObj
+        .transition()
+        .duration(speed)
+        .attr('fill', '#ffa500')
+        .attr('x', fromObj.attr('x'));
+      
+      // Swap
+      let temp = fromObj.attr('value');
+      fromObj.attr('value', toObj.attr('value'));
+      toObj.attr('value', temp);
+      temp = fromObjTxt.attr('value');
+      fromObjTxt.attr('value', toObjTxt.attr('value'));
+      toObjTxt.attr('value', temp);
+    }
     // Reset Colors
-    fromObj.transition().duration(speed).delay(speed).attr("fill", "#39a4ff");
-    toObj.transition().duration(speed).delay(speed).attr("fill", "#39a4ff");
-
-    // Swap
-    let temp = fromObj.attr("value");
-    fromObj.attr("value", toObj.attr("value"));
-    toObj.attr("value", temp);
-    temp = fromObjTxt.attr("value");
-    fromObjTxt.attr("value", toObjTxt.attr("value"));
-    toObjTxt.attr("value", temp);
-
+    fromObj.transition().duration(speed).delay(speed).attr('fill', '#39a4ff').attr('stroke-width',0);
+    toObj.transition().duration(speed).delay(speed).attr('fill', '#39a4ff').attr('stroke-width',0);
     // Allow next swapping
     setTimeout(() => {
-      this.setState({ swapping: false });
-    }, speed);
+      this.setState({swapping: false})
+    }, speed)
   }
 
   // Stepper
@@ -279,6 +327,58 @@ class SelectionSort extends Component {
     this.state.animation_queue = [];
     this.state.stepper_queue = [];
   };
+
+  renderSelectionSortPseudocode() {
+    function indentation(num) {
+      return num * 20;
+    }
+    return (
+      <div style={{padding: "20px"}}>
+        <div id={'sel-sort-0'} className="code-line">
+          1
+          <span style={{ marginLeft: indentation(1) }}>
+            SelectionSort(<i>array</i>):
+          </span>
+        </div>
+        <div id={'sel-sort-1'} className="code-line">
+          2
+          <span style={{ marginLeft: indentation(2) }}>
+            <b>Loop</b> for each item in <i>array</i>
+          </span>
+        </div>
+        <div id={'sel-sort-2'} className="code-line">
+          3
+          <span style={{ marginLeft: indentation(3) }}>
+            Let <i><u>min</u></i> = current index in <b>Loop</b>
+          </span>
+        </div>
+        <div id={'sel-sort-3'} className="code-line">
+          4
+          <span style={{ marginLeft: indentation(3) }}>
+            <b>Loop</b> for each item in <i>array</i>
+          </span>
+        </div>
+        <div id={'sel-sort-4'} className="code-line">
+          5
+          <span style={{ marginLeft: indentation(4) }}>
+            If <i><u>min element</u></i> is greator than <i><u>current element</u></i>, set <i><u>min</u></i> = current element index
+          </span>
+        </div>
+        <div id={'sel-sort-5'} className="code-line">
+          6
+          <span style={{ marginLeft: indentation(3) }}>
+            If <i><u>min</u></i> does not equal to current index, <b>swap</b> them 
+          </span>
+        </div>
+        <div id={'sel-sort-6'} className="code-line">
+          7
+          <span style={{ marginLeft: indentation(2) }}>
+            Return the sorted <u>array</u>
+          </span>
+        </div>
+      </div>
+    );
+  }
 
   render() {
     return (
@@ -382,6 +482,7 @@ class SelectionSort extends Component {
         </Row>
         <Row>
           <div id="sort-container" className="selection-sort"></div>
+          {this.renderSelectionSortPseudocode()}
         </Row>
       </Container>
     );
