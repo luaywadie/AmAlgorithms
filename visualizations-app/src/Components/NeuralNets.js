@@ -1251,6 +1251,8 @@ class NeuralNets extends Component {
                       speed: event.target.value,
                     })
                   }
+                  max="1000"
+                  min="1"
                 />
               </label>
               <label>
@@ -1308,7 +1310,7 @@ class NeuralNets extends Component {
               style={{ fontSize: '22px', marginLeft: '-10px' }}
             >
               <div className={'row'}>
-                <h1>FORWARD Propogation</h1> <br></br>
+                <h1>Forward Propogation</h1> <br></br>
               </div>
               <div className={'row'}>
                 <div id={'h0-net-eq'} className={'nn-equation'}>
@@ -1410,7 +1412,7 @@ class NeuralNets extends Component {
               style={{ fontSize: '17px', marginLeft: '-60px' }}
             >
               <div className={'row'} style={{ marginTop: '10px' }}>
-                <h1>BACKPROP </h1> <br></br>
+                <h1>Backpropagation</h1> <br></br>
               </div>
 
               <div className={'row'}>
@@ -1621,7 +1623,7 @@ class NeuralNets extends Component {
             </Tab>
             <Tab eventKey="update" title="Update" style={{ fontSize: '22px' }}>
               <div className={'row'} style={{ marginTop: '10px' }}>
-                <h1>UPDATES</h1> <br></br>
+                <h1>Parameter Update</h1> <br></br>
               </div>
 
               <div className={'row'}>

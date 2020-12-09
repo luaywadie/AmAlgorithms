@@ -556,7 +556,7 @@
     },
     {
       "type": "info",
-      "title": "Backpropogation",
+      "title": "Backpropagation",
       "text": "<b>Backpropagation is the algorithm used for computing the gradient,</b> which gives the slight adjustments to the network’s weights and biases needed to most quickly increase the loss (make the network worse). <b>Subtracting the gradient</b> from the weights and biases performs gradient descent and causes the network to learn. The main idea behind backpropagation comes from the chain rule from calculus, where determining a small change of a composite function can be reduced to multiplying the derivatives of the changes that caused it.",
       "image_link": "/assets/neural-network/backprop.png",
       "credit_link": "https://youtu.be/njKP3FqW3Sk",
