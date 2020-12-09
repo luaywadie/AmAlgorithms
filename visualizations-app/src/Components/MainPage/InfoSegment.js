@@ -140,7 +140,7 @@ class InfoSegment extends Component {
             <a
               href={
                 process.env.PUBLIC_URL +
-                '/#/' +
+                '/#/' + 
                 this.state.slides[this.state.current_id]['redirect_link']
               }
               target="_blank"
@@ -155,7 +155,7 @@ class InfoSegment extends Component {
               href={this.state.slides[this.state.current_id]['credit_link']}
               target="_blank"
             >
-              <i className="gif-credit-link">Credit Link</i>
+              <i className="gif-credit-link">Credit</i>
             </a>
           )}
           <img
